@@ -78,5 +78,5 @@ public struct AuthenticatorStep: Equatable {
     public static let confirmVerifyUser = AuthenticatorStep("confirmVerifyUser")
 
     /// An authenticated user has successfuly signed in.
-    private(set) public static var signedIn = AuthenticatorStep("signedIn")
+    public static let signedIn = AuthenticatorStep("signedIn")
 }
