@@ -1,0 +1,149 @@
+//
+// Copyright Amazon.com Inc. or its affiliates.
+// All Rights Reserved.
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+/* Authenticator Fields */
+"authenticator.field.label.optional" = "%@ (Optional)"; // Argument is the field's name. E.g. "Username"
+"authenticator.countryCodes.search" = "Search country";
+
+"authenticator.field.date.label" = "Select a date";
+"authenticator.imageButton.close" = "Close";
+"authenticator.imageButton.clear" = "Clear";
+"authenticator.imageButton.open" = "Open";
+"authenticator.imageButton.showPassword" = "Show password";
+"authenticator.imageButton.hidePassword" = "Hide password";
+
+"authenticator.field.username.label" = "Username";
+"authenticator.field.username.placeholder" = "Enter your username";
+"authenticator.field.password.label" = "Password";
+"authenticator.field.password.placeholder" = "Enter your password";
+"authenticator.field.confirmPassword.label" = "Confirm password";
+"authenticator.field.confirmPassword.placeholder" = "Re-enter your password";
+"authenticator.field.email.label" = "Email";
+"authenticator.field.email.placeholder" = "Enter your email";
+"authenticator.field.phoneNumber.label" = "Phone number";
+"authenticator.field.phoneNumber.placeholder" = "Enter your phone number";
+"authenticator.field.diallingCode.label" = "Dialling code";
+"authenticator.field.diallingCode.placeholder" = "+";
+"authenticator.field.code.label" = "Verification Code";
+"authenticator.field.code.placeholder" = "Enter your verification code";
+"authenticator.field.newPassword.label" = "New password";
+"authenticator.field.newPassword.placeholder" = "Enter your new password";
+"authenticator.field.confirmNewPassword.label" = "Confirm password";
+"authenticator.field.confirmNewPassword.placeholder" = "Re-enter your new password";
+"authenticator.field.address.label" = "Address";
+"authenticator.field.address.placeholder" = "Enter your address";
+"authenticator.field.birthDate.label" = "Birth Date";
+"authenticator.field.birthDate.placeholder" = "Enter your birth date";
+"authenticator.field.gender.label" = "Gender";
+"authenticator.field.gender.placeholder" = "Enter your gender";
+"authenticator.field.givenName.label" = "Given name";
+"authenticator.field.givenName.placeholder" = "Enter your given name";
+"authenticator.field.middleName.label" = "Middle name";
+"authenticator.field.middleName.placeholder" = "Enter your middle name";
+"authenticator.field.familyName.label" = "Family name";
+"authenticator.field.familyName.placeholder" = "Enter your family name";
+"authenticator.field.name.label" = "Name";
+"authenticator.field.name.placeholder" = "Enter your name";
+"authenticator.field.nickname.label" = "Nickname";
+"authenticator.field.nickname.placeholder" = "Enter your nickname";
+"authenticator.field.preferredUsername.label" = "Preferred username";
+"authenticator.field.preferredUsername.placeholder" = "Enter your preferred username";
+"authenticator.field.profile.label" = "Profile";
+"authenticator.field.profile.placeholder" = "Enter your profile";
+"authenticator.field.website.label" = "Website";
+"authenticator.field.website.placeholder" = "Enter your website";
+
+/* Sign In view */
+"authenticator.signIn.title" = "Sign In";
+"authenticator.signIn.button.forgotPassword" = "Forgot password?";
+"authenticator.signIn.button.signIn" = "Sign In";
+"authenticator.signIn.button.createAccount" = "Create account";
+
+/* Confirm Sign In with Password view */
+"authenticator.confirmSignInWithNewPassword.title" = "Set a new password";
+"authenticator.confirmSignInWithNewPassword.button.submit" = "Submit";
+
+/* Confirm Sign In with MFA view */
+"authenticator.confirmSignInWithMFACode.title" = "Enter your Sign In code";
+
+/* Confirm Sign In with Custom Challenge view */
+"authenticator.confirmSignInWithCustomChallenge.title" = "Enter your Sign In code";
+
+/* Confirm Sign In with Code */
+"authenticator.confirmSignInWithCode.button.submit" = "Submit";
+
+/* Reset Password view */
+"authenticator.resetPassword.title" = "Reset your password";
+"authenticator.resetPassword.button.sendCode" = "Send code";
+"authenticator.resetPassword.button.backToSignIn" = "Back to Sign In";
+
+/* Confirm Reset Password view */
+"authenticator.confirmResetPassword.title" = "Reset your password";
+"authenticator.confirmResetPassword.button.submit" = "Submit";
+"authenticator.confirmResetPassword.button.backToSignIn" = "Back to Sign In";
+
+/* Sign Up view */
+"authenticator.signUp.title" = "Create Account";
+"authenticator.signUp.button.forgotPassword" = "Forgot password?";
+"authenticator.signUp.button.createAccount" = "Create account";
+"authenticator.signUp.button.backToSignIn" = "Back to Sign In";
+
+/* Confirm Sign Up view */
+"authenticator.confirmSignUp.title" = "Confirm your account";
+"authenticator.confirmSignUp.lostCode" = "Lost your code?";
+"authenticator.confirmSignUp.button.submit" = "Submit";
+"authenticator.confirmSignUp.button.sendCode" = "Send code";
+"authenticator.confirmSignUp.button.backToSignIn" = "Back to Sign In";
+
+/* Verify User view */
+"authenticator.verifyUser.title" = "Account recovery requires verified contact information";
+"authenticator.verifyUser.button.verify" = "Verify";
+"authenticator.verifyUser.button.skip" = "Skip";
+
+/* Confirm Verify User view */
+"authenticator.confirmVerifyUser.title" = "Confirm your %@"; //Argument is user's attribute that needs confirmation. E.g., "Email"
+"authenticator.confirmVerifyUser.button.verify" = "Verify";
+"authenticator.confirmVerifyUser.button.skip" = "Skip";
+
+/* Field Validation messages */
+"authenticator.validator.field" = "Field";
+"authenticator.validator.field.required" = "%@ must not be blank."; // Argument is the field's name. E.g. "Username"
+"authenticator.validator.field.maxLength" = "%@ must not exceed %i characters"; // First argument is the field's name (e.g. "Username"), second argument is a number.
+"authenticator.validator.field.date.maxDate" = "%@ must not be after %@"; // First argument is the field's name (e.g. "Birthdate"), second argument is a formatted date.
+"authenticator.validator.field.date.minDate" = "%@ must not be before %@"; // First argument is the field's name (e.g. "Birthdate"), second argument is a formatted date.
+"authenticator.validator.field.conditions.title" = "%@ must include:"; // Argument is the field's name. E.g. "Username"
+"authenticator.validator.field.conditions.length" = "* at least %i characters"; // Argument is a number"
+"authenticator.validator.field.conditions.requiresNumbers" = "* at least one number";
+"authenticator.validator.field.conditions.requiresSymbols" = "* at least one special character";
+"authenticator.validator.field.conditions.requiresLowercase" = "* at least one lowercase letter";
+"authenticator.validator.field.conditions.requiresUppercase" = "* at least one uppercase letter";
+"authenticator.validator.field.email.format" = "Invalid email format";
+"authenticator.validator.field.newPassword.doesNotMatch" = "Passwords do not match.";
+"authenticator.validator.field.phoneNumber.format" = "Invalid phone number";
+
+/* Authenticator Banner Messages */
+"authenticator.banner.sendCode" = "A confirmation code has been sent to %@"; // Argument is the destination where a code was sent. E.g. "axxx@axxx.com"
+"authenticator.banner.sendCodeGeneric" = "A confirmation code has been sent";
+
+/* Authenticator Error View */
+"authenticator.authenticatorError.title" = "Something went wrong";
+"authenticator.authenticatorError.message" = "There is a configuration problem that is preventing the Authenticator from being displayed.";
+
+/* Authenticator Errors */
+"authenticator.authError.incorrectCredentials" = "Incorrect username or password";
+"authenticator.unknownError" = "Sorry, something went wrong";
+
+"authenticator.cognitoError.codeDelivery" = "Could not send confirmation cde";
+"authenticator.cognitoError.codeExpired" = "Confirmation code has expired";
+"authenticator.cognitoError.codeMismatch" = "Incorrect confirmation code";
+"authenticator.cognitoError.invalidPassword" = "The provided password is not valid";
+"authenticator.cognitoError.network" = "Please check your connectivity";
+"authenticator.cognitoError.usernameExists" = "Username already exists";
+"authenticator.cognitoError.userNotFound" = "User not found";
+
+/* Toolbar displayed on top of the keyboard */
+"authenticator.keyboardToolbar.Done" = "Done";
