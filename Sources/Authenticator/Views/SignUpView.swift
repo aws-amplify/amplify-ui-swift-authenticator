@@ -179,7 +179,7 @@ extension SignUpView {
             }
 
             let validator = Validator(
-                using: {[weak self] value in
+                using: { [weak self] value in
                     guard !value.isEmpty else {
                         return field.isRequired ? FieldValidators.required(value) : nil
                     }
