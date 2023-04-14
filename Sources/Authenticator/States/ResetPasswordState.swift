@@ -33,7 +33,7 @@ public class ResetPasswordState: AuthenticatorBaseState {
             setBusy(false)
 
             switch result.nextStep {
-            case.confirmResetPasswordWithCode(let details, _):
+            case .confirmResetPasswordWithCode(let details, _):
                 authenticatorState.setCurrentStep(.confirmResetPassword(deliveryDetails: details))
             case .done:
                 // This should not happen, go back to Sign In screen
