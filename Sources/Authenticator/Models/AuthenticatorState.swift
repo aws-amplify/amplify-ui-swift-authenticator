@@ -6,6 +6,8 @@
 //
 
 import Amplify
+@_spi(InternalAmplifyPluginExtension) import AWSCognitoAuthPlugin
+@_spi(InternalAmplifyPluginExtension) import AWSPluginsCore
 import Foundation
 
 /// An `ObservableObject` that represents the Authenticator's state
@@ -30,6 +32,7 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             configuration = try AmplifyConfiguration().cognito
             step = .loading
             currentStep = .loading
+            setUserAgentSuffix()
             signOutToken = Amplify.Hub.listen(to: .auth, eventName: HubPayload.EventName.Auth.signedOut) { [weak self] payload in
                 if payload.eventName == HubPayload.EventName.Auth.signedOut {
                     guard let self = self else { return }
@@ -89,6 +92,16 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             log.error("Error while attempting to determine signed in user, going signedOut step")
             setCurrentStep(signedOutStep)
         }
+    }
+
+    private func setUserAgentSuffix() {
+        guard let plugin = try? Amplify.Auth.getPlugin(for: "awsCognitoAuthPlugin") as? AWSCognitoAuthPlugin else {
+            log.error("Unable to retrieve the AWSCognitoAuthPlugin")
+            return
+        }
+
+        let suffix = "lib/\(ComponentInformation.name)/\(ComponentInformation.version)"
+        plugin.add(pluginExtension: UserAgentSuffixAppender(suffix: suffix))
     }
 }
 
