@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// This Button follows Amplify UI theming.
 struct Button: View {
     @Environment(\.authenticatorTheme) var theme
     private var viewModifiers = ViewModifiers()

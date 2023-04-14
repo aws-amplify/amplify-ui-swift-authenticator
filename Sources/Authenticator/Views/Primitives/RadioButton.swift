@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+/// This represents a simple Button with a Radio Button-like look.
+/// It automatically toggles its state on tap
 struct RadioButton: View {
     @Environment(\.authenticatorTheme) var theme
     @Binding private var isSelected: Bool

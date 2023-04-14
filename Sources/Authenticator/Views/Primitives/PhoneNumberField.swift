@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+/// This field allows the user to enter a phone number
+/// It consists of two fields: one for the dialing code and one for the actual phone number
+/// and updates the associated Binding with the concatenation of both.
+/// It also applies Amplify UI's theming
 struct PhoneNumberField: View {
     @Environment(\.authenticatorTheme) var theme
     @ObservedObject private var validator: Validator
@@ -134,6 +138,8 @@ struct PhoneNumberField: View {
     }
 }
 
+/// This allows the user to select a dialing code from a list of all available ones,
+/// showing a localized name of the region associated with each code and its flag
 struct CountryCodeList: View {
     @Environment(\.authenticatorTheme) var theme
     @State private var searchCountry: String = ""

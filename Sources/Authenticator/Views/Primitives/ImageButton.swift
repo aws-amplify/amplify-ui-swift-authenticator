@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// This is a convenient way of having a Button display a single known image
 struct ImageButton: View {
     private let image: Image
     private let action: () -> ()

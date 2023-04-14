@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// This field allows the user to select a Date and parse it to a ISO-8601 format.
+/// It displays a label and a "Select date" button, which when tapped shows a native DatePicker
+/// This is done in order to allow not selecting anything, which the native component doesn't
 struct DatePicker: View {
     @Environment(\.isEnabled) private var isEnabled: Bool
     @Environment(\.authenticatorOptions) private var options
@@ -98,14 +101,6 @@ struct DatePicker: View {
         .background(backgroundColor)
         .animation(options.contentAnimation, value: validator.state)
 
-    }
-
-    private var imageName: String {
-        if actualDate == nil {
-            return "chevron.down.circle"
-        }
-
-        return "xmark.circle.fill"
     }
 
     private var tintColor: Color {

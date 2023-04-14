@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// This field encapsulates a native TextField and a SecureField in a single component,
+/// providing a button to toggle betweem them, as is common.
+/// It also applies Amplify UI's theming
 struct PasswordField: View {
     @Environment(\.authenticatorTheme) var theme
     @ObservedObject private var validator: Validator
@@ -61,11 +64,11 @@ struct PasswordField: View {
                             validator.validate()
                         }
                     }
-    #if os(iOS)
+                #if os(iOS)
                     .autocapitalization(.none)
                     .frame(height: 25)
                     .padding([.top, .bottom, .leading], theme.Fields.style.padding)
-    #endif
+                #endif
                 if focusedField != nil, !text.isEmpty {
                     ImageButton(showPasswordImage) {
                         isShowingPassword.toggle()

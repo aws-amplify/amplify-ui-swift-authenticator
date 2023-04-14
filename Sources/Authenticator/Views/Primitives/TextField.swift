@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+/// This field allows the user to enter any text-based input
+/// It applies Amplify UI theming
 struct TextField: View {
     @Environment(\.authenticatorTheme) var theme
     @ObservedObject private var validator: Validator
