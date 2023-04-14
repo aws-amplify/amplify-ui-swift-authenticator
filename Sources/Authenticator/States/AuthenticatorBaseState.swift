@@ -64,7 +64,7 @@ public class AuthenticatorBaseState: ObservableObject {
         case .confirmSignInWithSMSMFACode(let details, _):
             return .confirmSignInWithMFACode(deliveryDetails: details)
         case .confirmSignInWithCustomChallenge(_):
-            return.confirmSignInWithCustomChallenge
+            return .confirmSignInWithCustomChallenge
         case .confirmSignInWithNewPassword(_):
             return .confirmSignInWithNewPassword
         case .resetPassword(_):
