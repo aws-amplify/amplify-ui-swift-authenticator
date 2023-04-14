@@ -124,9 +124,7 @@ public class AuthenticatorBaseState: ObservableObject {
                 // Unable to Sign In
                 log.verbose("Unable to Sign In after sucessfull sign up")
                 log.error(error: error)
-                credentials.message = AuthenticatorError.error(
-                    message: "authenticator.authError.incorrectCredentials".localized()
-                )
+                credentials.message = self.error(for: error)
                 return .signIn
             }
         }

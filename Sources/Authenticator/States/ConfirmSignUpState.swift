@@ -76,8 +76,4 @@ public class ConfirmSignUpState: AuthenticatorBaseState {
     var username: String {
         return credentials.username
     }
-
-    var password: String? {
-        return credentials.password
-    }
 }
