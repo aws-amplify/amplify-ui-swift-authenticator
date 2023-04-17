@@ -5,7 +5,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/aws-amplify/amplify-swift",
       "state" : {
-        "revision" : "a18dee84cd4523bed138f4224d90e5e9e9b83b06",
+        "revision" : "ff9f8a812a019ad4e3e25614d12aea9ac7204573",
         "version" : "2.8.1"
       }
     },
@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MaxDesiatov/XMLCoder.git",
       "state" : {
-        "revision" : "c438dad94f6a243b411b70a4b4bac54595064808",
-        "version" : "0.15.0"
+        "revision" : "666227de3b4cf4adcce7c70b8b89f98c7df02754",
+        "version" : "0.16.0"
       }
     }
   ],
