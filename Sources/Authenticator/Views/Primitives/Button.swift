@@ -23,24 +23,8 @@ struct Button: View {
     }
 
     var body: some View {
-        SwiftUI.Button(action: action) {
-            Text(label)
-                .font(font)
-                .foregroundColor(foregroundColor)
-                .padding(.all, padding)
-                .frame(maxWidth: viewModifiers.frame.maxWidth)
-                .background(
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(
-                            borderColor,
-                            lineWidth: borderWidth
-                        )
-                        .background(
-                            backgroundColor
-                                .cornerRadius(cornerRadius)
-                        )
-                )
-        }
+        SwiftUI.Button(label, action: action)
+            .buttonStyle(buttonStyle)
     }
 
     private var backgroundColor: Color {
@@ -115,6 +99,17 @@ struct Button: View {
             return theme.Authenticator.style.padding
         }
     }
+
+    private var buttonStyle: some ButtonStyle {
+        return AuthenticatorButtonStyle(
+            font: font,
+            foregroundColor: foregroundColor,
+            backgroundColor: backgroundColor,
+            cornerRadius: cornerRadius,
+            padding: padding,
+            maxWidth: viewModifiers.frame.maxWidth
+        )
+    }
 }
 
 extension Button {
@@ -168,5 +163,25 @@ extension Button {
         var view = self
         view.viewModifiers.style = buttonStyle
         return view
+    }
+}
+
+private struct AuthenticatorButtonStyle: ButtonStyle {
+    let font: Font
+    let foregroundColor: Color
+    let backgroundColor: Color
+    let cornerRadius: CGFloat
+    let padding: CGFloat?
+    let maxWidth: CGFloat?
+
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .font(font)
+            .padding(.all, padding)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: maxWidth)
+            .foregroundColor(configuration.isPressed ? foregroundColor.opacity(0.5) : foregroundColor)
+            .background(configuration.isPressed ? backgroundColor.opacity(0.5) : backgroundColor)
+            .cornerRadius(cornerRadius)
     }
 }

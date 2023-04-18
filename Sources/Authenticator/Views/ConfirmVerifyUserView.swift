@@ -51,8 +51,10 @@ public struct ConfirmVerifyUserView<Header: View,
                 validator: codeValidator
 
             )
-            .keyboardType(.default)
             .textContentType(.oneTimeCode)
+        #if os(iOS)
+            .keyboardType(.default)
+        #endif
 
             Button("authenticator.confirmVerifyUser.button.verify".localized()) {
                 Task {
@@ -71,6 +73,11 @@ public struct ConfirmVerifyUserView<Header: View,
             footerContent
         }
         .messageBanner($state.message)
+        .onSubmit {
+            Task {
+                await confirmVerifyUser()
+            }
+        }
     }
 
     /// Sets a custom error mapping function for the `AuthError`s that are displayed

@@ -64,7 +64,9 @@ struct SignUpInputField: View {
             }
         }
         .textContentType(field.attributeType.textContentType)
+    #if os(iOS)
         .keyboardType(field.attributeType.keyboardType)
+    #endif
     }
 
     @ViewBuilder func customView(for field: CustomSignUpField) -> some View {

@@ -56,8 +56,10 @@ public struct ConfirmSignUpView<Header: View,
                 placeholder: "authenticator.field.code.placeholder".localized(),
                 validator: codeValidator
             )
-            .keyboardType(.default)
             .textContentType(.oneTimeCode)
+        #if os(iOS)
+            .keyboardType(.default)
+        #endif
 
             HStack(alignment: .center) {
                 Text("authenticator.confirmSignUp.lostCode".localized())
@@ -86,6 +88,11 @@ public struct ConfirmSignUpView<Header: View,
             state.message = .info(
                 message: state.localizedMessage(for: state.deliveryDetails)
             )
+        }
+        .onSubmit {
+            Task {
+                await confirmSignUp()
+            }
         }
     }
 

@@ -44,8 +44,10 @@ struct ConfirmSignInWithCodeView<Header: View,
                 placeholder: "authenticator.field.code.placeholder".localized(),
                 validator: codeValidator
             )
-            .keyboardType(.default)
             .textContentType(.oneTimeCode)
+        #if os(iOS)
+            .keyboardType(.default)
+        #endif
 
             Button("authenticator.confirmSignInWithCode.button.submit".localized()) {
                 Task { await confirmSignIn() }
@@ -55,6 +57,11 @@ struct ConfirmSignInWithCodeView<Header: View,
             footerContent
         }
         .messageBanner($state.message)
+        .onSubmit {
+            Task {
+                await confirmSignIn()
+            }
+        }
     }
 
     private func confirmSignIn() async {

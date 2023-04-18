@@ -64,12 +64,14 @@ struct PasswordField: View {
                             validator.validate()
                         }
                     }
+                    .textFieldStyle(.plain)
+                    .frame(height: Platform.isMacOS ? 20 : 25)
+                    .padding([.top, .bottom, .leading], theme.Fields.style.padding)
                 #if os(iOS)
                     .autocapitalization(.none)
-                    .frame(height: 25)
-                    .padding([.top, .bottom, .leading], theme.Fields.style.padding)
                 #endif
-                if focusedField != nil, !text.isEmpty {
+
+                if shouldDisplayShowPasswordButton {
                     ImageButton(showPasswordImage) {
                         isShowingPassword.toggle()
                         focusedField = isShowingPassword ? .plain : .secure
@@ -99,7 +101,8 @@ struct PasswordField: View {
     private var showPasswordButtonColor: Color {
         switch validator.state {
         case .normal:
-            return theme.Colors.Border.interactive
+            return isFocused ?
+                theme.Colors.Border.interactive : theme.Colors.Border.primary
         case .error:
             return theme.Colors.Border.error
         }
@@ -107,6 +110,12 @@ struct PasswordField: View {
 
     private var showPasswordImage: ImageButton.Image {
         return isShowingPassword ? .showPassword : .hidePassword
+    }
+
+    private var shouldDisplayShowPasswordButton: Bool {
+        // Show the show password button when there's text and
+        // the field is focused on non-macOS platforms
+        return !text.isEmpty && (Platform.isMacOS || focusedField != nil)
     }
 
     private enum FieldType: Hashable {

@@ -71,7 +71,9 @@ public struct ConfirmSignInWithNewPasswordView<Header: View,
             )
             .focused(focusedField.projectedValue, equals: .newPassword)
             .textContentType(.password)
+        #if os(iOS)
             .textInputAutocapitalization(.never)
+        #endif
 
             PasswordField(
                 "authenticator.field.confirmPassword.label".localized(),
@@ -81,7 +83,9 @@ public struct ConfirmSignInWithNewPasswordView<Header: View,
             )
             .focused(focusedField.projectedValue, equals: .newPasswordConfirmation)
             .textContentType(.password)
+        #if os(iOS)
             .textInputAutocapitalization(.never)
+        #endif
 
             Button("authenticator.confirmSignInWithNewPassword.button.submit".localized()) {
                 Task {
@@ -94,6 +98,15 @@ public struct ConfirmSignInWithNewPasswordView<Header: View,
         }
         .messageBanner($state.message)
         .keyboardIterableToolbar(fields: self)
+        .onSubmit {
+            if hasNextField {
+                focusNextField()
+            } else {
+                Task {
+                    await confirmSignIn()
+                }
+            }
+        }
     }
 
     /// Sets a custom error mapping function for the `AuthError`s that are displayed

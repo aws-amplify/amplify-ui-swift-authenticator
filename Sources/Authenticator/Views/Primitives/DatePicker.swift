@@ -113,7 +113,7 @@ struct DatePicker: View {
 
     private var backgroundColor: Color {
         isEnabled ? .clear : Color(
-            light: Color(uiColor: .systemGray6),
+            light: theme.Colors.Background.disabled,
             dark: .clear
         )
     }

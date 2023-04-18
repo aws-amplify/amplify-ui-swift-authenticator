@@ -30,6 +30,7 @@ struct ImageButton: View {
                 SwiftUI.Image(systemName: image.rawValue)
             }
         )
+        .buttonStyle(.plain)
         .foregroundColor(color)
         .accessibilityLabel(
             Text(accessibilityLabel)

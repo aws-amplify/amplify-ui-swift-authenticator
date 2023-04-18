@@ -39,8 +39,6 @@ struct AuthenticatorField<Content: View>: View {
             }
 
             content
-
-        #if os(iOS)
             .background(
                 RoundedRectangle(cornerRadius: theme.Fields.style.cornerRadius, style: .continuous)
                     .fill(backgroundColor)
@@ -51,7 +49,6 @@ struct AuthenticatorField<Content: View>: View {
                             lineWidth: borderWidth)
 
             )
-        #endif
 
             if let errorMessage = errorMessage {
                 SwiftUI.Text(errorMessage)
@@ -69,7 +66,7 @@ struct AuthenticatorField<Content: View>: View {
 
     private var backgroundColor: Color {
         isEnabled ? theme.Fields.style.backgroundColor : Color(
-            light: Color(uiColor: .systemGray6),
+            light: theme.Colors.Background.disabled,
             dark: .clear
         )
     }
@@ -98,6 +95,7 @@ struct AuthenticatorField<Content: View>: View {
         let width = theme.Fields.style.borderWidth
         return isFocused ? width + 1 : width
     }
+
     private var title: String {
         return label ?? placeholder
     }

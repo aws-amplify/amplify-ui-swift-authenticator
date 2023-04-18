@@ -54,8 +54,10 @@ public struct SignUpView<Header: View,
                     field: field,
                     validator: validators.validator(for: field.field)
                 )
-                .textInputAutocapitalization(.never)
                 .focused(focusedField.projectedValue, equals: field.field.attributeType)
+            #if os(iOS)
+                .textInputAutocapitalization(.never)
+            #endif
             }
                        
             Button("authenticator.signUp.button.createAccount".localized()) {
@@ -68,7 +70,13 @@ public struct SignUpView<Header: View,
             footerContent
         }
         .onSubmit {
-            focusNextField()
+            if hasNextField {
+                focusNextField()
+            } else {
+                Task {
+                    await signUp()
+                }
+            }
         }
         .animation(options.contentAnimation, value: state.fields)
         .messageBanner($state.message)

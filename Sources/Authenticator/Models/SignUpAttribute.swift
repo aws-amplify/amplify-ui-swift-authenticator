@@ -30,7 +30,7 @@ public enum SignUpAttribute: Equatable, Hashable {
 #if canImport(UIKit)
     case custom(attributeKey: AuthUserAttributeKey, textContentType: UITextContentType? = nil)
 #else
-    case custom(attributeKey: AuthUserAttributeKey)
+    case custom(attributeKey: AuthUserAttributeKey, textContentType: NSTextContentType? = nil)
 #endif
 
     var attributeKey: AuthUserAttributeKey? {
@@ -71,7 +71,7 @@ public enum SignUpAttribute: Equatable, Hashable {
         case .custom(let attributeKey, _):
             return attributeKey
 #else
-        case .custom(let attributeKey):
+        case .custom(let attributeKey, _):
             return attributeKey
 #endif
         }
@@ -122,17 +122,26 @@ public enum SignUpAttribute: Equatable, Hashable {
             return nil
         case .website:
             return .URL
-#if canImport(UIKit)
         case .custom(_, let textContentType):
             return textContentType
-#else
-        case .custom(_):
+        }
+    }
+#elseif os(macOS)
+    var textContentType: NSTextContentType? {
+        switch self {
+        case .username,
+             .preferredUsername:
+            return .username
+        case .password,
+             .passwordConfirmation:
+            return .password
+        case .custom(_, let textContentType):
+            return textContentType
+        default:
             return nil
-#endif
         }
     }
 #endif
-
 }
 
 extension CognitoConfiguration.VerificationMechanism {

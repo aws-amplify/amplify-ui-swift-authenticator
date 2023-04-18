@@ -27,7 +27,7 @@ struct Country: Equatable, Hashable {
 
 extension Locale {
     var countryCode: String {
-        if #available(iOS 16, *) {
+        if #available(iOS 16, macOS 13, *) {
             return region?.identifier ?? ""
         } else {
             return regionCode ?? ""

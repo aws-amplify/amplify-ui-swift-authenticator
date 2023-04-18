@@ -52,8 +52,10 @@ public struct ResetPasswordView<Header: View,
             headerContent
             
             createUsernameInput(for: authenticatorState.configuration.usernameAttribute)
-                .textInputAutocapitalization(.never)
                 .textContentType(.username)
+            #if os(iOS)
+                .textInputAutocapitalization(.never)
+            #endif
                       
             Button("authenticator.resetPassword.button.sendCode".localized()) {
                 Task {
@@ -65,6 +67,11 @@ public struct ResetPasswordView<Header: View,
             footerContent
         }
         .messageBanner($state.message)
+        .onSubmit {
+            Task {
+                await resetPassword()
+            }
+        }
     }
 
     @ViewBuilder private func createUsernameInput(
@@ -78,7 +85,9 @@ public struct ResetPasswordView<Header: View,
                 placeholder: "authenticator.field.username.placeholder".localized(),
                 validator: usernameValidator
             )
+        #if os(iOS)
             .keyboardType(.default)
+        #endif
         case .email:
             TextField(
                 "authenticator.field.email.label".localized(),
@@ -86,7 +95,9 @@ public struct ResetPasswordView<Header: View,
                 placeholder: "authenticator.field.email.placeholder".localized(),
                 validator: usernameValidator
             )
+        #if os(iOS)
             .keyboardType(.emailAddress)
+        #endif
         case .phoneNumber:
             TextField(
                 "authenticator.field.phoneNumber.label".localized(),
@@ -94,7 +105,9 @@ public struct ResetPasswordView<Header: View,
                 placeholder: "authenticator.field.phoneNumber.placeholder".localized(),
                 validator: usernameValidator
             )
+        #if os(iOS)
             .keyboardType(.phonePad)
+        #endif
         }
     }
 

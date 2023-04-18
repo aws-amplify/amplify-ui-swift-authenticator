@@ -86,15 +86,18 @@ struct PhoneNumberField: View {
                             validator.validate()
                         }
                     }
-                    .autocapitalization(.none)
-                    .frame(height: 25)
-                    .padding([.top, .bottom, .leading], theme.Fields.style.padding)
-                    .keyboardType(.numberPad)
                     .accessibilityLabel(Text(
                         "authenticator.field.phoneNumber.label".localized()
                     ))
+                    .textFieldStyle(.plain)
+                    .frame(height: Platform.isMacOS ? 20 : 25)
+                    .padding([.top, .bottom, .leading], theme.Fields.style.padding)
+                #if os(iOS)
+                    .autocapitalization(.none)
+                    .keyboardType(.numberPad)
+                #endif
 
-                if focusedField != nil, !text.isEmpty {
+                if shouldDisplayClearButton {
                     ImageButton(.clear) {
                         phoneNumber = ""
                     }
@@ -107,7 +110,7 @@ struct PhoneNumberField: View {
                 validator.value = $phoneNumber
             }
             .onChange(of: isFocused) { isFocused in
-                if isFocused {
+                if isFocused && !Platform.isMacOS {
                     focusedField = .phoneNumber
                 }
             }
@@ -130,6 +133,12 @@ struct PhoneNumberField: View {
         case .error:
             return theme.Colors.Border.error
         }
+    }
+
+    private var shouldDisplayClearButton: Bool {
+        // Show the clear button when there's text and
+        // the field is focused on non-macOS platforms
+        return !text.isEmpty && (Platform.isMacOS || focusedField != nil)
     }
 
     private enum FieldType: Hashable {
@@ -172,11 +181,14 @@ struct CountryCodeList: View {
             }
         }
         .multilineTextAlignment(.center)
-        .keyboardType(.numberPad)
-        .frame(width: 55)
         .accessibilityLabel(Text(
             "authenticator.field.diallingCode.label".localized()
         ))
+        .textFieldStyle(.plain)
+        .frame(width: 55)
+    #if os(iOS)
+        .keyboardType(.numberPad)
+    #endif
     }
 
     private var callingCodePicker: some View {
@@ -186,48 +198,66 @@ struct CountryCodeList: View {
             },
             label: {
                 SwiftUI.Text(callingCode)
-                    .frame(width: 55)
+                    .textFieldStyle(.plain)
+                    .frame(width: 55, height: 35)
             }
         )
+        .buttonStyle(.borderless)
         .sheet(isPresented: $isShowingList) {
-            if #available(iOS 16.0, *) {
-                countryList
+            if #available(iOS 16.0, macOS 13.0, *) {
+                allCountriesContent
                     .presentationDetents([.medium, .large])
             } else {
-                countryList
+                allCountriesContent
             }
         }
     }
 
-    private var countryList: some View {
+    private var allCountriesContent: some View {
+    #if os(iOS)
         NavigationView {
-            List {
-                ForEach(countries, id: \.self) { country in
-                    SwiftUI.Button(
-                        action: {
-                            callingCode = country.callingCode
-                            isShowingList = false
-                        },
-                        label: {
-                            HStack {
-                                Text("\(country.flag) \(country.name)")
-                                Spacer()
-                                Text("\(country.callingCode)")
-                            }
-                        }
-                    )
-                    .accessibilityLabel(Text(country.name))
-                }
-            }
-            .foregroundColor(theme.Colors.Foreground.primary)
-            .listStyle(.plain)
+            countryList
         }
-        .keyboardType(.default)
         .searchable(
             text: $searchCountry,
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: "authenticator.countryCodes.search".localized()
         )
+        .keyboardType(.default)
+    #elseif os(macOS)
+        VStack {
+            SwiftUI.TextField("authenticator.countryCodes.search".localized(), text: $searchCountry)
+                .padding([.leading, .top, .trailing])
+                .textFieldStyle(.plain)
+            Divider()
+            countryList
+        }
+        .frame(width: 400, height: 300)
+    #endif
+    }
+
+    private var countryList: some View {
+        List {
+            ForEach(countries, id: \.self) { country in
+                SwiftUI.Button(
+                    action: {
+                        callingCode = country.callingCode
+                        isShowingList = false
+                    },
+                    label: {
+                        HStack {
+                            Text("\(country.flag) \(country.name)")
+                            Spacer()
+                            Text("\(country.callingCode)")
+                        }
+                    }
+                )
+                .buttonStyle(.borderless)
+                .accessibilityLabel(Text(country.name))
+            }
+        }
+        .foregroundColor(theme.Colors.Foreground.primary)
+        .listStyle(.plain)
     }
 
     private var countries: [Country] {
