@@ -7,7 +7,7 @@
 
 /* Authenticator Fields */
 "authenticator.field.label.optional" = "%@ (Optional)"; // Argument is the field's name. E.g. "Username"
-"authenticator.countryCodes.search" = "Search country";
+"authenticator.regionCodes.search" = "Search region";
 
 "authenticator.field.date.label" = "Select a date";
 "authenticator.imageButton.close" = "Close";
@@ -137,7 +137,7 @@
 "authenticator.authError.incorrectCredentials" = "Incorrect username or password";
 "authenticator.unknownError" = "Sorry, something went wrong";
 
-"authenticator.cognitoError.codeDelivery" = "Could not send confirmation cde";
+"authenticator.cognitoError.codeDelivery" = "Could not send confirmation code";
 "authenticator.cognitoError.codeExpired" = "Confirmation code has expired";
 "authenticator.cognitoError.codeMismatch" = "Incorrect confirmation code";
 "authenticator.cognitoError.invalidPassword" = "The provided password is not valid";

@@ -57,7 +57,7 @@ public struct FieldValidators {
 
     /// Requires that the provided value is not empty
     public static var required: FieldValidator = { content in
-        return content.isEmpty ? "authenticator.validator.field.required".localized() : nil
+        return content.isEmpty ? String.validator_field_required.localized() : nil
     }
 
     /// Requires that the provided value follows a phone format
@@ -66,7 +66,7 @@ public struct FieldValidators {
               content.count > 1,
               content.count <= 16
         else {
-            return "authenticator.validator.field.phoneNumber.format".localized()
+            return String.validator_field_phoneNumber_format.localized()
         }
 
         return nil
@@ -80,7 +80,7 @@ public struct FieldValidators {
             options: .regularExpression
         )
 
-        return validation == nil ? "authenticator.validator.field.email.format".localized() : nil
+        return validation == nil ? String.validator_field_email_format.localized() : nil
     }
 
     /// Requires that the provided value complies with the provided password policies
@@ -96,33 +96,33 @@ public struct FieldValidators {
                 return error
             }
 
-            let title = "authenticator.validator.field.conditions.title".localized(
-                using: "authenticator.field.password.label".localized()
+            let title = String.validator_field_conditions_title.localized(
+                using: String.field_password_label.localized()
             )
 
             var failedConditions: [String] = []
             if content.count < minLength {
-                failedConditions.append("authenticator.validator.field.conditions.length".localized(using:minLength))
+                failedConditions.append(.validator_field_conditions_length.localized(using:minLength))
             }
 
             for policy in characterPolicy {
                 switch policy {
                 case .requiresNumbers:
                     if content.rangeOfCharacter(from: .decimalDigits) == nil {
-                        failedConditions.append("authenticator.validator.field.conditions.requiresNumbers".localized())
+                        failedConditions.append(.validator_field_conditions_requiresNumbers.localized())
                     }
                 case .requiresSymbols:
                     let specialSymbols = CharacterSet(charactersIn: "^$*.[]{}()?\"!@#%&/\\,><':;|_~`=+-")
                     if content.rangeOfCharacter(from: specialSymbols) == nil {
-                        failedConditions.append("authenticator.validator.field.conditions.requiresSymbols".localized())
+                        failedConditions.append(.validator_field_conditions_requiresSymbols.localized())
                     }
                 case .requiresLowercase:
                     if content.rangeOfCharacter(from: .lowercaseLetters) == nil {
-                        failedConditions.append("authenticator.validator.field.conditions.requiresLowercase".localized())
+                        failedConditions.append(.validator_field_conditions_requiresLowercase.localized())
                     }
                 case .requiresUppercase:
                     if content.rangeOfCharacter(from: .uppercaseLetters) == nil {
-                        failedConditions.append("authenticator.validator.field.conditions.requiresUppercase".localized())
+                        failedConditions.append(.validator_field_conditions_requiresUppercase.localized())
                     }
                 default:
                     break

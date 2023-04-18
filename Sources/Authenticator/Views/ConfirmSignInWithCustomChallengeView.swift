@@ -52,7 +52,7 @@ public struct ConfirmSignInWithCustomChallengeHeader: View {
     public init() {}
     public var body: some View {
         DefaultHeader(
-            title: "authenticator.confirmSignInWithCustomChallenge.title".localized()
+            title: .confirmSignInWithCustomChallenge_title.localized()
         )
     }
 }

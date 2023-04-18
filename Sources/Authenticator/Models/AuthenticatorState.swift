@@ -69,8 +69,9 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
     }
 
     func reloadState(initialStep: AuthenticatorInitialStep) async {
-        if case .error(_) = step {
+        if case .error(let error) = step {
             log.error("Cannot reload state, the Authenticator is in error state.")
+            log.error(error: error)
             return
         }
         signedOutStep = .init(from: initialStep)

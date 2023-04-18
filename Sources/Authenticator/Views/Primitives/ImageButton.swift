@@ -45,15 +45,15 @@ struct ImageButton: View {
     private var accessibilityLabel: String {
         switch image {
         case .close:
-            return "authenticator.imageButton.close".localized()
+            return .imageButton_close.localized()
         case .clear:
-            return "authenticator.imageButton.clear".localized()
+            return .imageButton_clear.localized()
         case .open:
-            return "authenticator.imageButton.open".localized()
+            return .imageButton_open.localized()
         case .showPassword:
-            return "authenticator.imageButton.showPassword".localized()
+            return .imageButton_showPassword.localized()
         case .hidePassword:
-            return "authenticator.imageButton.hidePassword".localized()
+            return .imageButton_hidePassword.localized()
         }
     }
 }

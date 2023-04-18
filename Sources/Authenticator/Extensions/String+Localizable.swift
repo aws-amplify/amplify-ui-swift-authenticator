@@ -12,12 +12,12 @@ extension String {
     /// If no localization is found in the current app's bundle,
     /// it defaults to the one provided by Authenticator
     func localized(comment: String = "") -> String {
-        let defaultValue = NSLocalizedString(self, bundle: .module, comment: "")
+        let defaultValue = NSLocalizedString(self, bundle: .module, comment: comment)
         return NSLocalizedString(
             self,
             bundle: .main,
             value: defaultValue,
-            comment: ""
+            comment: comment
         )
     }
 

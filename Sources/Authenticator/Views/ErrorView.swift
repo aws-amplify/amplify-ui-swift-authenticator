@@ -16,11 +16,11 @@ public struct ErrorView: View {
     public var body: some View {
         AuthenticatorView(isBusy: false) {
             DefaultHeader(
-                title: "authenticator.authenticatorError.title".localized()
+                title: .authenticatorError_title.localized()
             )
             .foregroundColor(theme.Colors.Border.error)
             
-            SwiftUI.Text("authenticator.authenticatorError.message".localized())
+            SwiftUI.Text(String.authenticatorError_message.localized())
                 .foregroundColor(theme.Colors.Foreground.error)
             
             Spacer()

@@ -58,7 +58,7 @@ public struct ConfirmSignInWithMFACodeHeader: View {
     public init() {}
     public var body: some View {
         DefaultHeader(
-            title: "authenticator.confirmSignInWithMFACode.title".localized()
+            title: .confirmSignInWithMFACode_title.localized()
         )
     }
 }

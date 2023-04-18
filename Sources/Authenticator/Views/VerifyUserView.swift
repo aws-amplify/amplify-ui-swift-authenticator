@@ -49,7 +49,7 @@ public struct VerifyUserView<Header: View,
                 .animation(.none, value: state.selectedField)
             }
 
-            Button("authenticator.verifyUser.button.verify".localized()) {
+            Button(.verifyUser_button_verify.localized()) {
                 Task {
                     await verifyUser()
                 }
@@ -58,7 +58,7 @@ public struct VerifyUserView<Header: View,
             .disabled(state.selectedField == nil)
             .opacity(state.selectedField == nil ? 0.5 : 1)
 
-            Button("authenticator.verifyUser.button.skip".localized()) {
+            Button(.verifyUser_button_skip.localized()) {
                 Task {
                     await skip()
                 }
@@ -99,7 +99,7 @@ public struct VerifyUserHeader: View {
     public init() {}
     public var body: some View {
         DefaultHeader(
-            title: "authenticator.verifyUser.title".localized()
+            title: .verifyUser_title.localized()
         )
         .font(theme.Fonts.title3)
     }

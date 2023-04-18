@@ -11,9 +11,9 @@ extension AuthUserAttributeKey {
     var localizedTitle: String {
         switch self {
         case .email:
-            return "authenticator.field.email.label".localized()
+            return .field_email_label.localized()
         case .phoneNumber:
-            return "authenticator.field.phoneNumber.label".localized()
+            return .field_phoneNumber_label.localized()
         default:
             return ""
         }

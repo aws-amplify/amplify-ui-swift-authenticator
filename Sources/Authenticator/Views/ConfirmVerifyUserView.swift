@@ -45,23 +45,23 @@ public struct ConfirmVerifyUserView<Header: View,
             }
 
             TextField(
-                "authenticator.field.code.label".localized(),
+                .field_code_label.localized(),
                 text: $state.confirmationCode,
-                placeholder: "authenticator.field.code.placeholder".localized(),
+                placeholder: .field_code_placeholder.localized(),
                 validator: codeValidator
 
             )
             .keyboardType(.default)
             .textContentType(.oneTimeCode)
 
-            Button("authenticator.confirmVerifyUser.button.verify".localized()) {
+            Button(.confirmVerifyUser_button_verify.localized()) {
                 Task {
                     await confirmVerifyUser()
                 }
             }
             .buttonStyle(.primary)
 
-            Button("authenticator.confirmVerifyUser.button.skip".localized()) {
+            Button(.confirmVerifyUser_button_skip.localized()) {
                 Task {
                     await skip()
                 }
@@ -108,9 +108,8 @@ public struct ConfirmVerifyUserHeader: View {
 
     public var body: some View {
         DefaultHeader(
-            title:
-                "authenticator.confirmVerifyUser.title".localized(
-                    using: attribute.localizedTitle
+            title: .confirmVerifyUser_title.localized(
+                using: attribute.localizedTitle
             )
         )
     }

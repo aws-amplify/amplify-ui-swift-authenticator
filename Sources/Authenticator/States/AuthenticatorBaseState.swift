@@ -156,10 +156,10 @@ public class AuthenticatorBaseState: ObservableObject {
 
     func localizedMessage(for details: AuthCodeDeliveryDetails?) -> String {
         guard let destination = details?.destination.value, !destination.isEmpty else {
-            return "authenticator.banner.sendCodeGeneric".localized()
+            return .banner_sencCodeGeneric.localized()
         }
 
-        return "authenticator.banner.sendCode".localized(using: destination)
+        return .banner_sendCode.localized(using: destination)
     }
 
     func error(for error: Error) -> AuthenticatorError {
@@ -184,14 +184,14 @@ public class AuthenticatorBaseState: ObservableObject {
 
     private func localizedMessage(for error: AuthError) -> String? {
         if case .notAuthorized(_, _, _) = error {
-            return "authenticator.authError.incorrectCredentials".localized()
+            return .authError_incorrectCredentials.localized()
         }
 
         guard let cognitoError = error.underlyingError as? AWSCognitoAuthError else {
             return nil
         }
 
-        let key = "authenticator.cognitoError.\(cognitoError)"
+        let key = String.cognitoError(cognitoError)
         let localized = key.localized()
 
         if key != localized {

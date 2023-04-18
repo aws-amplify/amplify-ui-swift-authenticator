@@ -91,7 +91,7 @@ struct PhoneNumberField: View {
                     .padding([.top, .bottom, .leading], theme.Fields.style.padding)
                     .keyboardType(.numberPad)
                     .accessibilityLabel(Text(
-                        "authenticator.field.phoneNumber.label".localized()
+                        String.field_phoneNumber_label.localized()
                     ))
 
                 if focusedField != nil, !text.isEmpty {
@@ -151,7 +151,7 @@ struct CountryCodeList: View {
 
     var body: some View {
         SwiftUI.TextField(
-            "authenticator.field.diallingCode.placeholder".localized(),
+            String.field_diallingCode_placeholder.localized(),
             text: $callingCode
         )
         .focused($isFocused)
@@ -175,7 +175,7 @@ struct CountryCodeList: View {
         .keyboardType(.numberPad)
         .frame(width: 55)
         .accessibilityLabel(Text(
-            "authenticator.field.diallingCode.label".localized()
+            String.field_diallingCode_label.localized()
         ))
     }
 
@@ -226,7 +226,7 @@ struct CountryCodeList: View {
         .searchable(
             text: $searchCountry,
             placement: .navigationBarDrawer(displayMode: .always),
-            prompt: "authenticator.countryCodes.search".localized()
+            prompt: String.field_regionCodes_search.localized()
         )
     }
 

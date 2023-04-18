@@ -55,7 +55,7 @@ public struct ResetPasswordView<Header: View,
                 .textInputAutocapitalization(.never)
                 .textContentType(.username)
                       
-            Button("authenticator.resetPassword.button.sendCode".localized()) {
+            Button(.resetPassword_button_sendCode.localized()) {
                 Task {
                     await resetPassword()
                 }
@@ -73,25 +73,25 @@ public struct ResetPasswordView<Header: View,
         switch usernameAttribute {
         case .username:
             TextField(
-                "authenticator.field.username.label".localized(),
+                .field_username_label.localized(),
                 text: $state.username,
-                placeholder: "authenticator.field.username.placeholder".localized(),
+                placeholder: .field_username_placeholder.localized(),
                 validator: usernameValidator
             )
             .keyboardType(.default)
         case .email:
             TextField(
-                "authenticator.field.email.label".localized(),
+                .field_email_label.localized(),
                 text: $state.username,
-                placeholder: "authenticator.field.email.placeholder".localized(),
+                placeholder: .field_email_placeholder.localized(),
                 validator: usernameValidator
             )
             .keyboardType(.emailAddress)
         case .phoneNumber:
             TextField(
-                "authenticator.field.phoneNumber.label".localized(),
+                .field_phoneNumber_label.localized(),
                 text: $state.username,
-                placeholder: "authenticator.field.phoneNumber.placeholder".localized(),
+                placeholder: .field_phoneNumber_placeholder.localized(),
                 validator: usernameValidator
             )
             .keyboardType(.phonePad)
@@ -122,7 +122,7 @@ public struct ResetPasswordHeader: View {
     public init() {}
     public var body: some View {
         DefaultHeader(
-            title: "authenticator.resetPassword.title".localized()
+            title: .resetPassword_title.localized()
         )
     }
 }
@@ -133,7 +133,7 @@ public struct ResetPasswordFooter: View {
 
     public init() {}
     public var body: some View {
-        Button("authenticator.resetPassword.button.backToSignIn".localized()) {
+        Button(.resetPassword_button_backToSignIn.localized()) {
             authenticatorState.move(to: .signIn)
         }
         .buttonStyle(.link)

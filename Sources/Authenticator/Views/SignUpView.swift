@@ -23,7 +23,8 @@ public struct SignUpView<Header: View,
 
     /// Creates a `SignUpView`
     /// - Parameter state: The ``SignUpState`` that is observed by this view
-    /// - Parameter signUpFields: An array of Sign Up fields that will be displayed when signing up. The order of the array is mantained when displaying the fields. If empty or `nil`, the fields will be determined from Amplify's configuration. Defaults to `nil`
+    /// - Parameter signUpFields: An array of Sign Up fields that will be displayed when signing up.
+    /// The order of the array is mantained when displaying the fields. If empty or `nil`, the fields will be determined from Amplify's configuration. Defaults to `nil`
     /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``SignUpHeader``
     /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  ``SignUpFooter``
     public init(
@@ -58,7 +59,7 @@ public struct SignUpView<Header: View,
                 .focused(focusedField.projectedValue, equals: field.field.attributeType)
             }
                        
-            Button("authenticator.signUp.button.createAccount".localized()) {
+            Button(.signUp_button_createAccount.localized()) {
                 Task {
                     await signUp()
                 }
@@ -199,7 +200,7 @@ extension SignUpView {
                             characterPolicy: configuration.characterPolicy.asPasswordCharactersPolicy()
                         )(value)
                     } else if case .passwordConfirmation = field.attributeType, value != self.state.password {
-                        return "authenticator.validator.field.newPassword.doesNotMatch".localized()
+                        return String.validator_field_newPassword_doesNotMatch.localized()
                     }
 
                     return nil
@@ -224,7 +225,7 @@ public struct SignUpHeader: View {
     public init() {}
     public var body: some View {
         DefaultHeader(
-            title: "authenticator.signUp.title".localized()
+            title: .signUp_title.localized()
         )
     }
 }
@@ -235,7 +236,7 @@ public struct SignUpFooter: View {
 
     public init() {}
     public var body: some View {
-        Button("authenticator.signUp.button.backToSignIn".localized()) {
+        Button(.signUp_button_backToSignIn.localized()) {
             authenticatorState.move(to: .signIn)
         }
         .buttonStyle(.link)

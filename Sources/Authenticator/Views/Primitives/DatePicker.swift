@@ -46,7 +46,7 @@ struct DatePicker: View {
 
                 if actualDate == nil {
                     HStack(spacing: 0) {
-                        Button("authenticator.field.date.label".localized()) {
+                        Button(.field_date_label.localized()) {
                             updateDate(selectedDate)
                         }
                         .buttonStyle(.link)

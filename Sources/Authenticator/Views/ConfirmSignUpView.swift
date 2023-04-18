@@ -44,26 +44,26 @@ public struct ConfirmSignUpView<Header: View,
             headerContent
             
             TextField(
-                "authenticator.field.username.label".localized(),
+                .field_username_label.localized(),
                 text: .constant(state.username),
                 placeholder: ""
             )
             .disabled(true)
 
             TextField(
-                "authenticator.field.code.label".localized(),
+                .field_code_label.localized(),
                 text: $state.confirmationCode,
-                placeholder: "authenticator.field.code.placeholder".localized(),
+                placeholder: .field_code_placeholder.localized(),
                 validator: codeValidator
             )
             .keyboardType(.default)
             .textContentType(.oneTimeCode)
 
             HStack(alignment: .center) {
-                Text("authenticator.confirmSignUp.lostCode".localized())
+                Text(String.confirmSignUp_lostCode.localized())
                     .font(theme.Fonts.body)
                 Spacer()
-                Button("authenticator.confirmSignUp.button.sendCode".localized()) {
+                Button(.confirmSignUp_button_sendCode.localized()) {
                     Task {
                         await sendCode()
                     }
@@ -72,7 +72,7 @@ public struct ConfirmSignUpView<Header: View,
                 .frame(maxWidth: nil)
             }
 
-            Button("authenticator.confirmSignUp.button.submit".localized()) {
+            Button(.confirmSignUp_button_submit.localized()) {
                 Task {
                     await confirmSignUp()
                 }
@@ -117,7 +117,7 @@ public struct ConfirmSignUpHeader: View {
     public init() {}
     public var body: some View {
         DefaultHeader(
-            title: "authenticator.confirmSignUp.title".localized()
+            title: .confirmSignUp_title.localized()
         )
     }
 }
@@ -128,7 +128,7 @@ public struct ConfirmSignUpFooter: View {
 
     public init() {}
     public var body: some View {
-        Button("authenticator.confirmSignUp.button.backToSignIn".localized()) {
+        Button(.confirmSignUp_button_backToSignIn.localized()) {
             authenticatorState.move(to: .signIn)
         }
         .buttonStyle(.link)

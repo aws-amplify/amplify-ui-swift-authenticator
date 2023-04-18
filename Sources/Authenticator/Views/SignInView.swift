@@ -75,16 +75,16 @@ public struct SignInView<Header: View,
                 .textContentType(.username)
 
             PasswordField(
-                "authenticator.field.password.label".localized(),
+                .field_password_label.localized(),
                 text: $state.password,
-                placeholder: "authenticator.field.password.placeholder".localized(),
+                placeholder: .field_password_placeholder.localized(),
                 validator: passwordValidator
             )
             .focused(focusedField.projectedValue, equals: .password)
             .textContentType(.password)
             .textInputAutocapitalization(.never)
 
-            Button("authenticator.signIn.button.signIn".localized()) {
+            Button(.signIn_button_signIn.localized()) {
                 Task {
                     await signIn()
                 }
@@ -148,25 +148,25 @@ public struct SignInView<Header: View,
         switch usernameAttribute {
         case .username:
             TextField(
-                "authenticator.field.username.label".localized(),
+                .field_username_label.localized(),
                 text: $state.username,
-                placeholder: "authenticator.field.username.placeholder".localized(),
+                placeholder: .field_username_placeholder.localized(),
                 validator: usernameValidator
             )
             .keyboardType(.default)
         case .email:
             TextField(
-                "authenticator.field.email.label".localized(),
+                .field_email_label.localized(),
                 text: $state.username,
-                placeholder: "authenticator.field.email.placeholder".localized(),
+                placeholder: .field_email_placeholder.localized(),
                 validator: usernameValidator
             )
             .keyboardType(.emailAddress)
         case .phoneNumber:
             PhoneNumberField(
-                "authenticator.field.phoneNumber.label".localized(),
+                .field_phoneNumber_label.localized(),
                 text: $state.username,
-                placeholder: "authenticator.field.phoneNumber.placeholder".localized(),
+                placeholder: .field_phoneNumber_placeholder.localized(),
                 validator: usernameValidator
             )
             .keyboardType(.numberPad)
@@ -187,7 +187,7 @@ public struct SignInHeader: View {
     public init() {}
     public var body: some View {
         DefaultHeader(
-            title: "authenticator.signIn.title".localized()
+            title: .signIn_title.localized()
         )
     }
 }
@@ -222,7 +222,7 @@ public struct SignInFooter: View {
 
     public var body: some View {
         HStack {
-            Button("authenticator.signIn.button.forgotPassword".localized()) {
+            Button(.signIn_button_forgotPassword.localized()) {
                 authenticatorState.move(to: .resetPassword)
             }
             .buttonStyle(.link)
@@ -230,7 +230,7 @@ public struct SignInFooter: View {
             Spacer()
 
             if !hidesSignUpButton {
-                Button("authenticator.signIn.button.createAccount".localized()) {
+                Button(.signIn_button_createAccount.localized()) {
                     authenticatorState.move(to: .signUp)
                 }
                 .buttonStyle(.link)

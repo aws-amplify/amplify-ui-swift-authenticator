@@ -39,15 +39,15 @@ struct ConfirmSignInWithCodeView<Header: View,
             headerContent
 
             TextField(
-                "authenticator.field.code.label".localized(),
+                .field_code_label.localized(),
                 text: $state.confirmationCode,
-                placeholder: "authenticator.field.code.placeholder".localized(),
+                placeholder: .field_code_placeholder.localized(),
                 validator: codeValidator
             )
             .keyboardType(.default)
             .textContentType(.oneTimeCode)
 
-            Button("authenticator.confirmSignInWithCode.button.submit".localized()) {
+            Button(.confirmSignInWithCode_button_submit.localized()) {
                 Task { await confirmSignIn() }
             }
             .buttonStyle(.primary)

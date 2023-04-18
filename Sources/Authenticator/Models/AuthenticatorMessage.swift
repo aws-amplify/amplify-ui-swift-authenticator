@@ -67,7 +67,7 @@ public struct AuthenticatorError: LocalizedError, AuthenticatorMessage {
         log.error("Unknown error happened")
 
         return AuthenticatorError(
-            content: "authenticator.unknownError".localized()
+            content: .unknownError.localized()
         )
     }
 }

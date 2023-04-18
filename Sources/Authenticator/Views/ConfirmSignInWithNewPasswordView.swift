@@ -51,7 +51,7 @@ public struct ConfirmSignInWithNewPasswordView<Header: View,
                     return FieldValidators.required(value)
                 }
                 if value != state.newPassword {
-                    return "authenticator.validator.field.newPassword.doesNotMatch".localized()
+                    return String.validator_field_newPassword_doesNotMatch.localized()
                 }
 
                 return nil
@@ -64,9 +64,9 @@ public struct ConfirmSignInWithNewPasswordView<Header: View,
             headerContent
 
             PasswordField(
-                "authenticator.field.newPassword.label".localized(),
+                .field_newPassword_label.localized(),
                 text: $state.newPassword,
-                placeholder: "authenticator.field.newPassword.placeholder".localized(),
+                placeholder: .field_newPassword_placeholder.localized(),
                 validator: passwordValidator
             )
             .focused(focusedField.projectedValue, equals: .newPassword)
@@ -74,16 +74,16 @@ public struct ConfirmSignInWithNewPasswordView<Header: View,
             .textInputAutocapitalization(.never)
 
             PasswordField(
-                "authenticator.field.confirmPassword.label".localized(),
+                .field_confirmPassword_label.localized(),
                 text: $state.confirmPassword,
-                placeholder: "authenticator.field.confirmPassword.placeholder".localized(),
+                placeholder: .field_confirmPassword_placeholder.localized(),
                 validator: confirmPasswordValidator
             )
             .focused(focusedField.projectedValue, equals: .newPasswordConfirmation)
             .textContentType(.password)
             .textInputAutocapitalization(.never)
 
-            Button("authenticator.confirmSignInWithNewPassword.button.submit".localized()) {
+            Button(.confirmSignInWithNewPassword_button_submit.localized()) {
                 Task {
                     await confirmSignIn()
                 }
@@ -121,7 +121,7 @@ public struct ConfirmSignInWithNewPasswordHeader: View {
     public init() {}
     public var body: some View {
         DefaultHeader(
-            title: "authenticator.confirmSignInWithNewPassword.title".localized()
+            title: .confirmSignInWithNewPassword_title.localized()
         )
     }
 }

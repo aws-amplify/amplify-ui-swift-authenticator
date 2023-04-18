@@ -35,7 +35,7 @@ public struct BaseSignUpField: SignUpField {
         if isRequired {
             self.label = label
         } else {
-            self.label = "authenticator.field.label.optional".localized(using: label)
+            self.label = .field_label_optional.localized(using: label)
         }
         self.placeholder = placeholder
         self.isRequired = isRequired
@@ -76,8 +76,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// The user's username field
     static func username() -> SignUpField {
         return signUpField(
-            label: "authenticator.field.username.label".localized(),
-            placeholder: "authenticator.field.username.placeholder".localized(),
+            label: .field_username_label.localized(),
+            placeholder: .field_username_placeholder.localized(),
             isRequired: true,
             attributeType: .username,
             validator: FieldValidators.required
@@ -88,8 +88,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to true.
     static func password(isRequired: Bool = true) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.password.label".localized(),
-            placeholder: "authenticator.field.password.placeholder".localized(),
+            label: .field_password_label.localized(),
+            placeholder: .field_password_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .password,
             inputType: .password
@@ -100,8 +100,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to true.
     static func confirmPassword(isRequired: Bool = true) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.confirmPassword.label".localized(),
-            placeholder: "authenticator.field.confirmPassword.placeholder".localized(),
+            label: .field_confirmPassword_label.localized(),
+            placeholder: .field_confirmPassword_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .passwordConfirmation,
             inputType: .password
@@ -114,8 +114,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func email(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.email.label".localized(),
-            placeholder: "authenticator.field.email.placeholder".localized(),
+            label: .field_email_label.localized(),
+            placeholder: .field_email_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .email,
             validator: FieldValidators.email
@@ -128,8 +128,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func address(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.address.label".localized(),
-            placeholder: "authenticator.field.address.placeholder".localized(),
+            label: .field_address_label.localized(),
+            placeholder: .field_address_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .address
         )
@@ -141,8 +141,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func phoneNumber(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.phoneNumber.label".localized(),
-            placeholder: "authenticator.field.phoneNumber.placeholder".localized(),
+            label: .field_phoneNumber_label.localized(),
+            placeholder: .field_phoneNumber_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .phoneNumber,
             inputType: .phoneNumber,
@@ -156,8 +156,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func birthDate(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.birthDate.label".localized(),
-            placeholder: "authenticator.field.birthDate.placeholder".localized(),
+            label: .field_birthDate_label.localized(),
+            placeholder: .field_birthDate_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .birthDate,
             inputType: .date
@@ -170,8 +170,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func gender(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.gender.label".localized(),
-            placeholder: "authenticator.field.gender.placeholder".localized(),
+            label: .field_gender_label.localized(),
+            placeholder: .field_gender_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .gender
         )
@@ -183,8 +183,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func givenName(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.givenName.label".localized(),
-            placeholder: "authenticator.field.givenName.placeholder".localized(),
+            label: .field_givenName_label.localized(),
+            placeholder: .field_givenName_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .givenName
         )
@@ -196,8 +196,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func middleName(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.middleName.label".localized(),
-            placeholder: "authenticator.field.middleName.placeholder".localized(),
+            label: .field_middleName_label.localized(),
+            placeholder: .field_middleName_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .middleName
         )
@@ -209,8 +209,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func familyName(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.familyName.label".localized(),
-            placeholder: "authenticator.field.familyName.placeholder".localized(),
+            label: .field_familyName_label.localized(),
+            placeholder: .field_familyName_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .familyName
         )
@@ -222,8 +222,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func name(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.name.label".localized(),
-            placeholder: "authenticator.field.name.placeholder".localized(),
+            label: .field_name_label.localized(),
+            placeholder: .field_name_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .name
         )
@@ -235,8 +235,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func nickname(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.nickname.label".localized(),
-            placeholder: "authenticator.field.nickname.placeholder".localized(),
+            label: .field_nickname_label.localized(),
+            placeholder: .field_nickname_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .nickname
         )
@@ -248,8 +248,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func preferredUsername(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.preferredUsername.label".localized(),
-            placeholder: "authenticator.field.preferredUsername.placeholder".localized(),
+            label: .field_preferredUsername_label.localized(),
+            placeholder: .field_preferredUsername_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .preferredUsername
         )
@@ -261,8 +261,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func profile(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.profile.label".localized(),
-            placeholder: "authenticator.field.profile.placeholder".localized(),
+            label: .field_profile_label.localized(),
+            placeholder: .field_profile_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .profile
         )
@@ -274,8 +274,8 @@ public extension SignUpField where Self == BaseSignUpField {
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to false.
     static func website(isRequired: Bool = false) -> SignUpField {
         return signUpField(
-            label: "authenticator.field.website.label".localized(),
-            placeholder: "authenticator.field.website.placeholder".localized(),
+            label: .field_website_label.localized(),
+            placeholder: .field_website_placeholder.localized(),
             isRequired: isRequired,
             attributeType: .website
         )
@@ -332,13 +332,13 @@ public extension SignUpField where Self == BaseSignUpField {
                 defaultFormatter.dateStyle = .short
                 if let date = dateFormatter.date(from: value) {
                     if let minDate = minDate, date < minDate {
-                        return "authenticator.validator.field.date.minDate".localized(
+                        return String.validator_field_date_minDate.localized(
                             using: label, defaultFormatter.string(from: minDate)
                         )
                     }
 
                     if let maxDate = maxDate, date > maxDate {
-                        return "authenticator.validator.field.date.maxDate".localized(
+                        return String.validator_field_date_maxDate.localized(
                             using: label, defaultFormatter.string(from: maxDate)
                         )
                     }
@@ -395,7 +395,7 @@ extension SignUpField where Self == BaseSignUpField {
             inputType: inputType,
             validator: { value in
                 if value.count > maxLength {
-                    return "authenticator.validator.field.maxLength".localized(
+                    return String.validator_field_maxLength.localized(
                         using: label, maxLength
                     )
                 }

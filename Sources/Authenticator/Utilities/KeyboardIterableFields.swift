@@ -74,7 +74,7 @@ private struct KeyboardIterableToolbar<V>: ViewModifier where V: KeyboardIterabl
                     Spacer()
                 }
                 SwiftUI.ToolbarItem(placement: .keyboard) {
-                    SwiftUI.Button("authenticator.keyboardToolbar.Done".localized()) {
+                    SwiftUI.Button(String.keyboardToolbar_done.localized()) {
                         fields.focusedField.wrappedValue = nil
                     }
                 }

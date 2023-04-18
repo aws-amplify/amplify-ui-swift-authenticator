@@ -9,7 +9,8 @@ import Amplify
 import AWSCognitoAuthPlugin
 import SwiftUI
 
-/// The state observed by the Confirm Sign In with Custom Challenge and Confirm Sign In with MFA Code content views, representing the Authenticator is in either the `.confirmSignInWithCustomChallenge` or the `.confirmSignInWithMFACode` step accordingly.
+/// The state observed by the Confirm Sign In with Custom Challenge and Confirm Sign In with MFA Code content views,
+/// representing the Authenticator is in either the `.confirmSignInWithCustomChallenge` or the `.confirmSignInWithMFACode` step accordingly.
 public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
     /// The confirmation code provided by the user
     @Published public var confirmationCode: String = ""
