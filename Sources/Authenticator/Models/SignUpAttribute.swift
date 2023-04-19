@@ -6,8 +6,14 @@
 //
 
 import Amplify
+#if canImport(AppKit)
+import AppKit
+#endif
 import Foundation
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 /// Represents to which Sign Up attribute a field is associated with.
 public enum SignUpAttribute: Equatable, Hashable {
@@ -27,9 +33,9 @@ public enum SignUpAttribute: Equatable, Hashable {
     case preferredUsername
     case profile
     case website
-#if canImport(UIKit)
+#if os(iOS)
     case custom(attributeKey: AuthUserAttributeKey, textContentType: UITextContentType? = nil)
-#else
+#elseif os(macOS)
     case custom(attributeKey: AuthUserAttributeKey, textContentType: NSTextContentType? = nil)
 #endif
 
@@ -67,17 +73,12 @@ public enum SignUpAttribute: Equatable, Hashable {
             return .profile
         case .website:
             return .website
-#if canImport(UIKit)
         case .custom(let attributeKey, _):
             return attributeKey
-#else
-        case .custom(let attributeKey, _):
-            return attributeKey
-#endif
         }
     }
 
-#if canImport(UIKit)
+#if os(iOS)
     var keyboardType: UIKeyboardType {
         switch self {
         case .email:
