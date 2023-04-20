@@ -99,7 +99,7 @@ public struct ResetPasswordView<Header: View,
             .keyboardType(.emailAddress)
         #endif
         case .phoneNumber:
-            TextField(
+            PhoneNumberField(
                 "authenticator.field.phoneNumber.label".localized(),
                 text: $state.username,
                 placeholder: "authenticator.field.phoneNumber.placeholder".localized(),

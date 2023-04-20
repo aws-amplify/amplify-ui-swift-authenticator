@@ -9,7 +9,8 @@ import Amplify
 import SwiftUI
 
 /// The Authenticator component
-public struct Authenticator<SignInContent: View,
+public struct Authenticator<LoadingContent: View,
+                            SignInContent: View,
                             ConfirmSignInWithNewPasswordContent: View,
                             ConfirmSignInWithMFACodeContent: View,
                             ConfirmSignInWithCustomChallengeContent: View,
@@ -30,6 +31,7 @@ public struct Authenticator<SignInContent: View,
     private var initialStep: AuthenticatorInitialStep
     private var viewModifiers = ViewModifiers()
     private var contentStates: NSHashTable<AuthenticatorBaseState> = .weakObjects()
+    private let loadingContent: LoadingContent
     private let signInContent: SignInContent
     private let confirmSignInContentWithMFACodeContent: ConfirmSignInWithMFACodeContent
     private let confirmSignInContentWithCustomChallengeContent: ConfirmSignInWithCustomChallengeContent
@@ -48,6 +50,8 @@ public struct Authenticator<SignInContent: View,
     /// Creates an `Authenticator` component
     /// - Parameter initialStep: The initial step displayed to unauthorized users.
     /// Defaults to ``AuthenticatorInitialStep/signIn``
+    /// - Parameter loadingContent: The content that is associated with the ``AuthenticatorStep/loading`` step.
+    /// Defaults to a `SwiftUI.ProgressView`.
     /// - Parameter signInContent: The content associated with the ``AuthenticatorStep/signIn`` step.
     /// Defaults to a ``SignInView``.
     /// - Parameter confirmSignInWithMFACodeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithCustomChallenge`` step.
@@ -77,34 +81,37 @@ public struct Authenticator<SignInContent: View,
     /// - Parameter content: The content associated with the ``AuthenticatorStep/signedIn`` step, i.e. once the user has successfully authenticated.
     public init(
         initialStep: AuthenticatorInitialStep = .signIn,
-        @ViewBuilder signInContent: @escaping (SignInState) -> SignInContent = { state in
+        @ViewBuilder loadingContent: () -> LoadingContent = {
+            ProgressView()
+        },
+        @ViewBuilder signInContent: (SignInState) -> SignInContent = { state in
             SignInView(state: state)
         },
-        @ViewBuilder confirmSignInWithMFACodeContent: @escaping (ConfirmSignInWithCodeState) -> ConfirmSignInWithMFACodeContent = { state in
+        @ViewBuilder confirmSignInWithMFACodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithMFACodeContent = { state in
             ConfirmSignInWithMFACodeView(state: state)
         },
-        @ViewBuilder confirmSignInWithCustomChallengeContent: @escaping (ConfirmSignInWithCodeState) -> ConfirmSignInWithCustomChallengeContent = { state in
+        @ViewBuilder confirmSignInWithCustomChallengeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithCustomChallengeContent = { state in
             ConfirmSignInWithCustomChallengeView(state: state)
         },
-        @ViewBuilder confirmSignInWithNewPasswordContent: @escaping (ConfirmSignInWithNewPasswordState) -> ConfirmSignInWithNewPasswordContent = { state in
+        @ViewBuilder confirmSignInWithNewPasswordContent: (ConfirmSignInWithNewPasswordState) -> ConfirmSignInWithNewPasswordContent = { state in
             ConfirmSignInWithNewPasswordView(state: state)
         },
-        @ViewBuilder signUpContent: @escaping (SignUpState) -> SignUpContent = { state in
+        @ViewBuilder signUpContent: (SignUpState) -> SignUpContent = { state in
             SignUpView(state: state)
         },
-        @ViewBuilder confirmSignUpContent: @escaping (ConfirmSignUpState) -> ConfirmSignUpContent = { state in
+        @ViewBuilder confirmSignUpContent: (ConfirmSignUpState) -> ConfirmSignUpContent = { state in
             ConfirmSignUpView(state: state)
         },
-        @ViewBuilder resetPasswordContent: @escaping (ResetPasswordState) -> ResetPasswordContent = { state in
+        @ViewBuilder resetPasswordContent: (ResetPasswordState) -> ResetPasswordContent = { state in
             ResetPasswordView(state: state)
         },
-        @ViewBuilder confirmResetPasswordContent: @escaping (ConfirmResetPasswordState) -> ConfirmResetPasswordContent = { state in
+        @ViewBuilder confirmResetPasswordContent: (ConfirmResetPasswordState) -> ConfirmResetPasswordContent = { state in
             ConfirmResetPasswordView(state: state)
         },
-        @ViewBuilder verifyUserContent: @escaping (VerifyUserState) -> VerifyUserContent = { state in
+        @ViewBuilder verifyUserContent: (VerifyUserState) -> VerifyUserContent = { state in
             VerifyUserView(state: state)
         },
-        @ViewBuilder confirmVerifyUserContent: @escaping (ConfirmVerifyUserState) -> ConfirmVerifyUserContent = { state in
+        @ViewBuilder confirmVerifyUserContent: (ConfirmVerifyUserState) -> ConfirmVerifyUserContent = { state in
             ConfirmVerifyUserView(state: state)
         },
         @ViewBuilder errorContent: @escaping (Error) -> ErrorContent = { _ in
@@ -115,6 +122,7 @@ public struct Authenticator<SignInContent: View,
         @ViewBuilder content: @escaping (SignedInState) -> SignedInContent
     ) {
         self.initialStep = initialStep
+        self.loadingContent = loadingContent()
         let credentials = Credentials()
 
         let signInState = SignInState(credentials: credentials)
@@ -192,6 +200,7 @@ public struct Authenticator<SignInContent: View,
         .environment(\.authenticatorOptions.contentAnimation, viewModifiers.contentAnimation)
         .environment(\.authenticatorOptions.contentTransition, viewModifiers.contentTransition)
         .environment(\.authenticatorOptions.signUpFields, viewModifiers.signUpFields)
+        .environment(\.authenticatorOptions.busyStyle, viewModifiers.busyStyle)
         .task {
             state.authenticationService = authenticationService
             setUpContentStates(contentStates)
@@ -252,6 +261,27 @@ public struct Authenticator<SignInContent: View,
         return self
     }
 
+    /// Sets the style that is applied when an operation is in progress
+    /// - Parameter blurRadius: The radial size that determines how diffuse the blur behind the content is.
+    public func busyStyle(blurRadius: CGFloat) -> Self {
+        var view = self
+        view.viewModifiers.busyStyle.blurRadius = blurRadius
+        return view
+    }
+
+    /// Sets the style that is applied when an operation is in progress
+    /// - Parameter blurRadius: The radial size that determines how diffuse the blur behind the content is.
+    ///  Defaults to `nil`, which keeps the existing value.
+    /// - Parameter content: A closure that returns the content that is displayed while an operation is in progress
+    public func busyStyle<Content: View>(blurRadius: CGFloat? = nil, content: () -> Content) -> Self {
+        var view = self
+        view.viewModifiers.busyStyle.content = content()
+        if let blurRadius = blurRadius {
+            view.viewModifiers.busyStyle.blurRadius = blurRadius
+        }
+        return view
+    }
+
     /// Sets a custom theme
     /// - Parameter theme: A theme that will be applied to the Authenticator and all its views
     public func authenticatorTheme(_ theme: AuthenticatorTheme) -> some View {
@@ -265,8 +295,7 @@ public struct Authenticator<SignInContent: View,
     @ViewBuilder private func createView(for step: Step) -> some View {
         switch step {
         case .loading:
-            ProgressView()
-                .frame(minWidth: 60, maxWidth: .infinity, minHeight: 60, maxHeight: .infinity)
+            loadingContent
         case .signIn:
             signInContent
         case .confirmSignInWithNewPassword:
@@ -316,5 +345,6 @@ extension Authenticator {
         var contentAnimation: Animation = .easeInOut(duration: 0.25)
         var contentTransition: AnyTransition = .opacity
         var signUpFields: [SignUpField] = []
+        var busyStyle = AuthenticatorOptions.BusyStyle(content: ProgressView())
     }
 }
