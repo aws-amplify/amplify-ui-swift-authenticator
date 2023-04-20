@@ -71,8 +71,10 @@ public struct SignInView<Header: View,
 
             createUsernameInput(for: authenticatorState.configuration.usernameAttribute)
                 .focused(focusedField.projectedValue, equals: .username)
-                .textInputAutocapitalization(.never)
                 .textContentType(.username)
+            #if os(iOS)
+                .textInputAutocapitalization(.never)
+            #endif
 
             PasswordField(
                 "authenticator.field.password.label".localized(),
@@ -82,7 +84,9 @@ public struct SignInView<Header: View,
             )
             .focused(focusedField.projectedValue, equals: .password)
             .textContentType(.password)
+        #if os(iOS)
             .textInputAutocapitalization(.never)
+        #endif
 
             Button("authenticator.signIn.button.signIn".localized()) {
                 Task {
@@ -97,7 +101,13 @@ public struct SignInView<Header: View,
         .messageBanner($state.message)
         .keyboardIterableToolbar(fields: self)
         .onSubmit {
-            focusNextField()
+            if hasNextField {
+                focusNextField()
+            } else {
+                Task {
+                    await signIn()
+                }
+            }
         }
         .onAppear {
             state.password = ""
@@ -153,7 +163,10 @@ public struct SignInView<Header: View,
                 placeholder: "authenticator.field.username.placeholder".localized(),
                 validator: usernameValidator
             )
+        #if os(iOS)
             .keyboardType(.default)
+        #endif
+
         case .email:
             TextField(
                 "authenticator.field.email.label".localized(),
@@ -161,7 +174,10 @@ public struct SignInView<Header: View,
                 placeholder: "authenticator.field.email.placeholder".localized(),
                 validator: usernameValidator
             )
+        #if os(iOS)
             .keyboardType(.emailAddress)
+        #endif
+
         case .phoneNumber:
             PhoneNumberField(
                 "authenticator.field.phoneNumber.label".localized(),
@@ -169,7 +185,9 @@ public struct SignInView<Header: View,
                 placeholder: "authenticator.field.phoneNumber.placeholder".localized(),
                 validator: usernameValidator
             )
+        #if os(iOS)
             .keyboardType(.numberPad)
+        #endif
         }
     }
 }

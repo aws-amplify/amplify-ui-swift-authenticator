@@ -73,8 +73,10 @@ public struct ConfirmResetPasswordView<Header: View,
                 validator: codeValidator
             )
             .focused(focusedField.projectedValue, equals: .confirmationCode)
-            .keyboardType(.default)
             .textContentType(.oneTimeCode)
+        #if os(iOS)
+            .keyboardType(.default)
+        #endif
 
             PasswordField(
                 "authenticator.field.newPassword.label".localized(),
@@ -83,8 +85,12 @@ public struct ConfirmResetPasswordView<Header: View,
                 validator: passwordValidator
             )
             .focused(focusedField.projectedValue, equals: .newPassword)
+        #if os(iOS)
             .textContentType(.newPassword)
             .textInputAutocapitalization(.never)
+        #elseif os(macOS)
+            .textContentType(.password)
+        #endif
 
             PasswordField(
                 "authenticator.field.confirmPassword.label".localized(),
@@ -93,8 +99,12 @@ public struct ConfirmResetPasswordView<Header: View,
                 validator: confirmPasswordValidator
             )
             .focused(focusedField.projectedValue, equals: .newPasswordConfirmation)
+        #if os(iOS)
             .textContentType(.newPassword)
             .textInputAutocapitalization(.never)
+        #elseif os(macOS)
+            .textContentType(.password)
+        #endif
 
             Button("authenticator.confirmResetPassword.button.submit".localized()) {
                 Task {
@@ -111,6 +121,15 @@ public struct ConfirmResetPasswordView<Header: View,
             state.message = .info(
                 message: state.localizedMessage(for: state.deliveryDetails)
             )
+        }
+        .onSubmit {
+            if hasNextField {
+                focusNextField()
+            } else {
+                Task {
+                    await confirmResetPassword()
+                }
+            }
         }
     }
 

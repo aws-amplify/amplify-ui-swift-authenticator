@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 public class AuthenticatorTheme: ObservableObject {
     public struct Spacing {
@@ -40,7 +39,7 @@ public class AuthenticatorTheme: ObservableObject {
         init() {}
         public var spacing = Spacing (
             horizontal: 5,
-            vertical: 20
+            vertical: Platform.isMacOS ? 15 : 20
         )
         public var style = Style(
             cornerRadius: 0,
@@ -70,12 +69,12 @@ public class AuthenticatorTheme: ObservableObject {
         }
 
         public var primary = Size(
-            font: .body.bold(),
+            font: Platform.isMacOS ? .title3.bold() : .body.bold(),
             cornerRadius: 5,
             padding: 13
         )
         public var link = Size(
-            font: .system(size: 15, weight: .semibold),
+            font: Platform.isMacOS ? .body.weight(.semibold) : .subheadline.weight(.semibold),
             cornerRadius: 0,
             padding: 10
         )
@@ -84,14 +83,14 @@ public class AuthenticatorTheme: ObservableObject {
     public struct Field {
         init() {}
         public var spacing = Spacing(
-            horizontal: 0,
+            horizontal: Platform.isMacOS ? 5 : 0,
             vertical: 5
         )
         public var style = Style(
             cornerRadius: 5,
             padding: 10,
             borderWidth: 1,
-            backgroundColor: .clear
+            backgroundColor: Platform.isMacOS ? .AmplifyUI.Background.primary : .clear
         )
     }
 

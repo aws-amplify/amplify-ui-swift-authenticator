@@ -14,6 +14,7 @@ extension View {
 }
 
 private struct AuthenticatorMessageModifier: ViewModifier {
+    @Environment(\.authenticatorOptions) var options
     @Binding var message: AuthenticatorMessage?
 
     @State private var dismissTimer: Timer? {
@@ -23,34 +24,54 @@ private struct AuthenticatorMessageModifier: ViewModifier {
     }
 
     func body(content: Content) -> some View {
+        #if os(iOS)
         content
             .fullScreenCover(isPresented: .constant(message != nil)) {
-                if let message = message {
-                    VStack {
-                        Spacer()
-                        AuthenticatorMessageView(message: message, action: dismissErrorView)
-                            .background(Color.clear)
-                            .onAppear {
-                                dismissTimer = Timer.scheduledTimer(
-                                    withTimeInterval: 3,
-                                    repeats: false
-                                ) { _ in
-                                    dismissErrorView()
-                                }
-                            }
-                    }
-                    .background(ClearBackgroundView()
-                        .onTapGesture {
-                            dismissErrorView()
-                        }
-                    )
-                }
+                messageContent
             }
+        #elseif os(macOS)
+        ZStack {
+            content
+            messageContent
+        }
+        #endif
     }
 
     private func dismissErrorView() {
         dismissTimer = nil
         message = nil
+    }
+
+    @ViewBuilder private var messageContent: some View {
+        VStack {
+            if let message = message {
+                Spacer()
+                AuthenticatorMessageView(
+                    message: message,
+                    action: dismissErrorView
+                )
+                .onAppear {
+                    dismissTimer = Timer.scheduledTimer(
+                        withTimeInterval: 5,
+                        repeats: false
+                    ) { _ in
+                        dismissErrorView()
+                    }
+                }
+            #if os(macOS)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            #endif
+            }
+        }
+    #if os(iOS)
+        .background(ClearBackgroundView()
+            .onTapGesture {
+                dismissErrorView()
+            }
+        )
+    #elseif os(macOS)
+        .animation(options.contentAnimation, value: self.message != nil)
+    #endif
     }
 }
 
@@ -100,6 +121,7 @@ private struct AuthenticatorMessageView: View {
     }
 }
 
+#if os(iOS)
 struct ClearBackgroundView: UIViewRepresentable {
     func makeUIView(context: Context) -> UIView {
         return InnerView()
@@ -114,3 +136,4 @@ struct ClearBackgroundView: UIViewRepresentable {
         }
     }
 }
+#endif

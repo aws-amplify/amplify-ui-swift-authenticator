@@ -64,14 +64,14 @@ struct TextField: View {
                             validator.validate()
                         }
                     }
-
+                    .textFieldStyle(.plain)
+                    .frame(height: Platform.isMacOS ? 20 : 25)
+                    .padding([.top, .bottom, .leading], theme.Fields.style.padding)
                 #if os(iOS)
                     .autocapitalization(.none)
-                    .frame(height: 25)
-                    .padding([.top, .bottom, .leading], theme.Fields.style.padding)
                 #endif
 
-                if isFocused, !text.isEmpty {
+                if shouldDisplayClearButton {
                     ImageButton(.clear) {
                         text = ""
                     }
@@ -85,9 +85,16 @@ struct TextField: View {
     private var clearButtonColor: Color {
         switch validator.state {
         case .normal:
-            return theme.Colors.Border.interactive
+            return isFocused ?
+                theme.Colors.Border.interactive : theme.Colors.Border.primary
         case .error:
             return theme.Colors.Border.error
         }
+    }
+
+    private var shouldDisplayClearButton: Bool {
+        // Show the clear button when there's text and
+        // the field is focused on non-macOS platforms
+        return !text.isEmpty && (Platform.isMacOS || isFocused)
     }
 }
