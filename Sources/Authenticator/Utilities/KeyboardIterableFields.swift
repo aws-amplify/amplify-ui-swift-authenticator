@@ -58,22 +58,19 @@ private struct KeyboardIterableToolbar<V>: ViewModifier where V: KeyboardIterabl
     func body(content: Content) -> some View {
         content
             .toolbar {
-                SwiftUI.ToolbarItem(placement: .keyboard) {
+                SwiftUI.ToolbarItemGroup(placement: .keyboard) {
                     SwiftUI.Button(action: fields.focusPreviousField) {
                         Image(systemName: "chevron.up")
                     }
                     .disabled(!fields.hasPreviousField)
-                }
-                SwiftUI.ToolbarItem(placement: .keyboard) {
+
                     SwiftUI.Button(action: fields.focusNextField) {
                         Image(systemName: "chevron.down")
                     }
                     .disabled(!fields.hasNextField)
-                }
-                SwiftUI.ToolbarItem(placement: .keyboard) {
+
                     Spacer()
-                }
-                SwiftUI.ToolbarItem(placement: .keyboard) {
+
                     SwiftUI.Button("authenticator.keyboardToolbar.Done".localized()) {
                         fields.focusedField.wrappedValue = nil
                     }
