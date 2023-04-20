@@ -192,12 +192,8 @@ extension SignUpView {
                         return field.isRequired ? FieldValidators.required(value) : nil
                     }
 
-                    if let validator = field.validator {
-                        return validator(value)
-                    }
-
                     guard let self = self else {
-                        return nil
+                        return field.validator?(value)
                     }
 
                     if case .password = field.attributeType {
@@ -210,7 +206,7 @@ extension SignUpView {
                         return "authenticator.validator.field.newPassword.doesNotMatch".localized()
                     }
 
-                    return nil
+                    return field.validator?(value)
                 }
             )
             validators[field.attributeType] = validator
