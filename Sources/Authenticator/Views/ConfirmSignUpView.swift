@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.confirmSignUp` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignUp`` step.
 public struct ConfirmSignUpView<Header: View,
                                 Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState

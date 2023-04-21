@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.confirmResetPassword` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmResetPassword`` step.
 public struct ConfirmResetPasswordView<Header: View,
                                        Footer: View>: View, KeyboardIterableFields {
     @Environment(\.authenticatorState) private var authenticatorState

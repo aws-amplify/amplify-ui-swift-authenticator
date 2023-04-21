@@ -9,7 +9,7 @@ import Amplify
 import AWSCognitoAuthPlugin
 import SwiftUI
 
-/// The state observed by the Confirm Reset Password content view, representing the Authenticator is in the `.confirmResetPassword` step.
+/// The state observed by the Confirm Reset Password content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/confirmResetPassword`` step.
 public class ConfirmResetPasswordState: AuthenticatorBaseState {
     /// The confirmation code provided by the user
     @Published public var confirmationCode: String = ""
@@ -20,7 +20,7 @@ public class ConfirmResetPasswordState: AuthenticatorBaseState {
     /// The new password confirmation provided by the user
     @Published public var confirmPassword: String = ""
 
-    /// The ``AuthCodeDeliveryDetails`` associated with this state. If the Authenticator is not in the `.confirmResetPassword` step, it returns `nil`
+    /// The `Amplify.AuthCodeDeliveryDetails` associated with this state. If the Authenticator is not in the `.confirmResetPassword` step, it returns `nil`
     public var deliveryDetails: AuthCodeDeliveryDetails? {
         guard case .confirmResetPassword(let deliveryDetails) = authenticatorState.step else {
             return nil
@@ -33,7 +33,7 @@ public class ConfirmResetPasswordState: AuthenticatorBaseState {
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func confirmResetPassword() async throws {
         setBusy(true)
 

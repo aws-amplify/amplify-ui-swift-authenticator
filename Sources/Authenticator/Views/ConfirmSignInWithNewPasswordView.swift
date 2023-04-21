@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.confirmSignInWithNewPassword` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignInWithNewPassword`` step.
 public struct ConfirmSignInWithNewPasswordView<Header: View,
                                                Footer: View>: View, KeyboardIterableFields {
     @Environment(\.authenticatorState) private var authenticatorState
@@ -23,7 +23,7 @@ public struct ConfirmSignInWithNewPasswordView<Header: View,
     /// Creates a `ConfirmSignInWithNewPasswordView`
     /// - Parameter state: The ``ConfirmSignInWithNewPasswordState`` that is observed by this view
     /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``ConfirmSignInWithNewPasswordView``
-    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `EmptyView`
+    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `SwiftUI.EmptyView`
     public init(
         state: ConfirmSignInWithNewPasswordState,
         @ViewBuilder headerContent: () -> Header = {

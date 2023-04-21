@@ -9,7 +9,7 @@ import Amplify
 import AWSCognitoAuthPlugin
 import SwiftUI
 
-/// The state observed by the Sign In content view, representing the Authenticator is in the `.signIn` step.
+/// The state observed by the Sign In content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/signIn`` step.
 public class SignInState: AuthenticatorBaseState {
     /// The username provided by the user. Note that this could be an email and a phone number as well.
     @Published public var username: String = "" {
@@ -28,7 +28,7 @@ public class SignInState: AuthenticatorBaseState {
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and `AuthenticatorBaseState/message` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func signIn() async throws {
         setBusy(true)
 
