@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.error` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/error`` step.
 public struct ErrorView: View {
     @Environment(\.authenticatorTheme) private var theme
 

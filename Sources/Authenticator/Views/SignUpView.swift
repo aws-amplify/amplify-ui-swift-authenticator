@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.signUp` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/signUp`` step.
 public struct SignUpView<Header: View,
                          Footer: View>: View, KeyboardIterableFields {
     @Environment(\.authenticatorState) private var authenticatorState

@@ -8,7 +8,7 @@
 import Amplify
 import Foundation
 
-/// The state that represents that the Authenticator is in `.signedIn` step
+/// The state that represents that the ``Authenticator`` is in ``AuthenticatorStep/signedIn`` step
 /// It can be retrieved through `@EnvironmentObject var state: SignedInState`, but it will only be set once the Authenticator successfuly completes an authentication flow.
 public class SignedInState: ObservableObject {
     /// The signed in user

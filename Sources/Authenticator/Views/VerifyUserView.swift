@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.verifyUser` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/verifyUser`` step.
 public struct VerifyUserView<Header: View,
                              Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState
@@ -19,7 +19,7 @@ public struct VerifyUserView<Header: View,
     /// Creates a `VerifyUserView`
     /// - Parameter state: The ``VerifyUserState`` that is observed by this view
     /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``VerifyUserHeader``
-    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `EmptyView`
+    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `SwiftUI.EmptyView`
     public init(
         state: VerifyUserState,
         @ViewBuilder headerContent: () -> Header = {

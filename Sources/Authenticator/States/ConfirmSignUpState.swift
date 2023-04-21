@@ -9,12 +9,12 @@ import Amplify
 import SwiftUI
 import AWSCognitoAuthPlugin
 
-/// The state observed by the Confirm Sign Up content view, representing the Authenticator is in the `.confirmSignUp` step.
+/// The state observed by the Confirm Sign Up content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignUp`` step.
 public class ConfirmSignUpState: AuthenticatorBaseState {
     /// The confirmation code provided by the user
     @Published public var confirmationCode: String = ""
 
-    /// The ``AuthCodeDeliveryDetails`` associated with this state. If the Authenticator is not in the `.confirmSignUp` step, it returns `nil`
+    /// The `Amplify.AuthCodeDeliveryDetails` associated with this state. If the Authenticator is not in the `.confirmSignUp` step, it returns `nil`
     public var deliveryDetails: AuthCodeDeliveryDetails? {
         guard case .confirmSignUp(let deliveryDetails) = authenticatorState.step else {
             return nil
@@ -27,7 +27,7 @@ public class ConfirmSignUpState: AuthenticatorBaseState {
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func confirmSignUp() async throws {
         setBusy(true)
 
@@ -53,7 +53,7 @@ public class ConfirmSignUpState: AuthenticatorBaseState {
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func sendCode() async throws {
         setBusy(true)
 

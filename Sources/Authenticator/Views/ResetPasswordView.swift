@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.resetPassword` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/resetPassword`` step.
 ///
 /// This view will automatically determine what type of login mechanism (i.e. username, email, phone number) is configured
 /// and display the appropiate field.

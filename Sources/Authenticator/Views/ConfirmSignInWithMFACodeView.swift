@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.confirmSignInWithMFACode` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignInWithMFACode`` step.
 public struct ConfirmSignInWithMFACodeView<Header: View,
                                            Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState
@@ -18,7 +18,7 @@ public struct ConfirmSignInWithMFACodeView<Header: View,
     /// Creates a `ConfirmSignInWithMFACodeView`
     /// - Parameter state: The ``ConfirmSignInWithCodeState`` that is observed by this view
     /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``ConfirmSignInWithMFACodeHeader``
-    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `EmptyView`
+    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `SwiftUI.EmptyView`
     public init(
         state: ConfirmSignInWithCodeState,
         @ViewBuilder headerContent: () -> Header = {

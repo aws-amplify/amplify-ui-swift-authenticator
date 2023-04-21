@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.confirmVerifyUser` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmVerifyUser`` step.
 public struct ConfirmVerifyUserView<Header: View,
                                     Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState
@@ -20,7 +20,7 @@ public struct ConfirmVerifyUserView<Header: View,
     /// Creates a `ConfirmVerifyUserView`
     /// - Parameter state: The ``ConfirmVerifyUserState`` that is observed by this view
     /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``ConfirmVerifyUserHeader``
-    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `EmptyView`
+    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `SwiftUI.EmptyView`
     public init(
         state: ConfirmVerifyUserState,
         @ViewBuilder headerContent: @escaping (AuthUserAttributeKey) -> Header = { attribute in
@@ -104,11 +104,11 @@ extension ConfirmVerifyUserView: AuthenticatorLogging {}
 
 /// Default header for the ``ConfirmVerifyUserView``. It displays the view's title, which contains the attribute to verify
 public struct ConfirmVerifyUserHeader: View {
-    /// The `AuthUserAttributeKey` that the user must verify
+    /// The `Amplify.AuthUserAttributeKey` that the user must verify
     public let attribute: AuthUserAttributeKey
 
     /// Creates a ``ConfirmVerifyUserHeader``
-    /// - Parameter attribute: The ``AuthUserAttributeKey`` that the user must verify
+    /// - Parameter attribute: The `Amplify.AuthUserAttributeKey` that the user must verify
     public init(attribute: AuthUserAttributeKey) {
         self.attribute = attribute
     }

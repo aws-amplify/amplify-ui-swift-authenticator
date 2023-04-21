@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// The state observed by the Reset Password content view, representing the Authenticator is in the `.resetPassword` step.
+/// The state observed by the Reset Password content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/resetPassword`` step.
 public class ResetPasswordState: AuthenticatorBaseState {
     /// The username provided by the user
     @Published public var username: String = "" {
@@ -21,7 +21,7 @@ public class ResetPasswordState: AuthenticatorBaseState {
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func resetPassword() async throws {
         setBusy(true)
         do {

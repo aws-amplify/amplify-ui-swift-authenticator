@@ -9,7 +9,7 @@ import Amplify
 import AWSCognitoAuthPlugin
 import SwiftUI
 
-/// The state observed by the Confirm Sign In with New Password content view, representing the Authenticator is in the `.confirmSignInWithNewPassword` step.
+/// The state observed by the Confirm Sign In with New Password content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignInWithNewPassword`` step.
 public class ConfirmSignInWithNewPasswordState: AuthenticatorBaseState {
     /// The new password provided by the user
     @Published public var newPassword: String = ""
@@ -21,7 +21,7 @@ public class ConfirmSignInWithNewPasswordState: AuthenticatorBaseState {
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func confirmSignIn() async throws {
         setBusy(true)
 

@@ -8,12 +8,12 @@
 import Amplify
 import SwiftUI
 
-/// The state observed by the Confirm Verify User content view, representing the Authenticator is in the `.confirmVerifyUser` step.
+/// The state observed by the Confirm Verify User content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/confirmVerifyUser`` step.
 public class ConfirmVerifyUserState: AuthenticatorBaseState {
     /// The confirmation code provided by the user
     @Published public var confirmationCode: String = ""
 
-    /// The ``AuthUserAttributeKey`` associated with this state. If the Authenticator is not in the `.confirmVerifyUser` step, it returns `nil`
+    /// The `Amplify.AuthUserAttributeKey` associated with this state. If the Authenticator is not in the `.confirmVerifyUser` step, it returns `nil`
     public var userAttributeKey: AuthUserAttributeKey? {
         guard case .confirmVerifyUser(let attribute, _) = authenticatorState.step else {
             return nil
@@ -22,7 +22,7 @@ public class ConfirmVerifyUserState: AuthenticatorBaseState {
         return attribute
     }
 
-    /// The ``AuthCodeDeliveryDetails`` associated with this state. If the Authenticator is not in the `.confirmVerifyUser` step, it returns `nil`
+    /// The `Amplify.AuthCodeDeliveryDetails` associated with this state. If the Authenticator is not in the `.confirmVerifyUser` step, it returns `nil`
     public var deliveryDetails: AuthCodeDeliveryDetails? {
         guard case .confirmVerifyUser(_, let deliveryDetails) = authenticatorState.step else {
             return nil
@@ -34,8 +34,8 @@ public class ConfirmVerifyUserState: AuthenticatorBaseState {
     /// Attempts to verify the associated ``userAttributeKey`` using the provided confirmation code
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
-    /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// `Amplify.AuthenticatorBaseState/isBusy` and ``AuthenticatorBaseState/message`` properties.
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func confirmVerifyUser() async throws {
         guard let userAttributeKey = userAttributeKey else {
             return
@@ -67,7 +67,7 @@ public class ConfirmVerifyUserState: AuthenticatorBaseState {
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func skip() async throws {
         setBusy(true)
 

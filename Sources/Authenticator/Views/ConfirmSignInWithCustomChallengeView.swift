@@ -8,7 +8,7 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the Authenticator is in the `.confirmSignInWithCustomChallenge` step.
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignInWithCustomChallenge`` step.
 public struct ConfirmSignInWithCustomChallengeView<Header: View,
                                                    Footer: View>: View {
     @ObservedObject private var state: ConfirmSignInWithCodeState
@@ -17,7 +17,7 @@ public struct ConfirmSignInWithCustomChallengeView<Header: View,
     /// Creates a `ConfirmSignInWithCustomChallengeView`
     /// - Parameter state: The ``ConfirmSignInWithCodeState`` that is observed by this view
     /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``ConfirmSignInWithCustomChallengeHeader``
-    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `EmptyView`
+    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  `SwiftUI.EmptyView`
     public init(
         state: ConfirmSignInWithCodeState,
         @ViewBuilder headerContent: () -> Header = {

@@ -9,12 +9,12 @@ import Amplify
 import AWSCognitoAuthPlugin
 import SwiftUI
 
-/// The state observed by the Confirm Sign In with Custom Challenge and Confirm Sign In with MFA Code content views, representing the Authenticator is in either the `.confirmSignInWithCustomChallenge` or the `.confirmSignInWithMFACode` step accordingly.
+/// The state observed by the Confirm Sign In with Custom Challenge and Confirm Sign In with MFA Code content views, representing the ``Authenticator`` is in either the ``AuthenticatorStep/confirmSignInWithCustomChallenge`` or the ``AuthenticatorStep/confirmSignInWithMFACode`` step accordingly.
 public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
     /// The confirmation code provided by the user
     @Published public var confirmationCode: String = ""
 
-    /// The ``AuthCodeDeliveryDetails`` associated with this state. If the Authenticator is not in the `.confirmSignInWithMFACode` step, it returns `nil`
+    /// The `Amplify.AuthCodeDeliveryDetails` associated with this state. If the Authenticator is not in the `.confirmSignInWithMFACode` step, it returns `nil`
     public var deliveryDetails: AuthCodeDeliveryDetails? {
         guard case .confirmSignInWithMFACode(let deliveryDetails) = authenticatorState.step else {
             return nil
@@ -27,7 +27,7 @@ public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func confirmSignIn() async throws {
         setBusy(true)
 

@@ -46,21 +46,35 @@ public struct Authenticator<SignInContent: View,
     private let signedInContentBuilder: (SignedInState) -> SignedInContent
 
     /// Creates an `Authenticator` component
-    /// - Parameter initialStep: The initial step displayed to unauthorized users. Defaults to `.signIn`
-    /// - Parameter signInContent: The content associated with the `.signIn` step. Defaults to a ``SignInView``.
-    /// - Parameter confirmSignInWithMFACodeContent: The content associated with the `.confirmSignInWithCustomChallenge` step. Defaults to a ``ConfirmSignInWithMFACodeView``.
-    /// - Parameter confirmSignInWithCustomChallengeContent: The content associated with the `.confirmSignInWithMFACode` step. Defaults to a ``ConfirmSignInWithCustomChallengeView``.
-    /// - Parameter confirmSignInWithNewPasswordContent: The content associated with the `.confirmSignInWithNewPassword` step. Defaults to a ``ConfirmSignInWithNewPasswordView``.
-    /// - Parameter signUpContent: The content associated with the `.signUp` step. Defaults to a ``SignUpView``.
-    /// - Parameter confirmSignUpContent: The content associated with the `.confirmSignUp` step. Defaults to a ``ConfirmSignUpView``.
-    /// - Parameter resetPasswordContent: The content associated with the `.resetPassword` step. Defaults to a ``ResetPasswordView``.
-    /// - Parameter confirmResetPasswordContent: The content associated with the `.confirmResetPassword` step. Defaults to a ``ConfirmResetPasswordView``.
-    /// - Parameter verifyUserContent: The content associated with the `.verifyUser` step. Defaults to a ``VerifyUserView``.
-    /// - Parameter confirmVerifyUserContent: The content associated with the `.confirmVerifyUser` step. Defaults to a ``ConfirmVerifyUserView``.
-    /// - Parameter errorContent: The content associated with the `.error` step. Defaults to a ``ErrorView``.
-    /// - Parameter headerContent: A custom header content that is displayed on top of any other Authenticator content. Defaults to a ``EmptyView`.
-    /// - Parameter footerContent: A custom footer content that is displayed below any other Authenticator content. Defaults to a ``EmptyView`.
-    /// - Parameter content: The content associated with the `.signedIn` step, i.e. once the user has successfully authenticated.
+    /// - Parameter initialStep: The initial step displayed to unauthorized users.
+    /// Defaults to ``AuthenticatorInitialStep/signIn``
+    /// - Parameter signInContent: The content associated with the ``AuthenticatorStep/signIn`` step.
+    /// Defaults to a ``SignInView``.
+    /// - Parameter confirmSignInWithMFACodeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithCustomChallenge`` step.
+    /// Defaults to a ``ConfirmSignInWithMFACodeView``.
+    /// - Parameter confirmSignInWithCustomChallengeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithMFACode`` step.
+    /// Defaults to a ``ConfirmSignInWithCustomChallengeView``.
+    /// - Parameter confirmSignInWithNewPasswordContent: The content associated with the ``AuthenticatorStep/confirmSignInWithNewPassword`` step.
+    /// Defaults to a ``ConfirmSignInWithNewPasswordView``.
+    /// - Parameter signUpContent: The content associated with the ``AuthenticatorStep/signUp`` step.
+    /// Defaults to a ``SignUpView``.
+    /// - Parameter confirmSignUpContent: The content associated with the ``AuthenticatorStep/confirmSignUp`` step.
+    /// Defaults to a ``ConfirmSignUpView``.
+    /// - Parameter resetPasswordContent: The content associated with the ``AuthenticatorStep/resetPassword`` step.
+    /// Defaults to a ``ResetPasswordView``.
+    /// - Parameter confirmResetPasswordContent: The content associated with the ``AuthenticatorStep/confirmResetPassword`` step.
+    /// Defaults to a ``ConfirmResetPasswordView``.
+    /// - Parameter verifyUserContent: The content associated with the ``AuthenticatorStep/verifyUser`` step.
+    /// Defaults to a ``VerifyUserView``.
+    /// - Parameter confirmVerifyUserContent: The content associated with the ``AuthenticatorStep/confirmVerifyUser`` step.
+    /// Defaults to a ``ConfirmVerifyUserView``.
+    /// - Parameter errorContent: The content associated with the ``AuthenticatorStep/error`` step.
+    /// Defaults to a ``ErrorView``.
+    /// - Parameter headerContent: A custom header content that is displayed on top of any other Authenticator content.
+    /// Defaults to a `SwiftUI.EmptyView`.
+    /// - Parameter footerContent: A custom footer content that is displayed below any other Authenticator content.
+    /// Defaults to a `SwiftUI.EmptyView`.
+    /// - Parameter content: The content associated with the ``AuthenticatorStep/signedIn`` step, i.e. once the user has successfully authenticated.
     public init(
         initialStep: AuthenticatorInitialStep = .signIn,
         @ViewBuilder signInContent: @escaping (SignInState) -> SignInContent = { state in

@@ -9,7 +9,7 @@ import Amplify
 import Foundation
 import SwiftUI
 
-/// The state observed by the Sign Up content view, representing the Authenticator is in the `.signUp` step.
+/// The state observed by the Sign Up content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/signUp`` step.
 public class SignUpState: AuthenticatorBaseState {
     /// The Sign Up ``Field``s that are be displayed
     private(set) public var fields: [Field] = []
@@ -18,7 +18,7 @@ public class SignUpState: AuthenticatorBaseState {
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
-    /// - Throws: An ``AuthenticationError`` if the operation fails
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func signUp() async throws {
         setBusy(true)
 
