@@ -47,7 +47,6 @@ public class AuthenticatorTheme: ObservableObject {
             borderWidth: 1,
             backgroundColor: .clear
         )
-        public var loadingBlur: CGFloat = 2
     }
 
     public struct Button {

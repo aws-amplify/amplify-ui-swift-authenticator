@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AuthenticatorView<Content: View>: View {
     @Environment(\.authenticatorTheme) private var theme
+    @Environment(\.authenticatorOptions) private var options
     private var isBusy: Bool
     private let content: Content
 
@@ -28,11 +29,11 @@ struct AuthenticatorView<Content: View>: View {
                 .cornerRadius(theme.Authenticator.style.cornerRadius)
                 .padding(theme.Authenticator.style.padding/2)
             }
-            .blur(radius: isBusy ? theme.Authenticator.loadingBlur : 0)
+            .blur(radius: isBusy ? options.busyStyle.blurRadius : 0)
             .disabled(isBusy)
 
             if isBusy {
-                ProgressView()
+                AnyView(options.busyStyle.content)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
