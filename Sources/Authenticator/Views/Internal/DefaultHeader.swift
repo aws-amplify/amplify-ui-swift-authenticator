@@ -20,8 +20,8 @@ struct DefaultHeader: View {
     var body: some View {
         HStack {
             SwiftUI.Text(title)
-                .font(font ?? theme.Fonts.title)
-                .foregroundColor(foregroundColor ?? theme.Colors.Foreground.primary)
+                .font(font ?? theme.fonts.title)
+                .foregroundColor(foregroundColor ?? theme.colors.foreground.primary)
             .accessibilityAddTraits(.isHeader)
             Spacer()
         }

@@ -66,7 +66,7 @@ struct TextField: View {
                     }
                     .textFieldStyle(.plain)
                     .frame(height: Platform.isMacOS ? 20 : 25)
-                    .padding([.top, .bottom, .leading], theme.Fields.style.padding)
+                    .padding([.top, .bottom, .leading], theme.components.field.padding)
                 #if os(iOS)
                     .autocapitalization(.none)
                 #endif
@@ -76,7 +76,7 @@ struct TextField: View {
                         text = ""
                     }
                     .tintColor(clearButtonColor)
-                    .padding([.top, .bottom, .trailing], theme.Fields.style.padding)
+                    .padding([.top, .bottom, .trailing], theme.components.field.padding)
                 }
             }
         }
@@ -86,9 +86,9 @@ struct TextField: View {
         switch validator.state {
         case .normal:
             return isFocused ?
-                theme.Colors.Border.interactive : theme.Colors.Border.primary
+                theme.colors.border.interactive : theme.colors.border.primary
         case .error:
-            return theme.Colors.Border.error
+            return theme.colors.border.error
         }
     }
 

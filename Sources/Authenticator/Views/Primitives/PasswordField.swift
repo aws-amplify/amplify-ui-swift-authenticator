@@ -66,7 +66,7 @@ struct PasswordField: View {
                     }
                     .textFieldStyle(.plain)
                     .frame(height: Platform.isMacOS ? 20 : 25)
-                    .padding([.top, .bottom, .leading], theme.Fields.style.padding)
+                    .padding([.top, .bottom, .leading], theme.components.field.padding)
                 #if os(iOS)
                     .autocapitalization(.none)
                 #endif
@@ -77,7 +77,7 @@ struct PasswordField: View {
                         focusedField = isShowingPassword ? .plain : .secure
                     }
                     .tintColor(showPasswordButtonColor)
-                    .padding([.top, .bottom, .trailing], theme.Fields.style.padding)
+                    .padding([.top, .bottom, .trailing], theme.components.field.padding)
                 }
             }
             .animation(.linear(duration: 0.1), value: isShowingPassword)
@@ -102,9 +102,9 @@ struct PasswordField: View {
         switch validator.state {
         case .normal:
             return isFocused ?
-                theme.Colors.Border.interactive : theme.Colors.Border.primary
+                theme.colors.border.interactive : theme.colors.border.primary
         case .error:
-            return theme.Colors.Border.error
+            return theme.colors.border.error
         }
     }
 

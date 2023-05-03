@@ -30,40 +30,40 @@ struct Button: View {
     private var backgroundColor: Color {
         switch viewModifiers.style {
         case .primary:
-            return theme.Colors.Background.interactive
+            return theme.colors.background.interactive
         case .link:
             return .clear
         default:
-            return theme.Colors.Background.error
+            return theme.colors.background.error
         }
     }
 
     private var foregroundColor: Color {
         switch viewModifiers.style {
         case .primary:
-            return theme.Colors.Foreground.inverse
+            return theme.colors.foreground.inverse
         case .link:
-            return theme.Colors.Foreground.interactive
+            return theme.colors.foreground.interactive
         default:
-            return theme.Colors.Foreground.primary
+            return theme.colors.foreground.primary
         }
     }
 
     private var cornerRadius: CGFloat {
         switch viewModifiers.style {
         case .primary:
-            return theme.Buttons.primary.cornerRadius
+            return theme.components.button.primary.cornerRadius
         case .link:
-            return theme.Buttons.link.cornerRadius
+            return theme.components.button.link.cornerRadius
         default:
-            return theme.Authenticator.style.cornerRadius
+            return theme.components.authenticator.cornerRadius
         }
     }
 
     private var borderColor: Color {
         switch viewModifiers.style {
         case .default:
-            return theme.Colors.Border.interactive
+            return theme.colors.border.interactive
         default:
             return .clear
         }
@@ -72,7 +72,7 @@ struct Button: View {
     private var borderWidth: CGFloat {
         switch viewModifiers.style {
         case .default:
-            return theme.Authenticator.style.borderWidth
+            return theme.components.authenticator.borderWidth
         default:
             return 0
         }
@@ -81,22 +81,22 @@ struct Button: View {
     private var font: Font {
         switch viewModifiers.style {
         case .primary:
-            return theme.Buttons.primary.font
+            return theme.components.button.primary.font
         case .link:
-            return theme.Buttons.link.font
+            return theme.components.button.link.font
         default:
-            return theme.Fonts.body
+            return theme.fonts.body
         }
     }
 
-    private var padding: CGFloat? {
+    private var padding: AuthenticatorTheme.Padding? {
         switch viewModifiers.style {
         case .primary:
-            return theme.Buttons.primary.padding
+            return theme.components.button.primary.padding
         case .link:
-            return theme.Buttons.link.padding
+            return theme.components.button.link.padding
         default:
-            return theme.Authenticator.style.padding
+            return theme.components.authenticator.padding
         }
     }
 
@@ -171,13 +171,13 @@ private struct AuthenticatorButtonStyle: ButtonStyle {
     let foregroundColor: Color
     let backgroundColor: Color
     let cornerRadius: CGFloat
-    let padding: CGFloat?
+    let padding: AuthenticatorTheme.Padding?
     let maxWidth: CGFloat?
 
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .font(font)
-            .padding(.all, padding)
+            .padding(padding)
             .multilineTextAlignment(.center)
             .frame(maxWidth: maxWidth)
             .foregroundColor(configuration.isPressed ? foregroundColor.opacity(0.5) : foregroundColor)

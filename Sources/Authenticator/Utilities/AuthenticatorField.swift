@@ -30,21 +30,21 @@ struct AuthenticatorField<Content: View>: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: theme.Fields.spacing.vertical) {
+        VStack(alignment: .leading, spacing: theme.components.field.spacing.vertical) {
             if let label = label {
                 SwiftUI.Text(label)
                     .foregroundColor(foregroundColor)
-                    .font(theme.Fonts.body)
+                    .font(theme.fonts.body)
                     .accessibilityHidden(true)
             }
 
             content
             .background(
-                RoundedRectangle(cornerRadius: theme.Fields.style.cornerRadius, style: .continuous)
+                RoundedRectangle(cornerRadius: theme.components.field.cornerRadius, style: .continuous)
                     .fill(backgroundColor)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: theme.Fields.style.cornerRadius)
+                RoundedRectangle(cornerRadius: theme.components.field.cornerRadius)
                     .stroke(borderColor,
                             lineWidth: borderWidth)
 
@@ -52,7 +52,7 @@ struct AuthenticatorField<Content: View>: View {
 
             if let errorMessage = errorMessage {
                 SwiftUI.Text(errorMessage)
-                    .font(theme.Fonts.subheadline)
+                    .font(theme.fonts.subheadline)
                     .foregroundColor(foregroundColor)
                     .transition(options.contentTransition)
                     .accessibilityHidden(true)
@@ -65,8 +65,8 @@ struct AuthenticatorField<Content: View>: View {
     }
 
     private var backgroundColor: Color {
-        isEnabled ? theme.Fields.style.backgroundColor : Color(
-            light: theme.Colors.Background.disabled,
+        isEnabled ? theme.components.field.backgroundColor : Color(
+            light: theme.colors.background.disabled,
             dark: .clear
         )
     }
@@ -74,9 +74,9 @@ struct AuthenticatorField<Content: View>: View {
     private var foregroundColor: Color {
         switch validator.state {
         case .normal:
-            return theme.Colors.Foreground.secondary
+            return theme.colors.foreground.secondary
         case .error:
-            return theme.Colors.Foreground.error
+            return theme.colors.foreground.error
         }
     }
 
@@ -84,15 +84,15 @@ struct AuthenticatorField<Content: View>: View {
         switch validator.state {
         case .normal:
             return isFocused ?
-                theme.Colors.Border.interactive : theme.Colors.Border.primary
+                theme.colors.border.interactive : theme.colors.border.primary
 
         case .error:
-            return theme.Colors.Border.error
+            return theme.colors.border.error
         }
     }
 
     private var borderWidth: CGFloat {
-        let width = theme.Fields.style.borderWidth
+        let width = theme.components.field.borderWidth
         return isFocused ? width + 1 : width
     }
 

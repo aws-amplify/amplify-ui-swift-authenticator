@@ -21,13 +21,13 @@ struct AuthenticatorView<Content: View>: View {
     var body: some View {
         ZStack {
             ScrollView {
-                VStack(spacing: theme.Authenticator.spacing.vertical) {
+                VStack(spacing: theme.components.authenticator.spacing.vertical) {
                     content
                 }
-                .padding(theme.Authenticator.style.padding/2)
-                .background(theme.Authenticator.style.backgroundColor)
-                .cornerRadius(theme.Authenticator.style.cornerRadius)
-                .padding(theme.Authenticator.style.padding/2)
+                .padding(theme.components.authenticator.padding/2)
+                .background(theme.components.authenticator.backgroundColor)
+                .cornerRadius(theme.components.authenticator.cornerRadius)
+                .padding(theme.components.authenticator.padding/2)
             }
             .blur(radius: isBusy ? options.busyStyle.blurRadius : 0)
             .disabled(isBusy)

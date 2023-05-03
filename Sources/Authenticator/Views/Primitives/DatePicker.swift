@@ -35,11 +35,11 @@ struct DatePicker: View {
     }
 
     var body: some View {
-        VStack(alignment: .trailing, spacing: theme.Fields.spacing.vertical) {
-            HStack(alignment: .center, spacing: theme.Fields.spacing.horizontal) {
+        VStack(alignment: .trailing, spacing: theme.components.field.spacing.vertical) {
+            HStack(alignment: .center, spacing: theme.components.field.spacing.horizontal) {
                 SwiftUI.Text(label)
                     .foregroundColor(foregroundColor)
-                    .font(theme.Fonts.body)
+                    .font(theme.fonts.body)
                     .accessibilityHidden(true)
 
                 Spacer()
@@ -56,7 +56,7 @@ struct DatePicker: View {
                             updateDate(selectedDate)
                         }
                         .tintColor(tintColor)
-                        .padding([.top, .bottom], theme.Fields.style.padding)
+                        .padding([.top, .bottom], theme.components.field.padding)
                         .accessibilityHidden(true)
                     }
                     .accessibilityAddTraits(.isButton)
@@ -68,7 +68,7 @@ struct DatePicker: View {
                         displayedComponents: .date
                     )
                     .fixedSize()
-                    .tint(theme.Colors.Background.interactive)
+                    .tint(theme.colors.background.interactive)
                     .focused($isFocused)
                     .onChange(of: selectedDate) { date in
                         updateDate(date)
@@ -85,13 +85,13 @@ struct DatePicker: View {
                         validator.validate()
                     }
                     .tintColor(tintColor)
-                    .padding([.top, .bottom], theme.Fields.style.padding)
+                    .padding([.top, .bottom], theme.components.field.padding)
                 }
             }
 
             if let errorMessage = errorMessage {
                 SwiftUI.Text(errorMessage)
-                    .font(theme.Fonts.subheadline)
+                    .font(theme.fonts.subheadline)
                     .foregroundColor(borderColor)
                 .transition(options.contentTransition)
             }
@@ -105,7 +105,7 @@ struct DatePicker: View {
 
     private var tintColor: Color {
         if actualDate == nil {
-            return theme.Colors.Background.interactive
+            return theme.colors.background.interactive
         }
 
         return borderColor
@@ -113,7 +113,7 @@ struct DatePicker: View {
 
     private var backgroundColor: Color {
         isEnabled ? .clear : Color(
-            light: theme.Colors.Background.disabled,
+            light: theme.colors.background.disabled,
             dark: .clear
         )
     }
@@ -121,18 +121,18 @@ struct DatePicker: View {
     private var foregroundColor: Color {
         switch validator.state {
         case .normal:
-            return theme.Colors.Foreground.secondary
+            return theme.colors.foreground.secondary
         case .error:
-            return theme.Colors.Foreground.error
+            return theme.colors.foreground.error
         }
     }
 
     private var borderColor: Color {
         switch validator.state {
         case .normal:
-            return theme.Colors.Border.primary
+            return theme.colors.border.primary
         case .error:
-            return theme.Colors.Border.error
+            return theme.colors.border.error
         }
     }
 

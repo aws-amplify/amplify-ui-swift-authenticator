@@ -18,10 +18,10 @@ public struct ErrorView: View {
             DefaultHeader(
                 title: "authenticator.authenticatorError.title".localized()
             )
-            .foregroundColor(theme.Colors.Border.error)
+            .foregroundColor(theme.colors.border.error)
             
             SwiftUI.Text("authenticator.authenticatorError.message".localized())
-                .foregroundColor(theme.Colors.Foreground.error)
+                .foregroundColor(theme.colors.foreground.error)
             
             Spacer()
         }
