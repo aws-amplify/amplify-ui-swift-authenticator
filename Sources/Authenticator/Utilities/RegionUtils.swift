@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Country: Equatable, Hashable {
+struct Region: Equatable, Hashable {
     let name: String
     let code: String
     let callingCode: String
@@ -26,7 +26,7 @@ struct Country: Equatable, Hashable {
 }
 
 extension Locale {
-    var countryCode: String {
+    var isoRegionCode: String {
         if #available(iOS 16, macOS 13, *) {
             return region?.identifier ?? ""
         } else {
@@ -34,7 +34,7 @@ extension Locale {
         }
     }
 
-    func countryName(forCode code: String) -> String? {
+    func displayName(forCode code: String) -> String? {
         return (self as NSLocale).displayName(
             forKey: .countryCode,
             value: code
@@ -42,19 +42,19 @@ extension Locale {
     }
 }
 
-class CountryUtils {
-    static let shared: CountryUtils = .init()
+class RegionUtils {
+    static let shared: RegionUtils = .init()
     private var locale: Locale {
         Locale.current
     }
 
     private init() {}
 
-    lazy var allCountries: [Country] = {
-        var countries: [Country] = []
+    lazy var allRegions: [Region] = {
+        var regions: [Region] = []
         for code in allCallingCodes {
-            if let name = locale.countryName(forCode: code.key) {
-                countries.append(.init(
+            if let name = locale.displayName(forCode: code.key) {
+                regions.append(.init(
                     name: name,
                     code: code.key,
                     callingCode: code.value)
@@ -62,11 +62,11 @@ class CountryUtils {
             }
         }
 
-        return countries.sorted(by: { $0.name < $1.name })
+        return regions.sorted(by: { $0.name < $1.name })
     }()
 
     var currentCallingCode: String {
-        return allCallingCodes[locale.countryCode] ?? ""
+        return allCallingCodes[locale.isoRegionCode] ?? ""
     }
 
     private let allCallingCodes = [
@@ -77,13 +77,14 @@ class CountryUtils {
         "AI": "+1",
         "AL": "+355",
         "AM": "+374",
-        "AN": "+599",
         "AO": "+244",
+        "AQ": "+672",
         "AR": "+54",
         "AS": "+1",
         "AT": "+43",
         "AU": "+61",
         "AW": "+297",
+        "AX": "+358",
         "AZ": "+994",
         "BA": "+387",
         "BB": "+1",
@@ -98,9 +99,11 @@ class CountryUtils {
         "BM": "+1",
         "BN": "+673",
         "BO": "+591",
+        "BQ": "+599",
         "BR": "+55",
         "BS": "+1",
         "BT": "+975",
+        "BV": "+47",
         "BW": "+267",
         "BY": "+375",
         "BZ": "+501",
@@ -119,6 +122,7 @@ class CountryUtils {
         "CR": "+506",
         "CU": "+53",
         "CV": "+238",
+        "CW": "+599",
         "CX": "+61",
         "CY": "+537",
         "CZ": "+420",
@@ -131,6 +135,7 @@ class CountryUtils {
         "EC": "+593",
         "EE": "+372",
         "EG": "+20",
+        "EH": "+212",
         "ER": "+291",
         "ES": "+34",
         "ET": "+251",
@@ -160,6 +165,7 @@ class CountryUtils {
         "GW": "+245",
         "GY": "+595",
         "HK": "+852",
+        "HM": "+672",
         "HN": "+504",
         "HR": "+385",
         "HT": "+509",
@@ -271,12 +277,15 @@ class CountryUtils {
         "SN": "+221",
         "SO": "+252",
         "SR": "+597",
+        "SS": "+211",
         "ST": "+239",
         "SV": "+503",
+        "SX": "+599",
         "SY": "+963",
         "SZ": "+268",
         "TC": "+1",
         "TD": "+235",
+        "TF": "+262",
         "TG": "+228",
         "TH": "+66",
         "TJ": "+992",
