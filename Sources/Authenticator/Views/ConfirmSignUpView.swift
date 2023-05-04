@@ -63,7 +63,7 @@ public struct ConfirmSignUpView<Header: View,
 
             HStack(alignment: .center) {
                 Text("authenticator.confirmSignUp.lostCode".localized())
-                    .font(theme.Fonts.body)
+                    .font(theme.fonts.body)
                 Spacer()
                 Button("authenticator.confirmSignUp.button.sendCode".localized()) {
                     Task {

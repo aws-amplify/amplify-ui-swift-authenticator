@@ -83,7 +83,7 @@ struct SignUpInputField: View {
             if case .error(let message) = validator.state, let errorMessage = message {
                 AnyView(
                     field.errorContent(errorMessage)
-                        .font(theme.Fonts.subheadline)
+                        .font(theme.fonts.subheadline)
                 )
                     .foregroundColor(borderColor)
                     .transition(options.contentTransition)
@@ -94,9 +94,9 @@ struct SignUpInputField: View {
     private var borderColor: Color {
         switch validator.state {
         case .normal:
-            return theme.Colors.Border.primary
+            return theme.colors.border.primary
         case .error:
-            return theme.Colors.Border.error
+            return theme.colors.border.error
         }
     }
 }

@@ -65,7 +65,7 @@ struct PhoneNumberField: View {
 
                 Divider()
                     .frame(width: 1)
-                    .overlay(theme.Colors.Border.primary)
+                    .overlay(theme.colors.border.primary)
 
                 SwiftUI.TextField(placeholder, text: $phoneNumber)
                     .disableAutocorrection(true)
@@ -91,7 +91,7 @@ struct PhoneNumberField: View {
                     ))
                     .textFieldStyle(.plain)
                     .frame(height: Platform.isMacOS ? 20 : 25)
-                    .padding([.top, .bottom, .leading], theme.Fields.style.padding)
+                    .padding([.top, .bottom, .leading], theme.components.field.padding)
                 #if os(iOS)
                     .autocapitalization(.none)
                     .keyboardType(.numberPad)
@@ -102,7 +102,7 @@ struct PhoneNumberField: View {
                         phoneNumber = ""
                     }
                     .tintColor(borderColor)
-                    .padding([.top, .bottom, .trailing], theme.Fields.style.padding)
+                    .padding([.top, .bottom, .trailing], theme.components.field.padding)
                 }
             }
             .focused($isFocused)
@@ -120,18 +120,18 @@ struct PhoneNumberField: View {
     private var foregroundColor: Color {
         switch validator.state {
         case .normal:
-            return theme.Colors.Foreground.secondary
+            return theme.colors.foreground.secondary
         case .error:
-            return theme.Colors.Foreground.error
+            return theme.colors.foreground.error
         }
     }
 
     private var borderColor: Color {
         switch validator.state {
         case .normal:
-            return theme.Colors.Border.interactive
+            return theme.colors.border.interactive
         case .error:
-            return theme.Colors.Border.error
+            return theme.colors.border.error
         }
     }
 
@@ -256,7 +256,7 @@ struct CountryCodeList: View {
                 .accessibilityLabel(Text(country.name))
             }
         }
-        .foregroundColor(theme.Colors.Foreground.primary)
+        .foregroundColor(theme.colors.foreground.primary)
         .listStyle(.plain)
     }
 

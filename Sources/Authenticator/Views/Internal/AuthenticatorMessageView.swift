@@ -83,7 +83,7 @@ private struct AuthenticatorMessageView: View {
     var body: some View {
         HStack {
             Text(message.content)
-                .font(theme.Fonts.callout)
+                .font(theme.fonts.callout)
             Spacer()
             ImageButton(.close) {
                 action()
@@ -92,31 +92,31 @@ private struct AuthenticatorMessageView: View {
         }
         .frame(maxWidth: .infinity)
         .foregroundColor(foregroundColor)
-        .padding(theme.Banners.padding/2)
+        .padding(theme.components.alert.padding/2)
         .background(backgroundColor)
-        .cornerRadius(theme.Banners.cornerRadius)
-        .padding(theme.Banners.padding/2)
+        .cornerRadius(theme.components.alert.cornerRadius)
+        .padding(theme.components.alert.padding/2)
     }
 
     private var foregroundColor: Color {
         switch message.style {
         case .error:
-            return theme.Colors.Foreground.error
+            return theme.colors.foreground.error
         case .info:
-            return theme.Colors.Foreground.info
+            return theme.colors.foreground.info
         default:
-            return theme.Colors.Foreground.primary
+            return theme.colors.foreground.primary
         }
     }
 
     private var backgroundColor: Color {
         switch message.style {
         case .error:
-            return theme.Colors.Background.error
+            return theme.colors.background.error
         case .info:
-            return theme.Colors.Background.info
+            return theme.colors.background.info
         default:
-            return theme.Colors.Background.primary
+            return theme.colors.background.primary
         }
     }
 }

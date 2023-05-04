@@ -41,7 +41,7 @@ struct RadioButton: View {
                     .font(.system(size: 24))
                     .foregroundColor(foregroundColor)
                     Text(label)
-                        .foregroundColor(theme.Colors.Foreground.primary)
+                        .foregroundColor(theme.colors.foreground.primary)
                     Spacer()
                 }
             }
@@ -50,9 +50,9 @@ struct RadioButton: View {
 
     private var foregroundColor: Color {
         if isSelected {
-            return theme.Colors.Background.interactive
+            return theme.colors.background.interactive
         }
 
-        return theme.Colors.Border.primary
+        return theme.colors.border.primary
     }
 }

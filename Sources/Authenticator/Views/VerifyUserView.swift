@@ -101,6 +101,6 @@ public struct VerifyUserHeader: View {
         DefaultHeader(
             title: "authenticator.verifyUser.title".localized()
         )
-        .font(theme.Fonts.title3)
+        .font(theme.fonts.title3)
     }
 }

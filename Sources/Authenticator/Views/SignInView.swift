@@ -212,6 +212,7 @@ public struct SignInHeader: View {
 
 /// Default footer for the ``SignInView``. It displays the navigation buttons
 public struct SignInFooter: View {
+    @Environment(\.authenticatorTheme) private var theme
     @Environment(\.authenticatorState) private var authenticatorState
     @Environment(\.authenticatorOptions) private var options
     @State private var authenticatorHidesSignUpButton = false
@@ -239,7 +240,7 @@ public struct SignInFooter: View {
     }
 
     public var body: some View {
-        HStack {
+        HStack(spacing: theme.components.authenticator.spacing.horizontal) {
             Button("authenticator.signIn.button.forgotPassword".localized()) {
                 authenticatorState.move(to: .resetPassword)
             }
