@@ -17,7 +17,7 @@ struct PhoneNumberField: View {
     @Binding private var text: String
     @FocusState private var isFocused: Bool
     @FocusState private var focusedField: FieldType?
-    @State private var callingCode: String = CountryUtils.shared.currentCallingCode
+    @State private var callingCode: String = RegionUtils.shared.currentCallingCode
     @State private var phoneNumber: String = ""
 
     private let label: String?
@@ -56,7 +56,7 @@ struct PhoneNumberField: View {
             isFocused: focusedField != nil
         ) {
             HStack(spacing: 0) {
-                CountryCodeList(callingCode: $callingCode)
+                CallingCodeField(callingCode: $callingCode)
                     .foregroundColor(foregroundColor)
                     .focused($focusedField, equals: .callingCode)
                     .onChange(of: callingCode) { text in
@@ -149,13 +149,13 @@ struct PhoneNumberField: View {
 
 /// This allows the user to select a dialing code from a list of all available ones,
 /// showing a localized name of the region associated with each code and its flag
-struct CountryCodeList: View {
+struct CallingCodeField: View {
     @Environment(\.authenticatorTheme) var theme
-    @State private var searchCountry: String = ""
+    @State private var searchRegion: String = ""
     @State private var isShowingList = false
     @FocusState private var isFocused: Bool
     @Binding var callingCode: String
-    private let defaultCallingCode = CountryUtils.shared.currentCallingCode
+    private let defaultCallingCode = RegionUtils.shared.currentCallingCode
     private let maxCallingCodeLength = 4
 
     var body: some View {
@@ -205,70 +205,70 @@ struct CountryCodeList: View {
         .buttonStyle(.borderless)
         .sheet(isPresented: $isShowingList) {
             if #available(iOS 16.0, macOS 13.0, *) {
-                allCountriesContent
+                allRegionsContent
                     .presentationDetents([.medium, .large])
             } else {
-                allCountriesContent
+                allRegionsContent
             }
         }
     }
 
-    private var allCountriesContent: some View {
+    private var allRegionsContent: some View {
     #if os(iOS)
         NavigationView {
-            countryList
+            regionList
         }
         .searchable(
-            text: $searchCountry,
+            text: $searchRegion,
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: "authenticator.countryCodes.search".localized()
         )
         .keyboardType(.default)
     #elseif os(macOS)
         VStack {
-            SwiftUI.TextField("authenticator.countryCodes.search".localized(), text: $searchCountry)
+            SwiftUI.TextField("authenticator.countryCodes.search".localized(), text: $searchRegion)
                 .padding([.leading, .top, .trailing])
                 .textFieldStyle(.plain)
             Divider()
-            countryList
+            regionList
         }
         .frame(width: 400, height: 300)
     #endif
     }
 
-    private var countryList: some View {
+    private var regionList: some View {
         List {
-            ForEach(countries, id: \.self) { country in
+            ForEach(regions, id: \.self) { region in
                 SwiftUI.Button(
                     action: {
-                        callingCode = country.callingCode
+                        callingCode = region.callingCode
                         isShowingList = false
                     },
                     label: {
                         HStack {
-                            Text("\(country.flag) \(country.name)")
+                            Text("\(region.flag) \(region.name)")
                             Spacer()
-                            Text("\(country.callingCode)")
+                            Text("\(region.callingCode)")
                         }
                     }
                 )
                 .buttonStyle(.borderless)
-                .accessibilityLabel(Text(country.name))
+                .accessibilityLabel(Text(region.name))
             }
         }
         .foregroundColor(theme.colors.foreground.primary)
         .listStyle(.plain)
     }
 
-    private var countries: [Country] {
-        let allCountries = CountryUtils.shared.allCountries
-        guard !searchCountry.isEmpty else {
-            return allCountries
+    private var regions: [Region] {
+        let allRegions = RegionUtils.shared.allRegions
+        guard !searchRegion.isEmpty else {
+            return allRegions
         }
 
-        return allCountries.filter {
-            $0.name.lowercased().contains(searchCountry.lowercased())
-            || $0.callingCode.lowercased().contains(searchCountry.lowercased())
+        return allRegions.filter {
+            $0.name.lowercased().contains(searchRegion.lowercased())
+            || $0.callingCode.lowercased().contains(searchRegion.lowercased())
         }
     }
 }

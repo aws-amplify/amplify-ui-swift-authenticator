@@ -7,7 +7,7 @@
 
 /* Authenticator Fields */
 "authenticator.field.label.optional" = "%@ (Optional)"; // Argument is the field's name. E.g. "Username"
-"authenticator.countryCodes.search" = "Search country";
+"authenticator.countryCodes.search" = "Search region";
 
 "authenticator.field.date.label" = "Select a date";
 "authenticator.imageButton.close" = "Close";
