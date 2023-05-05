@@ -17,6 +17,9 @@ public class AuthenticatorTheme: ObservableObject {
     
     /// Defines the default colors used by all components
     public var colors = Colors()
+    
+    /// Creates a new ``AuthenticatorTheme``
+    public init() {}
 }
 
 extension AuthenticatorTheme {
