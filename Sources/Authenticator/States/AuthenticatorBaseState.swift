@@ -123,7 +123,7 @@ public class AuthenticatorBaseState: ObservableObject {
             } catch {
                 // Unable to Sign In
                 log.verbose("Unable to Sign In after sucessfull sign up")
-                log.error(error: error)
+                log.error(error)
                 credentials.message = self.error(for: error)
                 return .signIn
             }
@@ -148,7 +148,7 @@ public class AuthenticatorBaseState: ObservableObject {
             }
         } catch {
             log.verbose("Unable to initiate a password reset.")
-            log.error(error: error)
+            log.error(error)
             // Take the user to manually request a password reset
             return .resetPassword
         }
@@ -163,7 +163,7 @@ public class AuthenticatorBaseState: ObservableObject {
     }
 
     func error(for error: Error) -> AuthenticatorError {
-        log.error(error: error)
+        log.error(error)
 
         guard let authError = error as? AuthError else {
             return .unknown(from: error)
@@ -188,6 +188,7 @@ public class AuthenticatorBaseState: ObservableObject {
         }
 
         guard let cognitoError = error.underlyingError as? AWSCognitoAuthError else {
+            log.verbose("Unable to localize error that is not of type AWSCognitoAuthError")
             return nil
         }
 
@@ -195,9 +196,11 @@ public class AuthenticatorBaseState: ObservableObject {
         let localized = key.localized()
 
         if key != localized {
+            log.verbose("A localizable string was found for error of type '\(cognitoError)'")
             return localized
         }
-
+        
+        log.verbose("No localizable string was found for error of type '\(cognitoError)'")
         return nil
     }
 }

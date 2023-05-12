@@ -63,8 +63,8 @@ public struct AuthenticatorError: LocalizedError, AuthenticatorMessage {
 
     /// An unknown error.
     public static func unknown(from error: Error) -> Self {
-        log.error(error: error)
-        log.error("Unknown error happened")
+        log.verbose("Creating an unknown AuthenticatorError")
+        log.verbose(error)
 
         return AuthenticatorError(
             content: "authenticator.unknownError".localized()

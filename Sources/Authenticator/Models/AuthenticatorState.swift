@@ -40,7 +40,7 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
                 }
             }
         } catch {
-            Self.log.error(error: error)
+            Self.log.error(error)
             Self.log.error("Unable to create AuthenticatorState")
             configuration = .empty
             step = .error(error)
@@ -58,7 +58,8 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
     }
 
     func setCurrentStep(_ step: Step) {
-        if case .error(_) = step {
+        if case .error(let error) = step {
+            log.error(error)
             log.error("Cannot move to \(step), the Authenticator is in error state.")
             return
         }
@@ -69,7 +70,8 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
     }
 
     func reloadState(initialStep: AuthenticatorInitialStep) async {
-        if case .error(_) = step {
+        if case .error(let error) = step {
+            log.error(error)
             log.error("Cannot reload state, the Authenticator is in error state.")
             return
         }
@@ -88,7 +90,7 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             }
 
         } catch {
-            log.error(error: error)
+            log.error(error)
             log.error("Error while attempting to determine signed in user, going signedOut step")
             setCurrentStep(signedOutStep)
         }
