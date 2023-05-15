@@ -11,7 +11,7 @@ import SwiftUI
 
 /// The state observed by the Sign Up content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/signUp`` step.
 public class SignUpState: AuthenticatorBaseState {
-    /// The Sign Up ``Field``s that are be displayed
+    /// The Sign Up ``Field``s that are displayed
     private(set) public var fields: [Field] = []
 
     /// Attempts to confirm the new password using the provided values.
@@ -36,6 +36,10 @@ public class SignUpState: AuthenticatorBaseState {
                     attributes.append(
                         AuthUserAttribute(key, value: field.value)
                     )
+                    // Check if the current AuthUserAttribute is defined to be the usernameAttribute in Cognito's config
+                    if configuration.usernameAttribute == CognitoConfiguration.UsernameAttribute(from: key) {
+                        username = field.value
+                    }
                 }
             }
         }

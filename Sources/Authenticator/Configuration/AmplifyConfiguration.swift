@@ -120,6 +120,17 @@ struct CognitoConfiguration {
         case username = "USERNAME"
         case email = "EMAIL"
         case phoneNumber = "PHONE_NUMBER"
+        
+        init?(from authUserAttributeKey: AuthUserAttributeKey) {
+            switch authUserAttributeKey {
+            case .email:
+                self = .email
+            case .phoneNumber:
+                self = .phoneNumber
+            default:
+                return nil
+            }
+        }
     }
 
     enum SignUpAttribute: String, Decodable {

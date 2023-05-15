@@ -69,9 +69,12 @@ class MockAuthenticationService: AuthenticationService {
     // MARK: - Sign Up
 
     var signUpCount = 0
+    var signUpParams: (username: String, password: String?)? = nil
     var mockedSignUpResult: AuthSignUpResult?
     func signUp(username: String, password: String?, options: AuthSignUpRequest.Options?) async throws -> AuthSignUpResult {
         signUpCount += 1
+        signUpParams = (username, password)
+        
         if let mockedSignUpResult = mockedSignUpResult {
             return mockedSignUpResult
         }
