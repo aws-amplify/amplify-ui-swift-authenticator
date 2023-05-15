@@ -68,7 +68,7 @@ public class VerifyUserState: AuthenticatorBaseState {
             setBusy(false)
         } catch {
             log.error("Unable to get the current user after skipping verification")
-            log.error(error: error)
+            log.error(error)
             setBusy(false)
             // Go back to sign in
             authenticatorState.setCurrentStep(.signIn)

@@ -68,7 +68,7 @@ public class ConfirmResetPasswordState: AuthenticatorBaseState {
             return try await nextStep(for: result)
         } catch {
             log.error("Unable to Sign In after confirming password reset")
-            log.error(error: error)
+            log.error(error)
             return .signIn
         }
     }
