@@ -17,7 +17,7 @@ struct Region: Equatable, Hashable {
         self.name = name
         self.code = code
         self.callingCode = callingCode
-        let base: UInt32 = 127397
+        let base = UnicodeScalar("🇦").value - UnicodeScalar("A").value
         let scalarView = String.UnicodeScalarView(code.unicodeScalars.compactMap {
             Unicode.Scalar(base + $0.value)
         })

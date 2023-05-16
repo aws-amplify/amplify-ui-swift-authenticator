@@ -159,39 +159,6 @@ struct CallingCodeField: View {
     private let maxCallingCodeLength = 4
 
     var body: some View {
-        SwiftUI.TextField(
-            "authenticator.field.diallingCode.placeholder".localized(),
-            text: $callingCode
-        )
-        .focused($isFocused)
-        .onChange(of: callingCode) { text in
-            if text.isEmpty {
-                callingCode = "+"
-            } else if !text.hasPrefix("+") {
-                var updated = text
-                updated.removeAll(where: { $0 == "+" })
-                callingCode = "+\(updated)"
-            } else if text.count > maxCallingCodeLength {
-                callingCode = String(text.prefix(maxCallingCodeLength))
-            }
-        }
-        .onChange(of: isFocused) { isFocused in
-            if !isFocused, callingCode == "+" {
-                callingCode = defaultCallingCode
-            }
-        }
-        .multilineTextAlignment(.center)
-        .accessibilityLabel(Text(
-            "authenticator.field.diallingCode.label".localized()
-        ))
-        .textFieldStyle(.plain)
-        .frame(width: 55)
-    #if os(iOS)
-        .keyboardType(.numberPad)
-    #endif
-    }
-
-    private var callingCodePicker: some View {
         SwiftUI.Button(
             action: {
                 isShowingList = true
@@ -211,6 +178,10 @@ struct CallingCodeField: View {
                 allRegionsContent
             }
         }
+        .accessibilityLabel(Text(
+            "authenticator.field.diallingCode.label".localized()
+        ))
+        .frame(width: 55)
     }
 
     private var allRegionsContent: some View {
@@ -253,7 +224,8 @@ struct CallingCodeField: View {
                     }
                 )
                 .buttonStyle(.borderless)
-                .accessibilityLabel(Text(region.name))
+                .accessibilityLabel(Text("\(region.name), \(region.callingCode)"))
+                .accessibilityRemoveTraits(.isButton)
             }
         }
         .foregroundColor(theme.colors.foreground.primary)
