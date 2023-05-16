@@ -62,7 +62,29 @@ class SignUpStateTests: XCTestCase {
             await task.value
         }
     }
+    
+    func testSignUp_withEmailAsUsernameAttribute_shouldSetEmailAsUsername() async {
+        authenticatorState.configuration.usernameAttributes = [.email]
+        await state.configure(with: [.email()])
 
+        let emailField = await state.fields.first(where: {$0.field.attributeType == .email})
+        emailField?.value = "email@email.com"
+        
+        try? await state.signUp()
+        XCTAssertEqual(authenticationService.signUpParams?.username, emailField?.value)
+    }
+    
+    func testSignUp_withPhoneNumberAsUsernameAttribute_shouldSetPhoneAsUsername() async {
+        authenticatorState.configuration.usernameAttributes = [.phoneNumber]
+        await state.configure(with: [.phoneNumber()])
+
+        let phoneNumberField = await state.fields.first(where: {$0.field.attributeType == .phoneNumber})
+        phoneNumberField?.value = "+12345678910"
+        
+        try? await state.signUp()
+        XCTAssertEqual(authenticationService.signUpParams?.username, phoneNumberField?.value)
+    }
+    
     func testConfigure_withFields_shouldPopulateFields_addingVerificationMechanism() {
         authenticatorState.configuration.verificationMechanisms = [
             .email,
