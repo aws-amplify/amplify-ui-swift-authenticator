@@ -62,7 +62,9 @@ class RegionUtils {
             }
         }
 
-        return regions.sorted(by: { $0.name < $1.name })
+        return regions.sorted(by: {
+            $0.name.compare($1.name, locale: locale) == .orderedAscending
+        })
     }()
 
     var currentCallingCode: String {
