@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-/// This field allows the user to select a Date and parse it to a ISO-8601 format.
-/// It displays a label and a "Select date" button, which when tapped shows a native DatePicker
-/// This is done in order to allow not selecting anything, which the native component doesn't
+/// This field allows the user to select a date and parse it to a ISO-8601 format.
+/// It allows to select a date by revealing a native `SwiftUI.DatePicker` when tapped.
+/// It also applies Amplify UI theming
 struct DatePicker: View {
     @Environment(\.isEnabled) private var isEnabled: Bool
     @Environment(\.authenticatorOptions) private var options
@@ -17,94 +17,147 @@ struct DatePicker: View {
     @ObservedObject private var validator: Validator
     @State private var selectedDate: Date = .now
     @State private var actualDate: Date? = nil
+    @State private var isShowingDatePicker = false
     @FocusState private var isFocused: Bool
     @Binding private var text: String
     private let label: String
+    private let placeholder: String
     private let formatter = ISO8601DateFormatter()
 
     init(_ label: String,
          text: Binding<String>,
+         placeholder: String,
          validator: Validator? = nil) {
         self.label = label
         self._text = text
-
+        self.placeholder = placeholder
         self.validator = validator ?? .init(
             using: FieldValidators.none
         )
         self.validator.value = text
     }
 
+#if os(iOS)
     var body: some View {
         VStack(alignment: .trailing, spacing: theme.components.field.spacing.vertical) {
-            HStack(alignment: .center, spacing: theme.components.field.spacing.horizontal) {
-                SwiftUI.Text(label)
-                    .foregroundColor(foregroundColor)
-                    .font(theme.fonts.body)
-                    .accessibilityHidden(true)
+            AuthenticatorField(
+                label,
+                placeholder: placeholder,
+                validator: validator,
+                isFocused: isFocused
+            ) {
+                HStack(spacing: 0) {
+                    createDisplayedDateText()
 
-                Spacer()
+                    Spacer()
 
-                if actualDate == nil {
-                    HStack(spacing: 0) {
-                        Button("authenticator.field.date.label".localized()) {
-                            updateDate(selectedDate)
-                        }
-                        .buttonStyle(.link)
-                        .frame(maxWidth: nil)
-
-                        ImageButton(.open) {
-                            updateDate(selectedDate)
-                        }
-                        .tintColor(tintColor)
-                        .padding([.top, .bottom], theme.components.field.padding)
-                        .accessibilityHidden(true)
-                    }
-                    .accessibilityAddTraits(.isButton)
-                    .accessibilityElement(children: .combine)
-                } else {
-                    SwiftUI.DatePicker(
-                        "",
-                        selection: $selectedDate,
-                        displayedComponents: .date
-                    )
-                    .fixedSize()
-                    .tint(theme.colors.background.interactive)
-                    .focused($isFocused)
-                    .onChange(of: selectedDate) { date in
-                        updateDate(date)
-                    }
-                    .onChange(of: isFocused) { isFocused in
-                        if !isFocused {
+                    if !text.isEmpty {
+                        ImageButton(.clear) {
+                            actualDate = nil
+                            text = ""
                             validator.validate()
                         }
+                        .tintColor(clearButtonColor)
+                        .padding([.top, .bottom, .trailing], theme.components.field.padding)
                     }
 
-                    ImageButton(.clear) {
-                        actualDate = nil
-                        text = ""
-                        validator.validate()
+                    Divider()
+                        .frame(width: 1)
+                        .overlay(theme.colors.border.primary)
+
+                    ImageButton(.calendar) {
+                        withAnimation {
+                            isShowingDatePicker.toggle()
+                        }
                     }
                     .tintColor(tintColor)
-                    .padding([.top, .bottom], theme.components.field.padding)
+                    .padding(theme.components.field.padding)
+                    .frame(maxHeight: .infinity)
+                }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                withAnimation {
+                    isShowingDatePicker.toggle()
                 }
             }
 
-            if let errorMessage = errorMessage {
-                SwiftUI.Text(errorMessage)
-                    .font(theme.fonts.subheadline)
-                    .foregroundColor(borderColor)
-                .transition(options.contentTransition)
+            createDatePicker(style: .graphical)
+                .frame(height: isShowingDatePicker ? nil : 0, alignment: .top)
+                .clipped()
+        }
+    }
+#elseif os(macOS)
+    var body: some View {
+        VStack(alignment: .trailing, spacing: theme.components.field.spacing.vertical) {
+            AuthenticatorField(
+                label,
+                placeholder: placeholder,
+                validator: validator,
+                isFocused: isFocused
+            ) {
+                HStack(spacing: 0) {
+                    if isShowingDatePicker {
+                        createDatePicker(height: 20, style: .stepperField)
+                    } else {
+                        createDisplayedDateText()
+                    }
+
+                    Spacer()
+
+                    if isShowingDatePicker {
+                        ImageButton(.clear) {
+                            actualDate = nil
+                            text = ""
+                            validator.validate()
+                            isShowingDatePicker = false
+                        }
+                        .tintColor(clearButtonColor)
+                        .padding([.top, .bottom, .trailing], theme.components.field.padding)
+                    }
+                }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                guard !Platform.isMacOS || text.isEmpty else {
+                    return
+                }
+                withAnimation {
+                    isShowingDatePicker.toggle()
+                }
             }
         }
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(accessibilityLabel)
-        .background(backgroundColor)
-        .animation(options.contentAnimation, value: validator.state)
+    }
+#endif
 
+    @ViewBuilder private func createDatePicker<S: DatePickerStyle>(
+        height: CGFloat? = nil,
+        style: S
+    ) -> some View {
+        SwiftUI.DatePicker(
+            "",
+            selection: $selectedDate,
+            displayedComponents: .date
+        )
+        .frame(height: height)
+        .datePickerStyle(style)
+        .tint(theme.colors.background.interactive)
+        .onChange(of: selectedDate) { date in
+            updateDate(date)
+        }
+        .padding([.top, .bottom], theme.components.field.padding)
+    }
+
+    @ViewBuilder private func createDisplayedDateText() -> some View {
+        Text(displayedDate)
+            .frame(height: Platform.isMacOS ? 20 : 25)
+            .padding([.top, .bottom, .leading], theme.components.field.padding)
+            .foregroundColor(text.isEmpty ? placeholderColor : theme.colors.foreground.primary)
+            .accessibilityAddTraits(.isButton)
     }
 
     private var tintColor: Color {
-        if actualDate == nil {
+        if isShowingDatePicker {
             return theme.colors.background.interactive
         }
 
@@ -142,19 +195,32 @@ struct DatePicker: View {
         validator.validate()
     }
 
-    private var errorMessage: String? {
-        if case .error(let message) = validator.state,
-            let message = message {
-            return String(format: message, label)
+    private var displayedDate: String {
+        guard let date = actualDate else {
+            return placeholder
         }
-        return nil
+
+        return date.formatted(
+            .dateTime
+                .day()
+                .month()
+                .year()
+        )
     }
 
-    private var accessibilityLabel: Text {
-        if let errorMessage = errorMessage {
-            return Text(errorMessage)
-        }
+    private var placeholderColor: Color {
+        Platform.isMacOS
+        ? Color(red: 178/255, green: 178/255, blue: 178/255)
+        : Color(red: 184/255, green: 184/255, blue: 187/255)
+    }
 
-        return Text(label)
+    private var clearButtonColor: Color {
+        switch validator.state {
+        case .normal:
+            return isFocused ?
+            theme.colors.border.interactive : theme.colors.border.primary
+        case .error:
+            return theme.colors.border.error
+        }
     }
 }

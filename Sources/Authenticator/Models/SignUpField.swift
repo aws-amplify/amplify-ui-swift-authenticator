@@ -308,6 +308,7 @@ public extension SignUpField where Self == BaseSignUpField {
     /// A date-based field associated with the given attribute key
     /// - Parameter key: The `AuthUserAttributeKey`
     /// - Parameter label: The label that is displayed along the field
+    /// - Parameter placeholder: The placeholder that is displayed in the field
     /// - Parameter isRequired: Whether the view will require a date to be entered before proceeding. Defaults to false.
     /// - Parameter minDate: The minimum date this field's value can be set to. Defaults to nil
     /// - Parameter maxDate: The maximum date this field's value can be set to. Defaults to nil
@@ -315,6 +316,7 @@ public extension SignUpField where Self == BaseSignUpField {
     static func date(
         key: AuthUserAttributeKey,
         label: String,
+        placeholder: String,
         isRequired: Bool = false,
         minDate: Date? = nil,
         maxDate: Date? = nil,
@@ -322,7 +324,7 @@ public extension SignUpField where Self == BaseSignUpField {
     ) -> SignUpField {
         return signUpField(
             label: label,
-            placeholder: "",
+            placeholder: placeholder,
             isRequired: isRequired,
             attributeType: .custom(attributeKey: key),
             inputType: .date,
