@@ -15,6 +15,7 @@
 "authenticator.imageButton.open" = "Open";
 "authenticator.imageButton.showPassword" = "Show password";
 "authenticator.imageButton.hidePassword" = "Hide password";
+"authenticator.imageButton.calendar" = "Calendar";
 
 "authenticator.field.username.label" = "Username";
 "authenticator.field.username.placeholder" = "Enter your username";

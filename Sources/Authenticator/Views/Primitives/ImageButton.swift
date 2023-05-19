@@ -55,6 +55,8 @@ struct ImageButton: View {
             return "authenticator.imageButton.showPassword".localized()
         case .hidePassword:
             return "authenticator.imageButton.hidePassword".localized()
+        case .calendar:
+            return "authenticator.imageButton.calendar".localized()
         }
     }
 }
@@ -66,5 +68,6 @@ extension ImageButton {
         case open = "chevron.down.circle"
         case showPassword = "eye.fill"
         case hidePassword = "eye.slash.fill"
+        case calendar = "calendar"
     }
 }

@@ -52,6 +52,7 @@ struct SignUpInputField: View {
                 DatePicker(
                     field.label,
                     text: $field.value,
+                    placeholder: field.placeholder,
                     validator: validator
                 )
             case .phoneNumber:
