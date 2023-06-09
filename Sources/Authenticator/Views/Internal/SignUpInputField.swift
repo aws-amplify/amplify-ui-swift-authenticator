@@ -74,13 +74,13 @@ struct SignUpInputField: View {
         VStack(alignment: .leading) {
             AnyView(
                 field.content($field.value)
-                    .onChange(of: self.field.value) { _ in
-                        validator.validate()
-                    }
-                    .onAppear {
-                        validator.value = $field.value
-                    }
             )
+            .onChange(of: self.field.value) { _ in
+                validator.validate()
+            }
+            .onAppear {
+                validator.value = $field.value
+            }
             if case .error(let message) = validator.state, let errorMessage = message {
                 AnyView(
                     field.errorContent(errorMessage)
