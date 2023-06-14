@@ -59,8 +59,10 @@ struct PhoneNumberField: View {
                 CallingCodeField(callingCode: $callingCode)
                     .foregroundColor(foregroundColor)
                     .focused($focusedField, equals: .callingCode)
-                    .onChange(of: callingCode) { text in
-                        self.text = "\(text)\(phoneNumber)"
+                    .onChange(of: callingCode) { code in
+                        if !phoneNumber.isEmpty {
+                            text = "\(code)\(phoneNumber)"
+                        }
                     }
 
                 Divider()

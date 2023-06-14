@@ -89,7 +89,18 @@ public class SignUpState: AuthenticatorBaseState {
 
         setBusy(true)
         let cognitoConfiguration = authenticatorState.configuration
-        var inputs = signUpFields.map { Field(field: $0) }
+
+        var existingFields: Set<String> = []
+        var inputs = signUpFields.compactMap { field -> Field? in
+            guard !existingFields.contains(field.rawValue) else {
+                log.warn("Skipping configuring field of type '\(field.rawValue)' because it was already present.")
+                return nil
+            }
+            
+            existingFields.insert(field.rawValue)
+            return Field(field: field)
+        }
+
         for attribute in cognitoConfiguration.verificationMechanisms {
             if let index = inputs.firstIndex(where: { $0.field.attributeType == attribute.asSignUpAttribute }) {
                 if !inputs[index].field.isRequired {
@@ -157,6 +168,21 @@ public extension SignUpState {
 
         public func hash(into hasher: inout Hasher) {
             return hasher.combine(field.attributeType)
+        }
+    }
+}
+
+private extension SignUpField {
+    var rawValue: String {
+        switch attributeType {
+        case .username:
+            return "username"
+        case .password:
+            return "password"
+        case .passwordConfirmation:
+            return "passwordConfirmation"
+        default:
+            return attributeType.attributeKey?.rawValue ?? "unknown"
         }
     }
 }
