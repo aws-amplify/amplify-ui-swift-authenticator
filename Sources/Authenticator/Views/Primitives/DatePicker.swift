@@ -22,7 +22,11 @@ struct DatePicker: View {
     @Binding private var text: String
     private let label: String
     private let placeholder: String
-    private let formatter = ISO8601DateFormatter()
+    private var formatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = .withFullDate
+        return formatter
+    }()
 
     init(_ label: String,
          text: Binding<String>,
