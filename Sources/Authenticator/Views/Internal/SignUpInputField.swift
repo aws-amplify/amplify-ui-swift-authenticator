@@ -71,7 +71,16 @@ struct SignUpInputField: View {
     }
 
     @ViewBuilder func customView(for field: CustomSignUpField) -> some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: theme.components.field.spacing.vertical) {
+            if let label = field.label {
+                HStack {
+                    SwiftUI.Text(label)
+                        .foregroundColor(foregroundColor)
+                        .font(theme.fonts.body)
+                        .accessibilityHidden(true)
+                    Spacer()
+                }
+            }
             AnyView(
                 field.content($field.value)
             )
@@ -86,9 +95,18 @@ struct SignUpInputField: View {
                     field.errorContent(errorMessage)
                         .font(theme.fonts.subheadline)
                 )
-                    .foregroundColor(borderColor)
-                    .transition(options.contentTransition)
+                .foregroundColor(borderColor)
+                .transition(options.contentTransition)
             }
+        }
+    }
+    
+    private var foregroundColor: Color {
+        switch validator.state {
+        case .normal:
+            return theme.colors.foreground.secondary
+        case .error:
+            return theme.colors.foreground.error
         }
     }
 
