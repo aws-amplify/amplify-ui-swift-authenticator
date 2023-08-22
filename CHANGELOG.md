@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4 (2023-08-22)
+### Bug Fixes
+- Adding missing label when displaying a `.custom()` Sign Up field.
+
 ## 1.0.3 (2023-08-17)
 
 ### Bug Fixes
