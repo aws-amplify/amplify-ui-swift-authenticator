@@ -188,3 +188,16 @@ extension CognitoConfiguration.SignUpAttribute {
         }
     }
 }
+
+extension CognitoConfiguration.UsernameAttribute {
+    var asSignUpAttribute: SignUpAttribute {
+        switch self {
+        case .username:
+            return .username
+        case .email:
+            return .email
+        case .phoneNumber:
+            return .phoneNumber
+        }
+    }
+}

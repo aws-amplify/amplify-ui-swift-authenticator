@@ -36,28 +36,28 @@ struct SignUpInputField: View {
             switch field.inputType {
             case .text:
                 TextField(
-                    field.label,
+                    field.displayedLabel,
                     text: $field.value,
                     placeholder: field.placeholder,
                     validator: validator
                 )
             case .password:
                 PasswordField(
-                    field.label,
+                    field.displayedLabel,
                     text: $field.value,
                     placeholder: field.placeholder,
                     validator: validator
                 )
             case .date:
                 DatePicker(
-                    field.label,
+                    field.displayedLabel,
                     text: $field.value,
                     placeholder: field.placeholder,
                     validator: validator
                 )
             case .phoneNumber:
                 PhoneNumberField(
-                    field.label,
+                    field.displayedLabel,
                     text: $field.value,
                     placeholder: field.placeholder,
                     validator: validator
@@ -72,7 +72,7 @@ struct SignUpInputField: View {
 
     @ViewBuilder func customView(for field: CustomSignUpField) -> some View {
         VStack(alignment: .leading, spacing: theme.components.field.spacing.vertical) {
-            if let label = field.label {
+            if let label = field.displayedLabel {
                 HStack {
                     SwiftUI.Text(label)
                         .foregroundColor(foregroundColor)
@@ -92,11 +92,12 @@ struct SignUpInputField: View {
             }
             if case .error(let message) = validator.state, let errorMessage = message {
                 AnyView(
-                    field.errorContent(errorMessage)
+                    field.errorContent(String(format: errorMessage, field.label ?? "authenticator.validator.field".localized()))
                         .font(theme.fonts.subheadline)
                 )
-                .foregroundColor(borderColor)
+                .foregroundColor(foregroundColor)
                 .transition(options.contentTransition)
+                .accessibilityHidden(true)
             }
         }
     }
@@ -107,15 +108,6 @@ struct SignUpInputField: View {
             return theme.colors.foreground.secondary
         case .error:
             return theme.colors.foreground.error
-        }
-    }
-
-    private var borderColor: Color {
-        switch validator.state {
-        case .normal:
-            return theme.colors.border.primary
-        case .error:
-            return theme.colors.border.error
         }
     }
 }
