@@ -310,6 +310,10 @@ public struct Authenticator<LoadingContent: View,
             confirmResetPasswordContent
         case .signUp:
             signUpContent
+                .onAppear {
+                    guard let state = signUpState, state.fields.isEmpty else { return }
+                    state.configure(with: viewModifiers.signUpFields)
+                }
         case .confirmSignUp:
             confirmSignUpContent
         case .verifyUser:
@@ -336,6 +340,10 @@ public struct Authenticator<LoadingContent: View,
         for contentState in contentStates.allObjects {
             contentState.configure(with: state)
         }
+    }
+    
+    private var signUpState: SignUpState? {
+        contentStates.allObjects.compactMap({ $0 as? SignUpState }).first
     }
 }
 

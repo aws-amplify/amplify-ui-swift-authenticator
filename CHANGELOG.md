@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.5 (2023-08-31)
+
+### Bug Fixes
+- Fixing required Sign Up attributes being displayed as optionals
+- Fixing Sign Up fields not being populated when providing a `signUpContent`
+- Fixing DatePicker being interactable while invisible, plus not displaying previous dates.
+
 ## 1.0.4 (2023-08-22)
 ### Bug Fixes
 - Adding missing label when displaying a `.custom()` Sign Up field.
