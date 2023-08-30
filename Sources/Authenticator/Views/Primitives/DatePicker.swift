@@ -39,6 +39,10 @@ struct DatePicker: View {
             using: FieldValidators.none
         )
         self.validator.value = text
+        if let selectedDate = formatter.date(from: text.wrappedValue) {
+            self._selectedDate = .init(wrappedValue: selectedDate)
+            self._actualDate = .init(wrappedValue: selectedDate)
+        }
     }
 
 #if os(iOS)
@@ -88,6 +92,7 @@ struct DatePicker: View {
 
             createDatePicker(style: .graphical)
                 .frame(height: isShowingDatePicker ? nil : 0, alignment: .top)
+                .disabled(!isShowingDatePicker)
                 .clipped()
         }
     }
@@ -149,6 +154,7 @@ struct DatePicker: View {
         .onChange(of: selectedDate) { date in
             updateDate(date)
         }
+        .environment(\.timeZone, timeZone)
         .padding([.top, .bottom], theme.components.field.padding)
     }
 
@@ -203,13 +209,12 @@ struct DatePicker: View {
         guard let date = actualDate else {
             return placeholder
         }
-
-        return date.formatted(
-            .dateTime
-                .day()
-                .month()
-                .year()
-        )
+        
+        return date.formatted(Date.FormatStyle(
+            date: .abbreviated,
+            time: .omitted,
+            timeZone: timeZone
+        ))
     }
 
     private var placeholderColor: Color {
@@ -226,5 +231,9 @@ struct DatePicker: View {
         case .error:
             return theme.colors.border.error
         }
+    }
+    
+    private var timeZone: TimeZone {
+        TimeZone(secondsFromGMT: 0) ?? TimeZone.current
     }
 }
