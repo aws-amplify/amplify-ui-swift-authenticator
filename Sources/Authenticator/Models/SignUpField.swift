@@ -19,7 +19,7 @@ public protocol SignUpField {
 public struct BaseSignUpField: SignUpField {
     public let label: String
     public let placeholder: String
-    public let isRequired: Bool
+    internal(set) public var isRequired: Bool
     public let attributeType: SignUpAttribute
     public let validator: FieldValidator?
     let inputType: InputType
@@ -32,23 +32,23 @@ public struct BaseSignUpField: SignUpField {
         inputType: InputType = .text,
         validator: FieldValidator? = nil
     ) {
-        if isRequired {
-            self.label = label
-        } else {
-            self.label = "authenticator.field.label.optional".localized(using: label)
-        }
+        self.label = label
         self.placeholder = placeholder
         self.isRequired = isRequired
         self.attributeType = attributeType
         self.inputType = inputType
         self.validator = validator
     }
+
+    var displayedLabel: String {
+        return isRequired ? label : "authenticator.field.label.optional".localized(using: label)
+    }
 }
 
 /// A field that is displayed using a provided custom View
 public struct CustomSignUpField: SignUpField {
     public let label: String?
-    public let isRequired: Bool
+    internal(set) public var isRequired: Bool
     public let attributeType: SignUpAttribute
     public let validator: FieldValidator?
     public let content: (Binding<String>) -> any View
@@ -68,6 +68,11 @@ public struct CustomSignUpField: SignUpField {
         self.validator = validator
         self.content = content
         self.errorContent = errorContent
+    }
+
+    var displayedLabel: String? {
+        guard let label = label else { return nil }
+        return isRequired ? label : "authenticator.field.label.optional".localized(using: label)
     }
 }
 

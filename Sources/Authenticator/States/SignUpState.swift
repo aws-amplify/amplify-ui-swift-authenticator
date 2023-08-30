@@ -90,26 +90,59 @@ public class SignUpState: AuthenticatorBaseState {
         setBusy(true)
         let cognitoConfiguration = authenticatorState.configuration
 
-        var existingFields: Set<String> = []
+        var existingFields: Set<SignUpAttribute> = []
         var inputs = signUpFields.compactMap { field -> Field? in
-            guard !existingFields.contains(field.rawValue) else {
+            guard !existingFields.contains(field.attributeType) else {
                 log.warn("Skipping configuring field of type '\(field.rawValue)' because it was already present.")
                 return nil
             }
             
-            existingFields.insert(field.rawValue)
+            existingFields.insert(field.attributeType)
             return Field(field: field)
         }
+        
+        // Validate username attribute is present and required
+        let usernameAttribute = cognitoConfiguration.usernameAttribute
+        if existingFields.contains(usernameAttribute.asSignUpAttribute),
+           let usernameField = inputs.first(where: { $0.field.attributeType == usernameAttribute.asSignUpAttribute }) {
+            if !usernameField.isRequired {
+                log.verbose("Marking username attribute \(usernameAttribute.rawValue) as required")
+                usernameField.isRequired = true
+            }
+        } else {
+            // Add username field at the top
+            log.verbose("Adding missing username attribute \(usernameAttribute.rawValue) to Sign Up Fields")
+            inputs.insert(.init(field: .signUpField(from: usernameAttribute)), at: 0)
+            existingFields.insert(usernameAttribute.asSignUpAttribute)
+        }
+        
+        // Validate all required sign up attributes are present
+        for attribute in cognitoConfiguration.signupAttributes {
+            if existingFields.contains(attribute.asSignUpAttribute),
+               let field = inputs.first(where: { $0.field.attributeType == attribute.asSignUpAttribute }) {
+                if !field.isRequired {
+                    log.verbose("Marking sign up attribute \(attribute.rawValue) as required")
+                    field.isRequired = true
+                }
+            } else {
+                log.verbose("Adding missing required sign up attribute \(attribute.rawValue) to Sign Up Fields")
+                inputs.append(.init(field: .signUpField(from: attribute, isRequired: true)))
+                existingFields.insert(attribute.asSignUpAttribute)
+            }
+        }
 
+        // Validate all verification attributes are present
         for attribute in cognitoConfiguration.verificationMechanisms {
-            if let index = inputs.firstIndex(where: { $0.field.attributeType == attribute.asSignUpAttribute }) {
-                if !inputs[index].field.isRequired {
+            if existingFields.contains(attribute.asSignUpAttribute),
+               let field = inputs.first(where: { $0.field.attributeType == attribute.asSignUpAttribute }) {
+                if !field.isRequired {
                     log.verbose("Marking verification attribute \(attribute.rawValue) as required")
-                    inputs[index] = Field(field: .signUpField(from: attribute))
+                    field.isRequired = true
                 }
             } else {
                 log.verbose("Adding missing verification attribute \(attribute.rawValue) to Sign Up Fields")
-                inputs.append(Field(field: .signUpField(from: attribute)))
+                inputs.append(.init(field: .signUpField(from: attribute)))
+                existingFields.insert(attribute.asSignUpAttribute)
             }
         }
         self.fields = inputs
@@ -126,26 +159,22 @@ public class SignUpState: AuthenticatorBaseState {
             .confirmPassword()
         ]
 
+        var existingFields: Set<SignUpAttribute> = []
         for field in initialSignUpFields {
             fields.append(.init(field: field))
+            existingFields.insert(field.attributeType)
         }
 
-        for attribute in cognitoConfiguration.signupAttributes {
-            guard !fields.contains(where: { $0.field.attributeType == attribute.asSignUpAttribute } ) else {
-                continue
-            }
-
-            let isVerificationAttribute = cognitoConfiguration.verificationMechanisms.contains {
-                $0.rawValue == attribute.rawValue
-            }
-            let field: SignUpField = .signUpField(from: attribute, isRequired: isVerificationAttribute)
-            fields.append(Field(field: field))
+        // Add all required sign up attributes
+        for attribute in cognitoConfiguration.signupAttributes where !existingFields.contains(attribute.asSignUpAttribute) {
+            fields.append(.init(field: .signUpField(from: attribute, isRequired: true)))
+            existingFields.insert(attribute.asSignUpAttribute)
         }
 
-        for attribute in cognitoConfiguration.verificationMechanisms {
-            if !(fields.contains { $0.field.attributeType == attribute.asSignUpAttribute }){
-                fields.append(Field(field: .signUpField(from: attribute)))
-            }
+        // Add all verification mechanisms that might not be present
+        for attribute in cognitoConfiguration.verificationMechanisms where !existingFields.contains(attribute.asSignUpAttribute) {
+            fields.append(.init(field: .signUpField(from: attribute)))
+            existingFields.insert(attribute.asSignUpAttribute)
         }
 
         setBusy(false)
@@ -155,7 +184,7 @@ public class SignUpState: AuthenticatorBaseState {
 public extension SignUpState {
     /// Represents a pair between a `SignUpField` and the value that is provided by the user
     class Field: ObservableObject, Hashable {
-        public let field: SignUpField
+        private(set) public var field: SignUpField
         @Published public var value: String = ""
 
         init(field: SignUpField) {
@@ -168,6 +197,25 @@ public extension SignUpState {
 
         public func hash(into hasher: inout Hasher) {
             return hasher.combine(field.attributeType)
+        }
+        
+        var isRequired: Bool {
+            set {
+                guard isRequired != newValue else { return }
+                switch field {
+                case var baseField as BaseSignUpField:
+                    baseField.isRequired = newValue
+                    field = baseField
+                case var customField as CustomSignUpField:
+                    customField.isRequired = newValue
+                    field = customField
+                default:
+                    log.error("Unsupported SignUpField of type \(type(of: self)) cannot be mutated")
+                }
+            }
+            get {
+                field.isRequired
+            }
         }
     }
 }
