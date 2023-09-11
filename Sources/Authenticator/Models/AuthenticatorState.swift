@@ -58,7 +58,7 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
     }
 
     func setCurrentStep(_ step: Step) {
-        if case .error(let error) = step {
+        if case .error(let error) = self.step {
             log.error(error)
             log.error("Cannot move to \(step), the Authenticator is in error state.")
             return

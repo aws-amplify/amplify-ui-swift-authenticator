@@ -104,6 +104,12 @@ public class AuthenticatorBaseState: ObservableObject {
                 log.verbose("User has attributes pending verification: \(unverifiedAttributes)")
                 return .verifyUser(attributes: unverifiedAttributes)
             }
+        case .confirmSignInWithTOTPCode,
+             .continueSignInWithTOTPSetup(_):
+            log.error("The Authenticator does not yet support TOTP workflows.")
+            fallthrough
+        default:
+            throw AuthError.unknown("Unsupported next step: \(result.nextStep)", nil)
         }
     }
 
