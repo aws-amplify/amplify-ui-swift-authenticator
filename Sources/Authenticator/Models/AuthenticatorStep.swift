@@ -47,6 +47,10 @@ public struct AuthenticatorStep: Equatable {
     /// so they are presented with the Confirm Sign In with Custom Challenge view
     public static let confirmSignInWithCustomChallenge = AuthenticatorStep("confirmSignInWithCustomChallenge")
 
+    /// A user has successfuly provided valid Sign In credentials but is required TOTP code from their associated authenticator token generator
+    /// so they are presented with the Confirm Sign In with MFA Code View
+    public static let confirmSignInWithTOTP = AuthenticatorStep("confirmSignInWithTOTPCode")
+
     /// A user has successfuly provided valid Sign In credentials but is required to provide a MFA code,
     /// so they are presented with the Confirm Sign In with MFA Code view
     public static let confirmSignInWithMFACode = AuthenticatorStep("confirmSignInWithMFACode")

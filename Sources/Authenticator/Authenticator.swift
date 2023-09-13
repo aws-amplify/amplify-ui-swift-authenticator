@@ -13,6 +13,7 @@ public struct Authenticator<LoadingContent: View,
                             SignInContent: View,
                             ConfirmSignInWithNewPasswordContent: View,
                             ConfirmSignInWithMFACodeContent: View,
+                            ConfirmSignInWithTOTPContent: View,
                             ConfirmSignInWithCustomChallengeContent: View,
                             SignUpContent: View,
                             ConfirmSignUpContent: View,
@@ -34,6 +35,7 @@ public struct Authenticator<LoadingContent: View,
     private let loadingContent: LoadingContent
     private let signInContent: SignInContent
     private let confirmSignInContentWithMFACodeContent: ConfirmSignInWithMFACodeContent
+    private let confirmSignInWithTOTPContent: ConfirmSignInWithTOTPContent
     private let confirmSignInContentWithCustomChallengeContent: ConfirmSignInWithCustomChallengeContent
     private let confirmSignInContentWithNewPasswordContent: ConfirmSignInWithNewPasswordContent
     private let signUpContent: SignUpContent
@@ -90,6 +92,9 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder confirmSignInWithMFACodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithMFACodeContent = { state in
             ConfirmSignInWithMFACodeView(state: state)
         },
+        @ViewBuilder confirmSignInWithTOTPContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPContent = { state in
+            ConfirmSignInWithTOTPView(state: state)
+        },
         @ViewBuilder confirmSignInWithCustomChallengeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithCustomChallengeContent = { state in
             ConfirmSignInWithCustomChallengeView(state: state)
         },
@@ -133,6 +138,12 @@ public struct Authenticator<LoadingContent: View,
         contentStates.add(confirmSignInWithMFACodeState)
         self.confirmSignInContentWithMFACodeContent = confirmSignInWithMFACodeContent(
             confirmSignInWithMFACodeState
+        )
+
+        let confirmSignInWithTOTPState = ConfirmSignInWithCodeState(credentials: credentials)
+        contentStates.add(confirmSignInWithMFACodeState)
+        self.confirmSignInWithTOTPContent = confirmSignInWithTOTPContent(
+            confirmSignInWithTOTPState
         )
 
         let confirmSignInWithCustomChallengeState = ConfirmSignInWithCodeState(credentials: credentials)
@@ -302,6 +313,8 @@ public struct Authenticator<LoadingContent: View,
             confirmSignInContentWithNewPasswordContent
         case .confirmSignInWithMFACode:
             confirmSignInContentWithMFACodeContent
+        case .confirmSignInWithTOTP:
+            confirmSignInWithTOTPContent
         case .confirmSignInWithCustomChallenge:
             confirmSignInContentWithCustomChallengeContent
         case .resetPassword:

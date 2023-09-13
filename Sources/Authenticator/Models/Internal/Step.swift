@@ -13,6 +13,7 @@ enum Step {
     case error(_ error: Error)
     case signIn
     case confirmSignInWithCustomChallenge
+    case confirmSignInWithTOTP
     case confirmSignInWithMFACode(deliveryDetails: AuthCodeDeliveryDetails?)
     case confirmSignInWithNewPassword
     case signUp
@@ -46,6 +47,8 @@ enum Step {
             return .signIn
         case .confirmSignInWithCustomChallenge:
             return .confirmSignInWithCustomChallenge
+        case .confirmSignInWithTOTP:
+            return .confirmSignInWithTOTP
         case .confirmSignInWithMFACode:
             return .confirmSignInWithMFACode
         case .confirmSignInWithNewPassword:
