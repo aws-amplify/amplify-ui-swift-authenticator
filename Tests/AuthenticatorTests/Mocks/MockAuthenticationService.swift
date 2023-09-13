@@ -10,6 +10,7 @@ import Amplify
 import Foundation
 
 class MockAuthenticationService: AuthenticationService {
+    
     // MARK: - Sign In
 
     var signInCount = 0

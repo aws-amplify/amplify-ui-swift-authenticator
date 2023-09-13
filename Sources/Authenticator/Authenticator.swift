@@ -56,9 +56,11 @@ public struct Authenticator<LoadingContent: View,
     /// Defaults to a `SwiftUI.ProgressView`.
     /// - Parameter signInContent: The content associated with the ``AuthenticatorStep/signIn`` step.
     /// Defaults to a ``SignInView``.
-    /// - Parameter confirmSignInWithMFACodeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithCustomChallenge`` step.
+    /// - Parameter confirmSignInWithMFACodeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithMFACode`` step.
     /// Defaults to a ``ConfirmSignInWithMFACodeView``.
-    /// - Parameter confirmSignInWithCustomChallengeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithMFACode`` step.
+    ///- Parameter confirmSignInWithTOTPContent: The content associated with the ``AuthenticatorStep/confirmSignInWithTOTP`` step.
+    /// Defaults to a ``ConfirmSignInWithMFACodeView``.
+    /// - Parameter confirmSignInWithCustomChallengeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithCustomChallenge`` step.
     /// Defaults to a ``ConfirmSignInWithCustomChallengeView``.
     /// - Parameter confirmSignInWithNewPasswordContent: The content associated with the ``AuthenticatorStep/confirmSignInWithNewPassword`` step.
     /// Defaults to a ``ConfirmSignInWithNewPasswordView``.
