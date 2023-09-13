@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.6 (2023-09-14)
+
+### Misc. Updates
+- Updating code to support Amplify 2.16+. However, **TOTP** workflows are **not** yet supported.
+
 ## 1.0.5 (2023-08-31)
 
 ### Bug Fixes

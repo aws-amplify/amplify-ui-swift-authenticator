@@ -177,6 +177,14 @@ class MockAuthenticationService: AuthenticationService {
     func forgetDevice(_ device: AuthDevice?, options: AuthForgetDeviceRequest.Options?) async throws {}
 
     func rememberDevice(options: AuthRememberDeviceRequest.Options?) async throws {}
+    
+    // MARK: - TOTP
+    
+    func setUpTOTP() async throws -> TOTPSetupDetails {
+        return .init(sharedSecret: "", username: "")
+    }
+    
+    func verifyTOTPSetup(code: String, options: VerifyTOTPSetupRequest.Options?) async throws {}
 }
 
 extension MockAuthenticationService {
