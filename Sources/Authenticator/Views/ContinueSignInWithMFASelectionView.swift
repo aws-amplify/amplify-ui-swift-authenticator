@@ -66,6 +66,8 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
                 Task { await confirmSignIn() }
             }
             .buttonStyle(.primary)
+            .disabled(state.confirmationCode.isEmpty)
+            .opacity(state.confirmationCode.isEmpty ? 0.5 : 1)
 
             footerContent
         }

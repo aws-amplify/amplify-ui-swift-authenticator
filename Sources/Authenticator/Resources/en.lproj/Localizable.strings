@@ -151,7 +151,7 @@
 
 /* Authenticator Errors */
 "authenticator.authError.incorrectCredentials" = "Incorrect username or password";
-"authenticator.authError.continueSignInWithMFASelection.noSelectionError" = "Please select a MFA method to continue";
+"authenticator.authError.continueSignInWithMFASelection.noSelectionError" = "Please select an MFA method to continue";
 "authenticator.unknownError" = "Sorry, something went wrong";
 
 "authenticator.cognitoError.codeDelivery" = "Could not send confirmation code";
