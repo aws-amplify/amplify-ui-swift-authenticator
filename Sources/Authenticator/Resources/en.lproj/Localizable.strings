@@ -85,6 +85,13 @@
 "authenticator.confirmSignInWithCode.totp.button.submit" = "Confirm";
 "authenticator.confirmSignInWithCode.totp.button.backToSignIn" = "Back to Sign In";
 
+/* Continue Sign In with MFA Selection */
+"authenticator.continueSignInWithMFASelection.title" = "Select your preferred Two-Factor Auth method";
+"authenticator.continueSignInWithMFASelection.sms.radioButton.title" = "Text Message (SMS)";
+"authenticator.continueSignInWithMFASelection.totp.radioButton.title" = "Authenticator App (TOTP)";
+"authenticator.continueSignInWithMFASelection.button.submit" = "Continue";
+"authenticator.continueSignInWithMFASelection.button.backToSignIn" = "Back to Sign In";
+
 /* Reset Password view */
 "authenticator.resetPassword.title" = "Reset your password";
 "authenticator.resetPassword.button.sendCode" = "Send code";
@@ -144,9 +151,10 @@
 
 /* Authenticator Errors */
 "authenticator.authError.incorrectCredentials" = "Incorrect username or password";
+"authenticator.authError.continueSignInWithMFASelection.noSelectionError" = "Please select an MFA method to continue";
 "authenticator.unknownError" = "Sorry, something went wrong";
 
-"authenticator.cognitoError.codeDelivery" = "Could not send confirmation cde";
+"authenticator.cognitoError.codeDelivery" = "Could not send confirmation code";
 "authenticator.cognitoError.codeExpired" = "Confirmation code has expired";
 "authenticator.cognitoError.codeMismatch" = "Incorrect confirmation code";
 "authenticator.cognitoError.invalidPassword" = "The provided password is not valid";

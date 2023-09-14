@@ -10,7 +10,7 @@ import SwiftUI
 
 /// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignInWithTOTPCode`` step.
 public struct ConfirmSignInWithTOTPView<Header: View,
-                                           Footer: View>: View {
+                                        Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState
     @ObservedObject private var state: ConfirmSignInWithCodeState
     private let content: ConfirmSignInWithCodeView<Header, Footer>
