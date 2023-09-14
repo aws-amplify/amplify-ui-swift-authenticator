@@ -23,6 +23,15 @@ public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
         return deliveryDetails
     }
 
+    /// The `Amplify.AllowedMFATypes` associated with this state. If the Authenticator is not in the `.continueSignInWithMFASelection` step, it returns `empty` result
+    public var allowedMFATypes: AllowedMFATypes {
+        guard case .continueSignInWithMFASelection(let allowedMFATypes) = authenticatorState.step else {
+            return []
+        }
+
+        return allowedMFATypes
+    }
+
     /// Attempts to confirm the user's sign in using the provided confirmation code.
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
