@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-enum MFAType {
+enum AuthenticatorMFAType {
     case sms
     case totp
     case none

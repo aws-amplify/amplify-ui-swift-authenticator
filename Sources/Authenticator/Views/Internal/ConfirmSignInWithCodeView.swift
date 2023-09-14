@@ -13,7 +13,7 @@ struct ConfirmSignInWithCodeView<Header: View,
     @Environment(\.authenticatorState) private var authenticatorState
     @StateObject private var codeValidator: Validator
     @ObservedObject private var state: ConfirmSignInWithCodeState
-    private let mfaType: MFAType
+    private let mfaType: AuthenticatorMFAType
     private let headerContent: Header
     private let footerContent: Footer
 
@@ -26,7 +26,7 @@ struct ConfirmSignInWithCodeView<Header: View,
             EmptyView()
         },
         errorTransform: ((AuthError) -> AuthenticatorError)? = nil,
-        mfaType: MFAType
+        mfaType: AuthenticatorMFAType
     ) {
         self.state = state
         self.headerContent = headerContent()

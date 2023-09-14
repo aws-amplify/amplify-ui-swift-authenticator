@@ -106,8 +106,9 @@ public class AuthenticatorBaseState: ObservableObject {
             }
         case .confirmSignInWithTOTPCode:
             return .confirmSignInWithTOTP
-        case .continueSignInWithTOTPSetup(_),
-                .continueSignInWithMFASelection(_):
+        case .continueSignInWithMFASelection(let allowedMFATypes):
+            return .continueSignInWithMFASelection(allowedMFATypes: allowedMFATypes)
+        case .continueSignInWithTOTPSetup(_):
             log.error("The Authenticator does not yet support TOTP workflows.")
             fallthrough
         default:
@@ -193,6 +194,18 @@ public class AuthenticatorBaseState: ObservableObject {
     private func localizedMessage(for error: AuthError) -> String? {
         if case .notAuthorized(_, _, _) = error {
             return "authenticator.authError.incorrectCredentials".localized()
+        }
+
+        if case .validation(let field, _, _, _) = error {
+            switch authenticatorState.step {
+            case .continueSignInWithMFASelection:
+                if field.elementsEqual("challengeResponse") {
+                    return "authenticator.authError.continueSignInWithMFASelection.noSelectionError".localized()
+                }
+                return nil
+            default:
+                return nil
+            }
         }
 
         guard let cognitoError = error.underlyingError as? AWSCognitoAuthError else {
