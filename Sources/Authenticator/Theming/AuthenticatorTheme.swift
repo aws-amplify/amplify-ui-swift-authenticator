@@ -167,6 +167,7 @@ extension AuthenticatorTheme.Components {
         public var cornerRadius: CGFloat = 0
         public var borderWidth: CGFloat = 1
         public var backgroundColor: SwiftUI.Color = .clear
+        public var qrCodeSize: CGFloat = 200
     }
 
     public struct Button {
@@ -179,6 +180,11 @@ extension AuthenticatorTheme.Components {
             font: Platform.isMacOS ? .body.weight(.semibold) : .subheadline.weight(.semibold),
             cornerRadius: 0,
             padding: 10
+        )
+        public var capsule = Variation(
+            font: Platform.isMacOS ? .body.weight(.regular) : .subheadline.weight(.regular),
+            cornerRadius: .infinity,
+            padding: .init(top: 10, bottom: 10, trailing: 30, leading: 30)
         )
     }
 

@@ -51,6 +51,10 @@ public struct AuthenticatorStep: Equatable {
     /// so they are presented with the Confirm Sign In with TOTP Code View
     public static let confirmSignInWithTOTP = AuthenticatorStep("confirmSignInWithTOTP")
 
+    /// A user has successfully provided valid Sign In credentials but is required to setup TOTP before continuing sign in
+    /// so they are presented with the  TOTP Setup View
+    public static let continueSignInWithTOTPSetup = AuthenticatorStep("continueSignInWithTOTPSetup")
+
     /// A user has successfully provided valid Sign In credentials but is required to select  a MFA type to continue
     /// so they are presented with the Confirm Sign In with MFA Selection View
     public static let continueSignInWithMFASelection = AuthenticatorStep("continueSignInWithMFASelection")
