@@ -12,6 +12,7 @@ struct DefaultHeader: View {
     var title: String
     private var font: Font? = nil
     private var foregroundColor: Color? = nil
+    private var alignment: Alignment = .leading
 
     init(title: String) {
         self.title = title
@@ -20,9 +21,10 @@ struct DefaultHeader: View {
     var body: some View {
         HStack {
             SwiftUI.Text(title)
+                .frame(maxWidth: .infinity, alignment: alignment)
                 .font(font ?? theme.fonts.title)
                 .foregroundColor(foregroundColor ?? theme.colors.foreground.primary)
-            .accessibilityAddTraits(.isHeader)
+                .accessibilityAddTraits(.isHeader)
             Spacer()
         }
     }
@@ -36,6 +38,12 @@ struct DefaultHeader: View {
     func foregroundColor(_ foregroundColor: Color) -> DefaultHeader {
         var view = self
         view.foregroundColor = foregroundColor
+        return view
+    }
+
+    func alignment(_ alignment: Alignment) -> DefaultHeader {
+        var view = self
+        view.alignment = alignment
         return view
     }
 }

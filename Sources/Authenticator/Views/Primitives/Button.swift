@@ -31,7 +31,7 @@ struct Button: View {
         switch viewModifiers.style {
         case .primary:
             return theme.colors.background.interactive
-        case .link:
+        case .link, .capsule:
             return .clear
         default:
             return theme.colors.background.error
@@ -42,7 +42,7 @@ struct Button: View {
         switch viewModifiers.style {
         case .primary:
             return theme.colors.foreground.inverse
-        case .link:
+        case .link, .capsule:
             return theme.colors.foreground.interactive
         default:
             return theme.colors.foreground.primary
@@ -55,6 +55,8 @@ struct Button: View {
             return theme.components.button.primary.cornerRadius
         case .link:
             return theme.components.button.link.cornerRadius
+        case .capsule:
+            return theme.components.button.capsule.cornerRadius
         default:
             return theme.components.authenticator.cornerRadius
         }
@@ -62,7 +64,7 @@ struct Button: View {
 
     private var borderColor: Color {
         switch viewModifiers.style {
-        case .default:
+        case .default, .capsule:
             return theme.colors.border.interactive
         default:
             return .clear
@@ -71,7 +73,7 @@ struct Button: View {
 
     private var borderWidth: CGFloat {
         switch viewModifiers.style {
-        case .default:
+        case .default, .capsule:
             return theme.components.authenticator.borderWidth
         default:
             return 0
@@ -84,8 +86,19 @@ struct Button: View {
             return theme.components.button.primary.font
         case .link:
             return theme.components.button.link.font
+        case .capsule:
+            return theme.components.button.capsule.font
         default:
             return theme.fonts.body
+        }
+    }
+
+    private var maxWidth: CGFloat? {
+        switch viewModifiers.style {
+        case .capsule:
+            return nil
+        default:
+            return viewModifiers.frame.maxWidth
         }
     }
 
@@ -95,6 +108,8 @@ struct Button: View {
             return theme.components.button.primary.padding
         case .link:
             return theme.components.button.link.padding
+        case .capsule:
+            return theme.components.button.capsule.padding
         default:
             return theme.components.authenticator.padding
         }
@@ -107,7 +122,10 @@ struct Button: View {
             backgroundColor: backgroundColor,
             cornerRadius: cornerRadius,
             padding: padding,
-            maxWidth: viewModifiers.frame.maxWidth
+            maxWidth: maxWidth,
+            borderWidth: borderWidth,
+            borderColor: borderColor,
+            useOverlay: viewModifiers.style == .capsule
         )
     }
 }
@@ -137,6 +155,7 @@ extension Button {
         case `default`
         case primary
         case link
+        case capsule
     }
 
     func frame(
@@ -173,15 +192,35 @@ private struct AuthenticatorButtonStyle: ButtonStyle {
     let cornerRadius: CGFloat
     let padding: AuthenticatorTheme.Padding?
     let maxWidth: CGFloat?
+    let borderWidth: CGFloat
+    let borderColor: Color
+    let useOverlay: Bool
 
     func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .font(font)
-            .padding(padding)
-            .multilineTextAlignment(.center)
-            .frame(maxWidth: maxWidth)
-            .foregroundColor(configuration.isPressed ? foregroundColor.opacity(0.5) : foregroundColor)
-            .background(configuration.isPressed ? backgroundColor.opacity(0.5) : backgroundColor)
-            .cornerRadius(cornerRadius)
+        if useOverlay {
+            configuration.label
+                .font(font)
+                .padding(padding)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: maxWidth)
+                .foregroundColor(configuration.isPressed ? foregroundColor.opacity(0.5) : foregroundColor)
+                .background(configuration.isPressed ? backgroundColor.opacity(0.5) : backgroundColor)
+                .overlay(
+                    RoundedRectangle(cornerRadius: .infinity)
+                        .stroke(borderColor,
+                                lineWidth: borderWidth)
+                )
+        } else {
+            configuration.label
+                .font(font)
+                .padding(padding)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: maxWidth)
+                .foregroundColor(configuration.isPressed ? foregroundColor.opacity(0.5) : foregroundColor)
+                .background(configuration.isPressed ? backgroundColor.opacity(0.5) : backgroundColor)
+                .cornerRadius(cornerRadius)
+                .border(borderColor, width: borderWidth)
+        }
+
     }
 }

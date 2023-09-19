@@ -108,9 +108,8 @@ public class AuthenticatorBaseState: ObservableObject {
             return .confirmSignInWithTOTP
         case .continueSignInWithMFASelection(let allowedMFATypes):
             return .continueSignInWithMFASelection(allowedMFATypes: allowedMFATypes)
-        case .continueSignInWithTOTPSetup(_):
-            log.error("The Authenticator does not yet support TOTP workflows.")
-            fallthrough
+        case .continueSignInWithTOTPSetup(let totpSetupDetails):
+            return .continueSignInWithTOTPSetup(totpSetupDetails: totpSetupDetails)
         default:
             throw AuthError.unknown("Unsupported next step: \(result.nextStep)", nil)
         }
