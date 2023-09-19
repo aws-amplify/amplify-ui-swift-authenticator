@@ -8,8 +8,9 @@
 import Foundation
 
 extension Bundle {
+
     // Name of the app
-    var applicationName: String {
+    var applicationName: String? {
         if let localizedName = Bundle.main.infoDictionary?[kCFBundleLocalizationsKey as String] as? String {
             return localizedName
         }
@@ -19,6 +20,6 @@ extension Bundle {
         if let bundleName = Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String {
             return bundleName
         }
-        return "AmplifyAuthenticator"
+        return nil
     }
 }

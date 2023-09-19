@@ -62,8 +62,7 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
             // If the TOTP details were returned, build the QR Code and the button
             if let totpSetupDetails = state.totpSetupDetails {
 
-                if let qrCodeURI = try? totpSetupDetails.getSetupURI(appName: options.totpIssuer).absoluteString,
-                   let qrCodeImage = generateQRCode(from: qrCodeURI) {
+                if let qrCodeImage = generateQRCode(totpSetupDetails: totpSetupDetails) {
                     Image(decorative: qrCodeImage, scale: 1)
                         .interpolation(.none)
                         .resizable()
@@ -119,13 +118,45 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
 
     }
 
-    private func generateQRCode(from string: String) -> CGImage? {
-        let filter = CIFilter.qrCodeGenerator()
-        filter.message = Data(string.utf8)
-        guard let outputImage = filter.outputImage else {
+
+    private func extractIssuerForQRCodeGeneration() -> String? {
+        if let issuer = options.totpOptions?.issuer {
+            return issuer
+        }
+        log.warn("`totpOptions` not provided as part of initialization. Falling back to extract application name from Bundle.")
+
+        if let applicationName = Bundle.main.applicationName {
+            return applicationName
+        }
+        log.error("Unable to extract the application name from Bundle")
+        return nil
+    }
+
+    private func generateQRCode(totpSetupDetails: TOTPSetupDetails) -> CGImage? {
+        guard let issuer = extractIssuerForQRCodeGeneration() else {
+            log.error("Unable to create TOTP Setup QR code due to missing issuer.")
             return nil
         }
-        return CIContext().createCGImage(outputImage, from: outputImage.extent)
+
+        let qrCodeURIString: String
+        do {
+            qrCodeURIString = try totpSetupDetails.getSetupURI(appName: issuer).absoluteString
+        } catch {
+            log.error(error: error)
+            return nil
+        }
+
+        let filter = CIFilter.qrCodeGenerator()
+        filter.message = Data(qrCodeURIString.utf8)
+        guard let outputImage = filter.outputImage else {
+            log.error("Unable to create a CI Image for TOTP Setup QRCode")
+            return nil
+        }
+        guard let cgImage = CIContext().createCGImage(outputImage, from: outputImage.extent) else {
+            log.error("Unable to create a CGImage from CIImage for TOTP Setup QRCode ")
+            return nil
+        }
+        return cgImage
     }
     
     private func confirmSignIn() async {
