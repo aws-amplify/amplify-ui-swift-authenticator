@@ -9,8 +9,8 @@ import SwiftUI
 
 struct AuthenticatorTextWithHeader: View {
     @Environment(\.authenticatorTheme) private var theme
-    var title: String
-    var content: String
+    private var title: String
+    private var content: String
 
     init(title: String, content: String) {
         self.title = title

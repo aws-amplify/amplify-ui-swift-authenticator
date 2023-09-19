@@ -15,9 +15,9 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
                                               Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState
     @Environment(\.authenticatorTheme) private var theme
+    @Environment(\.authenticatorOptions) private var options
     @ObservedObject private var state: ConfirmSignInWithCodeState
     @StateObject private var codeValidator: Validator
-    private let issuer: String?
     private let headerContent: Header
     private let footerContent: Footer
 
@@ -27,7 +27,6 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
     /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  ``ContinueSignInWithTOTPSetupFooter``
     public init(
         state: ConfirmSignInWithCodeState,
-        issuer: String?,
         @ViewBuilder headerContent: () -> Header = {
             ContinueSignInWithTOTPSetupHeader()
         },
@@ -36,7 +35,6 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
         }
     ) {
         self.state = state
-        self.issuer = issuer
         self.headerContent = headerContent()
         self.footerContent = footerContent()
         self._codeValidator = StateObject(wrappedValue: Validator(
@@ -64,7 +62,7 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
             // If the TOTP details were returned, build the QR Code and the button
             if let totpSetupDetails = state.totpSetupDetails {
 
-                if let qrCodeURI = try? totpSetupDetails.getSetupURI(appName: issuer ?? Bundle.main.applicationName ?? "").absoluteString,
+                if let qrCodeURI = try? totpSetupDetails.getSetupURI(appName: options.totpIssuer).absoluteString,
                    let qrCodeImage = generateQRCode(from: qrCodeURI) {
                     Image(decorative: qrCodeImage, scale: 1)
                         .interpolation(.none)

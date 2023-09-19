@@ -32,7 +32,6 @@ public struct Authenticator<LoadingContent: View,
     @State private var currentStep: Step = .loading
     @State private var previousStep: Step = .loading
     private var initialStep: AuthenticatorInitialStep
-    private var totpOptions: TOTPOptions?
     private var viewModifiers = ViewModifiers()
     private var contentStates: NSHashTable<AuthenticatorBaseState> = .weakObjects()
     private let loadingContent: LoadingContent
@@ -57,8 +56,6 @@ public struct Authenticator<LoadingContent: View,
     /// Creates an `Authenticator` component
     /// - Parameter initialStep: The initial step displayed to unauthorized users.
     /// Defaults to ``AuthenticatorInitialStep/signIn``
-    /// - Parameter totpOptions: The TOTP Options that would be used by the Authenticator
-    /// Defaults to ``nil``
     /// - Parameter loadingContent: The content that is associated with the ``AuthenticatorStep/loading`` step.
     /// Defaults to a `SwiftUI.ProgressView`.
     /// - Parameter signInContent: The content associated with the ``AuthenticatorStep/signIn`` step.
@@ -96,7 +93,6 @@ public struct Authenticator<LoadingContent: View,
     /// - Parameter content: The content associated with the ``AuthenticatorStep/signedIn`` step, i.e. once the user has successfully authenticated.
     public init(
         initialStep: AuthenticatorInitialStep = .signIn,
-        totpOptions: TOTPOptions? = nil,
         @ViewBuilder loadingContent: () -> LoadingContent = {
             ProgressView()
         },
@@ -112,8 +108,8 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder continueSignInWithMFASelectionContent: (ConfirmSignInWithCodeState) -> ContinueSignInWithMFASelectionContent = { state in
             ContinueSignInWithMFASelectionView(state: state)
         },
-        @ViewBuilder continueSignInWithTOTPSetupContent: (ConfirmSignInWithCodeState, String?) -> ContinueSignInWithTOTPSetupContent = { state, issuer in
-            ContinueSignInWithTOTPSetupView(state: state, issuer: issuer)
+        @ViewBuilder continueSignInWithTOTPSetupContent: (ConfirmSignInWithCodeState) -> ContinueSignInWithTOTPSetupContent = { state in
+            ContinueSignInWithTOTPSetupView(state: state)
         },
         @ViewBuilder confirmSignInWithCustomChallengeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithCustomChallengeContent = { state in
             ConfirmSignInWithCustomChallengeView(state: state)
@@ -147,7 +143,6 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder content: @escaping (SignedInState) -> SignedInContent
     ) {
         self.initialStep = initialStep
-        self.totpOptions = totpOptions
         self.loadingContent = loadingContent()
         let credentials = Credentials()
 
@@ -176,8 +171,7 @@ public struct Authenticator<LoadingContent: View,
         let continueSignInWithTOTPSetupState = ConfirmSignInWithCodeState(credentials: credentials)
         contentStates.add(continueSignInWithTOTPSetupState)
         self.continueSignInWithTOTPSetupContent = continueSignInWithTOTPSetupContent(
-            continueSignInWithTOTPSetupState,
-            totpOptions?.issuer
+            continueSignInWithTOTPSetupState
         )
 
         let confirmSignInWithCustomChallengeState = ConfirmSignInWithCodeState(credentials: credentials)
@@ -242,6 +236,7 @@ public struct Authenticator<LoadingContent: View,
         }
         .animation(viewModifiers.contentAnimation, value: currentStep)
         .environment(\.authenticatorOptions.hidesSignUpButton, viewModifiers.hidesSignUpButton)
+        .environment(\.authenticatorOptions.totpIssuer, viewModifiers.totpIssuer)
         .environment(\.authenticatorOptions.contentAnimation, viewModifiers.contentAnimation)
         .environment(\.authenticatorOptions.contentTransition, viewModifiers.contentTransition)
         .environment(\.authenticatorOptions.signUpFields, viewModifiers.signUpFields)
@@ -270,6 +265,19 @@ public struct Authenticator<LoadingContent: View,
     public func hidesSignUpButton(_ hidesSignUpButton: Bool = true) -> Self {
         var view = self
         view.viewModifiers.hidesSignUpButton = hidesSignUpButton
+        return view
+    }
+
+    /// Hides the Sign Up Button that is displayed in the default ``ContinueSignInWithTOTPSetupView``.
+    /// The `totpIssuer` is the title displayed in a user's TOTP App preceding the
+    /// account name. In most cases, this should be the name of your app.
+    /// For example, if your app is called "My App", your user will see
+    /// "My App" - "username" in their TOTP app.
+    /// Defaults to the `appName` found in the project configuration.
+    /// - Parameter totpIssuer: The `totpIssuer` is the title displayed in a user's TOTP App. Defaults
+    public func totpIssuer(_ totpIssuer: String) -> Self {
+        var view = self
+        view.viewModifiers.totpIssuer = totpIssuer
         return view
     }
 
@@ -401,6 +409,7 @@ public struct Authenticator<LoadingContent: View,
 extension Authenticator {
     private struct ViewModifiers {
         var hidesSignUpButton = false
+        var totpIssuer: String = Bundle.main.applicationName
         var contentAnimation: Animation = .easeInOut(duration: 0.25)
         var contentTransition: AnyTransition = .opacity
         var signUpFields: [SignUpField] = []
