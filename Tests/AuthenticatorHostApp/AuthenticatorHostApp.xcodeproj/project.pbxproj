@@ -22,7 +22,7 @@
 		4873E7532ABC99E4001EDA1D /* ImageDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7522ABC99E4001EDA1D /* ImageDiff.swift */; };
 		4873E7552ABC9AF7001EDA1D /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7542ABC9AF7001EDA1D /* Snapshot.swift */; };
 		4873E7572ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7562ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift */; };
-		4873E7592ABC9C58001EDA1D /* XCTestCase+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7582ABC9C58001EDA1D /* XCTestCase+Snapshot.swift */; };
+		4873E7592ABC9C58001EDA1D /* XCTestCaseExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7582ABC9C58001EDA1D /* XCTestCaseExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +50,7 @@
 		4873E7522ABC99E4001EDA1D /* ImageDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDiff.swift; sourceTree = "<group>"; };
 		4873E7542ABC9AF7001EDA1D /* Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
 		4873E7562ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanCounterBetweenTestCases.swift; sourceTree = "<group>"; };
-		4873E7582ABC9C58001EDA1D /* XCTestCase+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Snapshot.swift"; sourceTree = "<group>"; };
+		4873E7582ABC9C58001EDA1D /* XCTestCaseExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCaseExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +133,7 @@
 		483E095D2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests */ = {
 			isa = PBXGroup;
 			children = (
+				4873E7582ABC9C58001EDA1D /* XCTestCaseExtension.swift */,
 				4873E74E2ABC9944001EDA1D /* Snapshot */,
 				483E095E2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests.swift */,
 				482D01122ABE21F7000A3140 /* ProcessArgument.swift */,
@@ -146,7 +147,6 @@
 				4873E74F2ABC994E001EDA1D /* ImageProcessing */,
 				4873E7542ABC9AF7001EDA1D /* Snapshot.swift */,
 				4873E7562ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift */,
-				4873E7582ABC9C58001EDA1D /* XCTestCase+Snapshot.swift */,
 			);
 			path = Snapshot;
 			sourceTree = "<group>";
@@ -282,7 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4873E7572ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift in Sources */,
-				4873E7592ABC9C58001EDA1D /* XCTestCase+Snapshot.swift in Sources */,
+				4873E7592ABC9C58001EDA1D /* XCTestCaseExtension.swift in Sources */,
 				482D01142ABE21F7000A3140 /* ProcessArgument.swift in Sources */,
 				4873E7532ABC99E4001EDA1D /* ImageDiff.swift in Sources */,
 				483E095F2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests.swift in Sources */,

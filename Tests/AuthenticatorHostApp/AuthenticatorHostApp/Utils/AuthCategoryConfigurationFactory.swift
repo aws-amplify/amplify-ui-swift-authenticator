@@ -53,14 +53,8 @@ class AuthCategoryConfigurationFactory {
         ])
     }
 
-    func setUserAtribute(_ userAttribute: UsernameAttribute) {
-        usernameAttributes = [ .string(userAttribute.rawValue) ]
-    }
-
-    enum UsernameAttribute: String, Decodable {
-        case username = "USERNAME"
-        case email = "EMAIL"
-        case phoneNumber = "PHONE_NUMBER"
+    func setUserAtributes(_ userAttributesArg: [UserAttribute]) {
+        usernameAttributes = userAttributesArg.map({ .string($0.rawValue) })
     }
 }
 

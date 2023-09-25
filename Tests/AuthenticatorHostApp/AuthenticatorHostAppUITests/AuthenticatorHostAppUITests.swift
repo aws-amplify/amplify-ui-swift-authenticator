@@ -22,33 +22,19 @@ final class AuthenticatorHostAppUITests: XCTestCase {
 
     func testSignInViewWithWithUsernameAsPhoneNumber() throws {
         launchApp(with: [
-            ProcessArgument.hidesSignUpButton(false),
-            ProcessArgument.initialStep(.signIn)
+            .hidesSignUpButton(false),
+            .initialStep(.signIn),
+            .userAttributes([ .phoneNumber ])
         ])
         assertSnapshot()
     }
 
-    func testResetPasswordView() throws {
+    func testResetPasswordViewWithUsernameAsPhoneNumber() throws {
         launchApp(with: [
-            ProcessArgument.hidesSignUpButton(false),
-            ProcessArgument.initialStep(.resetPassword)
+            .hidesSignUpButton(false),
+            .initialStep(.resetPassword),
+            .userAttributes([ .phoneNumber ])
         ])
         assertSnapshot()
-    }
-
-    func launchApp(with args: [ProcessArgument]) {
-        // Launch Application
-        let app = XCUIApplication()
-
-        if let encodedData = try? JSONEncoder().encode(args),
-           let stringJSON = String(data: encodedData, encoding: .utf8) {
-            app.launchArguments = [
-                "-uiTestArgsData", stringJSON,
-            ]
-        } else {
-            print("Unable to encode process args")
-        }
-
-        app.launch()
     }
 }

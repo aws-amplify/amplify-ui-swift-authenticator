@@ -34,4 +34,20 @@ extension XCTestCase {
             "Snapshot Assertion failed for test. Description:\n\n\(result.message ?? "No description")")
     }
 
+    func launchApp(with args: [ProcessArgument]) {
+        // Launch Application
+        let app = XCUIApplication()
+
+        if let encodedData = try? JSONEncoder().encode(args),
+           let stringJSON = String(data: encodedData, encoding: .utf8) {
+            app.launchArguments = [
+                "-uiTestArgsData", stringJSON,
+            ]
+        } else {
+            print("Unable to encode process args")
+        }
+
+        app.launch()
+    }
+
 }
