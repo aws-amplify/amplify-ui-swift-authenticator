@@ -8,9 +8,9 @@
 import UIKit
 import XCTest
 
-struct Snapshot {
+struct Snapshotter {
 
-    public func captureAndVerifySnapshot(
+    public static func captureAndVerifySnapshot(
         for newImage: UIImage,
         named name: String? = nil,
         snapshotDirectory: String? = nil,
@@ -98,7 +98,7 @@ struct Snapshot {
 
 
     // MARK: - Private
-    func sanitizePathComponent(_ string: String) -> String {
+    private static func sanitizePathComponent(_ string: String) -> String {
         return string
             .replacingOccurrences(of: "\\W+", with: "-", options: .regularExpression)
             .replacingOccurrences(of: "^-|-$", with: "", options: .regularExpression)

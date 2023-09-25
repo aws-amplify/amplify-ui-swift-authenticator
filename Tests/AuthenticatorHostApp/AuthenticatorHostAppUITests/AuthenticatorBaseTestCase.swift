@@ -25,7 +25,7 @@ class AuthenticatorBaseTestCase: XCTestCase {
         testName: String = #function,
         line: UInt = #line
     ) {
-        let result = Snapshot().captureAndVerifySnapshot(
+        let result = Snapshotter.captureAndVerifySnapshot(
             for: XCUIApplication().screenshot().image,
             named: name,
             snapshotDirectory: snapshotDirectory,
