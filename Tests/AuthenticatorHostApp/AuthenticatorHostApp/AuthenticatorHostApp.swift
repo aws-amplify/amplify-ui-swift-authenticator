@@ -14,7 +14,6 @@ import SwiftUI
 struct AuthenticatorHostApp: App {
 
     private let factory = AuthCategoryConfigurationFactory.shared
-
     private var hidesSignUpButton = false
     private var initialStep = AuthenticatorInitialStep.signIn
 

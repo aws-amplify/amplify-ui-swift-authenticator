@@ -7,7 +7,15 @@
 
 import XCTest
 
-extension XCTestCase {
+class AuthenticatorBaseTestCase: XCTestCase {
+
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+    }
+
+    override func tearDownWithError() throws {
+        XCUIApplication().terminate()
+    }
 
     func assertSnapshot(
         named name: String? = nil,
