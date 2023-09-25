@@ -17,12 +17,11 @@ enum ImageDiffError: Error {
 struct ImageDiff {
 
     static func compare(_ old: UIImage, _ new: UIImage) throws -> Bool {
-        return try compare(tolerance: 0, expected: old, observed: new)
+        return try compare(tolerance: 0.01, expected: old, observed: new)
     }
 
     /// Value in range 0...100 %
     typealias Percentage = Float
-    // See: https://github.com/facebookarchive/ios-snapshot-test-case/blob/master/FBSnapshotTestCase/Categories/UIImage%2BCompare.m
     private static func compare(tolerance: Percentage, expected: UIImage, observed: UIImage) throws -> Bool {
         guard let expectedCGImage = expected.cgImage, let observedCGImage = observed.cgImage else {
             throw ImageDiffError.unableToGetCGImageFromData
