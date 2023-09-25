@@ -15,11 +15,11 @@ struct ContentView: View {
     private let initialStep: AuthenticatorInitialStep
 
     init(hidesSignUpButton: Bool,
-         initialStep: AuthenticatorInitialStep) {
+         initialStep: AuthenticatorInitialStep,
+         authSignInStep: AuthSignInStep) {
         self.hidesSignUpButton = hidesSignUpButton
         self.initialStep = initialStep
-
-        MockAuthenticationService.shared.mockedSignInResult = .init(nextStep: .confirmSignInWithTOTPCode)
+        MockAuthenticationService.shared.mockedSignInResult = .init(nextStep: authSignInStep)
     }
 
     var body: some View {

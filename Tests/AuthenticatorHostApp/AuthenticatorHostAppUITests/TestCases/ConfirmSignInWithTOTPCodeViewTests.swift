@@ -12,9 +12,9 @@ final class ConfirmSignInWithTOTPCodeViewTests: AuthenticatorBaseTestCase {
     func testConfirmSignInWithTOTPCodeView() throws {
         launchAppAndLogin(with: [
             .hidesSignUpButton(false),
-            .initialStep(.signIn)
+            .initialStep(.signIn),
+            .authSignInStep(.confirmSignInWithTOTPCode)
         ])
-
         assertSnapshot()
     }
 }

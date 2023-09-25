@@ -75,6 +75,13 @@ class AuthenticatorBaseTestCase: XCTestCase {
 
         // Tap Sign in button
         app.buttons["Sign In"].firstMatch.tap()
+
+        // Wait for Sign In view to disappear
+        let expectation = expectation(
+            for: .init(format: "exists == false"),
+            evaluatedWith: app.staticTexts["Sign In"])
+        let result = XCTWaiter.wait(for: [expectation], timeout: 5.0)
+        XCTAssertEqual(result, .completed)
     }
 
 }

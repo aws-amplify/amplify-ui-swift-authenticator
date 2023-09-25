@@ -16,12 +16,14 @@ struct AuthenticatorHostApp: App {
     private let factory = AuthCategoryConfigurationFactory.shared
     private var hidesSignUpButton = false
     private var initialStep = AuthenticatorInitialStep.signIn
+    private var authSignInNextStep = AuthSignInStep.done
 
     var body: some Scene {
         WindowGroup {
             ContentView(
                 hidesSignUpButton: hidesSignUpButton,
-                initialStep: initialStep)
+                initialStep: initialStep,
+                authSignInStep: authSignInNextStep)
         }
     }
 
@@ -43,6 +45,8 @@ struct AuthenticatorHostApp: App {
             self.hidesSignUpButton = hidesSignUpButton
         case .userAttributes(let userAttributes):
             factory.setUserAtributes(userAttributes)
+        case .authSignInStep(let authUITestNextStep):
+            self.authSignInNextStep = getMockedNextStepResult(from: authUITestNextStep)
         }
     }
 
@@ -57,6 +61,29 @@ struct AuthenticatorHostApp: App {
         }
         for argument in arguments {
             modifyConfiguration(for: argument)
+        }
+    }
+
+    private func getMockedNextStepResult(from authUITestSignInStep: AuthUITestSignInStep) -> AuthSignInStep {
+        switch authUITestSignInStep {
+        case .confirmSignInWithSMSMFACode:
+            return .confirmSignInWithSMSMFACode(.init(destination: .email("testEmail@test.com")), nil)
+        case .confirmSignInWithCustomChallenge:
+            return .confirmSignInWithCustomChallenge(nil)
+        case .confirmSignInWithNewPassword:
+            return .confirmSignInWithNewPassword(nil)
+        case .confirmSignInWithTOTPCode:
+            return .confirmSignInWithTOTPCode
+        case .continueSignInWithTOTPSetup:
+            return .continueSignInWithTOTPSetup(.init(sharedSecret: "secret", username: "username"))
+        case .continueSignInWithMFASelection:
+            return .continueSignInWithMFASelection([.totp, .sms])
+        case .resetPassword:
+            return .resetPassword(nil)
+        case .confirmSignUp:
+            return .confirmSignUp(nil)
+        case .done:
+            return .done
         }
     }
 }
