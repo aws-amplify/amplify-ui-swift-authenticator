@@ -7,13 +7,13 @@
 
 import XCTest
 
-final class ContinueSignInWithMFASelectionViewTests: AuthenticatorBaseTestCase {
+final class ContinueSignInWithTOTPSetupViewTests: AuthenticatorBaseTestCase {
 
-    func testContinueSignInWithMFASelectionView() throws {
+    func testContinueSignInWithTOTPSetupView() throws {
         launchAppAndLogin(with: [
             .hidesSignUpButton(false),
             .initialStep(.signIn),
-            .authSignInStep(.continueSignInWithMFASelection)
+            .authSignInStep(.continueSignInWithTOTPSetup)
         ])
         assertSnapshot()
     }

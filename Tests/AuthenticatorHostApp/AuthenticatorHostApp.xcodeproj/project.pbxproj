@@ -27,6 +27,7 @@
 		4873E7572ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7562ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift */; };
 		4873E7592ABC9C58001EDA1D /* AuthenticatorBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7582ABC9C58001EDA1D /* AuthenticatorBaseTestCase.swift */; };
 		48DED8F12AC2011100F44908 /* ContinueSignInWithMFASelectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DED8F02AC2011100F44908 /* ContinueSignInWithMFASelectionViewTests.swift */; };
+		48DED8F32AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DED8F22AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		4873E7562ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanCounterBetweenTestCases.swift; sourceTree = "<group>"; };
 		4873E7582ABC9C58001EDA1D /* AuthenticatorBaseTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorBaseTestCase.swift; sourceTree = "<group>"; };
 		48DED8F02AC2011100F44908 /* ContinueSignInWithMFASelectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueSignInWithMFASelectionViewTests.swift; sourceTree = "<group>"; };
+		48DED8F22AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueSignInWithTOTPSetupViewTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				482D011E2AC1E85C000A3140 /* ResetPasswordViewTests.swift */,
 				482D01232AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift */,
 				48DED8F02AC2011100F44908 /* ContinueSignInWithMFASelectionViewTests.swift */,
+				48DED8F22AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift */,
 			);
 			path = TestCases;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				482D011D2AC1E839000A3140 /* SignUpViewTests.swift in Sources */,
 				482D011F2AC1E85C000A3140 /* ResetPasswordViewTests.swift in Sources */,
 				482D01242AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift in Sources */,
+				48DED8F32AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift in Sources */,
 				4873E7552ABC9AF7001EDA1D /* Snapshot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
