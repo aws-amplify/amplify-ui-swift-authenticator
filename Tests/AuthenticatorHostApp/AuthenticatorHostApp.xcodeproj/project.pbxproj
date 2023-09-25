@@ -159,8 +159,8 @@
 			isa = PBXGroup;
 			children = (
 				482D01122ABE21F7000A3140 /* AuthenticatorUITestUtils.swift */,
-				482D01202AC1E939000A3140 /* TestCases */,
 				4873E7582ABC9C58001EDA1D /* AuthenticatorBaseTestCase.swift */,
+				482D01202AC1E939000A3140 /* TestCases */,
 				4873E74E2ABC9944001EDA1D /* SnapshotLogic */,
 			);
 			path = AuthenticatorHostAppUITests;

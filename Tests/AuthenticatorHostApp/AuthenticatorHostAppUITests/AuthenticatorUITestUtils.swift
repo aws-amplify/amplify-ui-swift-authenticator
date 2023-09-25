@@ -8,6 +8,8 @@
 import Foundation
 @testable import Authenticator
 
+let UITestKeyKey = "-uiTestArgsData"
+
 enum ProcessArgument: Codable {
     case hidesSignUpButton(Bool)
     case initialStep(AuthenticatorInitialStep)
@@ -32,4 +34,3 @@ public enum AuthUITestSignInStep: Codable {
     case confirmSignUp
     case done
 }
-

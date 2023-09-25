@@ -49,7 +49,7 @@ class AuthenticatorBaseTestCase: XCTestCase {
         if let encodedData = try? JSONEncoder().encode(args),
            let stringJSON = String(data: encodedData, encoding: .utf8) {
             app.launchArguments = [
-                "-uiTestArgsData", stringJSON,
+                UITestKeyKey, stringJSON,
             ]
         } else {
             print("Unable to encode process args")

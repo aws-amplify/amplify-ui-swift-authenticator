@@ -54,7 +54,7 @@ struct AuthenticatorHostApp: App {
         let uiTestArguments = ProcessInfo.processInfo.arguments
         var arguments: [ProcessArgument] = []
         for (index, argument) in uiTestArguments.enumerated() {
-            if argument.isEqual("-uiTestArgsData") {
+            if argument.isEqual(UITestKeyKey) {
                 arguments = try! JSONDecoder().decode([ProcessArgument].self, from: uiTestArguments[index + 1].data(using: .utf8)!)
                 break
             }
