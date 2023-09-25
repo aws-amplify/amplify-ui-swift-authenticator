@@ -18,7 +18,7 @@ struct Snapshot {
         file: StaticString = #file,
         testName: String = #function,
         line: UInt = #line
-    ) -> (message: String, attachments: [XCTAttachment])? {
+    ) -> (didSucceed: Bool, message: String?, attachments: [XCTAttachment]) {
 
         do {
             let fileUrl = URL(fileURLWithPath: "\(file)", isDirectory: false)
@@ -63,28 +63,36 @@ struct Snapshot {
                 }
 
                 print("File written at \(snapshotFileUrl.absoluteString)")
-                return (message: "Re-run test, image saved to directory", attachments: [])
+                return (didSucceed: false, message: "Re-run test, image saved to directory", attachments: [])
             }
 
             print("file already exists, please assert")
 
             guard let fileData = fileManager.contents(atPath: snapshotFileUrl.path),
                   let oldImage = UIImage(data: fileData) else {
-                return (message: "Unable to get already existing file in data format", attachments: [])
+                return (didSucceed: false, message: "Unable to get already existing file in data format", attachments: [])
             }
 
-            guard let diffMessage = ImageDiff().compare(oldImage, newImage) else {
-                return nil
+            var attachments: [XCTAttachment] = []
+            var message: String? = nil
+            do {
+                let didSucceed = try ImageDiff.compare(oldImage, newImage)
+                return (didSucceed: didSucceed, message: nil, attachments: attachments)
+            } catch {
+                message = error.localizedDescription
             }
 
             let oldAttachment = XCTAttachment(image: oldImage)
             oldAttachment.name = "Reference Image"
+            attachments.append(oldAttachment)
+
             let newAttachment = XCTAttachment(image: newImage)
             newAttachment.name = "Failure Image"
+            attachments.append(newAttachment)
 
-            return (message: diffMessage, attachments: [oldAttachment, newAttachment])
+            return (didSucceed: false, message: message, attachments: attachments)
         } catch {
-            return (message: error.localizedDescription, attachments: [])
+            return (didSucceed: false, message: error.localizedDescription, attachments: [])
         }
     }
 

@@ -19,15 +19,16 @@ struct AuthenticatorHostApp: App {
     }
 
     init() {
+
+
         let factory = AuthCategoryConfigurationFactory.shared
         factory.setUserAtribute(.phoneNumber)
         do {
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.configure(AmplifyConfiguration(auth: factory.createConfiguration()))
-
-            Amplify.Logging.logLevel = .warn
         } catch {
             print("Unable to configure Amplify \(error)")
         }
+
     }
 }

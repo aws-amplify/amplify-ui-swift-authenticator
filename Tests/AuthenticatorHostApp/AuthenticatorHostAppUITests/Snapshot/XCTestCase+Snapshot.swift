@@ -25,8 +25,13 @@ extension XCTestCase {
             file: file,
             testName: testName,
             line: line)
-        result?.attachments.forEach( {add($0) })
-        XCTAssertNil(result?.message, "Snapshot Assertion failed for test. Description:\n\n\(result?.message ?? "No description")")
+
+        // Add the attachments to the test case
+        result.attachments.forEach( {add($0) })
+        
+        XCTAssertTrue(
+            result.didSucceed,
+            "Snapshot Assertion failed for test. Description:\n\n\(result.message ?? "No description")")
     }
 
 }

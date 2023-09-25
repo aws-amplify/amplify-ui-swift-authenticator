@@ -92,3 +92,7 @@ public struct AuthenticatorStep: Equatable {
     /// An authenticated user has successfully signed in.
     public static let signedIn = AuthenticatorStep("signedIn")
 }
+
+extension AuthenticatorInitialStep: Codable { }
+
+extension AuthenticatorStep: Codable { }

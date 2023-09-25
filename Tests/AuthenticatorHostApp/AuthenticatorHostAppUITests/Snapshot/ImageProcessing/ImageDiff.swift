@@ -7,139 +7,88 @@
 
 import UIKit
 
+enum ImageDiffError: Error {
+    case unableToGetCGImageFromData
+    case unableToGetColorSpaceFromCGImage
+    case imagesHasDifferentSizes
+    case unableToInitializeContext
+}
+
 struct ImageDiff {
 
-    private let imageContextColorSpace = CGColorSpace(name: CGColorSpace.sRGB)
-    private let imageContextBitsPerComponent = 8
-    private let imageContextBytesPerPixel = 4
-
-    func compare(_ old: UIImage, _ new: UIImage) -> String? {
-        compare(old, new, precision: 0.99, perceptualPrecision: 1)
+    static func compare(_ old: UIImage, _ new: UIImage) throws -> Bool {
+        return try compare(tolerance: 0, expected: old, observed: new)
     }
 
-    private func compare(_ old: UIImage, _ new: UIImage, precision: Float, perceptualPrecision: Float) -> String? {
-        guard let oldCgImage = old.cgImage else {
-            return "Reference image could not be loaded."
+    /// Value in range 0...100 %
+    typealias Percentage = Float
+    // See: https://github.com/facebookarchive/ios-snapshot-test-case/blob/master/FBSnapshotTestCase/Categories/UIImage%2BCompare.m
+    private static func compare(tolerance: Percentage, expected: UIImage, observed: UIImage) throws -> Bool {
+        guard let expectedCGImage = expected.cgImage, let observedCGImage = observed.cgImage else {
+            throw ImageDiffError.unableToGetCGImageFromData
         }
-        guard let newCgImage = new.cgImage else {
-            return "Newly-taken snapshot could not be loaded."
+        guard let expectedColorSpace = expectedCGImage.colorSpace, let observedColorSpace = observedCGImage.colorSpace else {
+            throw ImageDiffError.unableToGetColorSpaceFromCGImage
         }
-        guard newCgImage.width != 0, newCgImage.height != 0 else {
-            return "Newly-taken snapshot is empty."
+        if expectedCGImage.width != observedCGImage.width || expectedCGImage.height != observedCGImage.height {
+            throw ImageDiffError.imagesHasDifferentSizes
         }
-        guard oldCgImage.width == newCgImage.width, oldCgImage.height == newCgImage.height else {
-            return "Newly-taken snapshot@\(new.size) does not match reference@\(old.size)."
+        let imageSize = CGSize(width: expectedCGImage.width, height: expectedCGImage.height)
+        let numberOfPixels = Int(imageSize.width * imageSize.height)
+
+        // Checking that our `UInt32` buffer has same number of bytes as image has.
+        let bytesPerRow = min(expectedCGImage.bytesPerRow, observedCGImage.bytesPerRow)
+        assert(MemoryLayout<UInt32>.stride == bytesPerRow / Int(imageSize.width))
+
+        let expectedPixels = UnsafeMutablePointer<UInt32>.allocate(capacity: numberOfPixels)
+        let observedPixels = UnsafeMutablePointer<UInt32>.allocate(capacity: numberOfPixels)
+
+        let expectedPixelsRaw = UnsafeMutableRawPointer(expectedPixels)
+        let observedPixelsRaw = UnsafeMutableRawPointer(observedPixels)
+
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+        guard let expectedContext = CGContext(data: expectedPixelsRaw, width: Int(imageSize.width), height: Int(imageSize.height),
+                                              bitsPerComponent: expectedCGImage.bitsPerComponent, bytesPerRow: bytesPerRow,
+                                              space: expectedColorSpace, bitmapInfo: bitmapInfo.rawValue) else {
+            expectedPixels.deallocate()
+            observedPixels.deallocate()
+            throw ImageDiffError.unableToInitializeContext
         }
-        let pixelCount = oldCgImage.width * oldCgImage.height
-        let byteCount = imageContextBytesPerPixel * pixelCount
-        var oldBytes = [UInt8](repeating: 0, count: byteCount)
-        guard let oldData = context(for: oldCgImage, data: &oldBytes)?.data else {
-            return "Reference image's data could not be loaded."
+        guard let observedContext = CGContext(data: observedPixelsRaw, width: Int(imageSize.width), height: Int(imageSize.height),
+                                              bitsPerComponent: observedCGImage.bitsPerComponent, bytesPerRow: bytesPerRow,
+                                              space: observedColorSpace, bitmapInfo: bitmapInfo.rawValue) else {
+            expectedPixels.deallocate()
+            observedPixels.deallocate()
+            throw ImageDiffError.unableToInitializeContext
         }
-        if let newContext = context(for: newCgImage), let newData = newContext.data {
-            if memcmp(oldData, newData, byteCount) == 0 { return nil }
-        }
-        var newerBytes = [UInt8](repeating: 0, count: byteCount)
-        guard
-            let pngData = new.pngData(),
-            let newerCgImage = UIImage(data: pngData)?.cgImage,
-            let newerContext = context(for: newerCgImage, data: &newerBytes),
-            let newerData = newerContext.data
-        else {
-            return "Newly-taken snapshot's data could not be loaded."
-        }
-        if memcmp(oldData, newerData, byteCount) == 0 { return nil }
-        if precision >= 1, perceptualPrecision >= 1 {
-            return "Newly-taken snapshot does not match reference."
-        }
-        if perceptualPrecision < 1, #available(iOS 11.0, tvOS 11.0, *) {
-            return perceptuallyCompare(
-                CIImage(cgImage: oldCgImage),
-                CIImage(cgImage: newCgImage),
-                pixelPrecision: precision,
-                perceptualPrecision: perceptualPrecision
-            )
+
+        expectedContext.draw(expectedCGImage, in: CGRect(origin: .zero, size: imageSize))
+        observedContext.draw(observedCGImage, in: CGRect(origin: .zero, size: imageSize))
+
+        let expectedBuffer = UnsafeBufferPointer(start: expectedPixels, count: numberOfPixels)
+        let observedBuffer = UnsafeBufferPointer(start: observedPixels, count: numberOfPixels)
+
+        var isEqual = true
+        if tolerance == 0 {
+            isEqual = expectedBuffer.elementsEqual(observedBuffer)
         } else {
-            let byteCountThreshold = Int((1 - precision) * Float(byteCount))
-            var differentByteCount = 0
-            for offset in 0..<byteCount {
-                if oldBytes[offset] != newerBytes[offset] {
-                    differentByteCount += 1
+            // Go through each pixel in turn and see if it is different
+            var numDiffPixels = 0
+            for pixel in 0 ..< numberOfPixels where expectedBuffer[pixel] != observedBuffer[pixel] {
+                // If this pixel is different, increment the pixel diff count and see if we have hit our limit.
+                numDiffPixels += 1
+                let percentage = 100 * Float(numDiffPixels) / Float(numberOfPixels)
+                if percentage > tolerance {
+                    isEqual = false
+                    break
                 }
             }
-            if differentByteCount > byteCountThreshold {
-                let actualPrecision = 1 - Float(differentByteCount) / Float(byteCount)
-                return "Actual image precision \(actualPrecision) is less than required \(precision)"
-            }
         }
-        return nil
+
+        expectedPixels.deallocate()
+        observedPixels.deallocate()
+
+        return isEqual
     }
 
-    func perceptuallyCompare(
-        _ old: CIImage, _ new: CIImage, pixelPrecision: Float, perceptualPrecision: Float
-    ) -> String? {
-        let deltaOutputImage = old.applyingFilter("CILabDeltaE", parameters: ["inputImage2": new])
-        let thresholdOutputImage: CIImage
-        do {
-            thresholdOutputImage = try ThresholdImageProcessorKernel.apply(
-                withExtent: new.extent,
-                inputs: [deltaOutputImage],
-                arguments: [
-                    ThresholdImageProcessorKernel.inputThresholdKey: (1 - perceptualPrecision) * 100
-                ]
-            )
-        } catch {
-            return "Newly-taken snapshot's data could not be loaded. \(error)"
-        }
-        var averagePixel: Float = 0
-        let context = CIContext(options: [.workingColorSpace: NSNull(), .outputColorSpace: NSNull()])
-        context.render(
-            thresholdOutputImage.applyingFilter(
-                "CIAreaAverage", parameters: [kCIInputExtentKey: new.extent]),
-            toBitmap: &averagePixel,
-            rowBytes: MemoryLayout<Float>.size,
-            bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
-            format: .Rf,
-            colorSpace: nil
-        )
-        let actualPixelPrecision = 1 - averagePixel
-        guard actualPixelPrecision < pixelPrecision else { return nil }
-        var maximumDeltaE: Float = 0
-        context.render(
-            deltaOutputImage.applyingFilter("CIAreaMaximum", parameters: [kCIInputExtentKey: new.extent]),
-            toBitmap: &maximumDeltaE,
-            rowBytes: MemoryLayout<Float>.size,
-            bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
-            format: .Rf,
-            colorSpace: nil
-        )
-        let actualPerceptualPrecision = 1 - maximumDeltaE / 100
-        if pixelPrecision < 1 {
-            return """
-        Actual image precision \(actualPixelPrecision) is less than required \(pixelPrecision)
-        Actual perceptual precision \(actualPerceptualPrecision) is less than required \(perceptualPrecision)
-        """
-        } else {
-            return "Actual perceptual precision \(actualPerceptualPrecision) is less than required \(perceptualPrecision)"
-        }
-    }
-
-    private func context(for cgImage: CGImage, data: UnsafeMutableRawPointer? = nil) -> CGContext? {
-        let bytesPerRow = cgImage.width * imageContextBytesPerPixel
-        guard
-            let colorSpace = imageContextColorSpace,
-            let context = CGContext(
-                data: data,
-                width: cgImage.width,
-                height: cgImage.height,
-                bitsPerComponent: imageContextBitsPerComponent,
-                bytesPerRow: bytesPerRow,
-                space: colorSpace,
-                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-            )
-        else { return nil }
-
-        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height))
-        return context
-    }
 }
