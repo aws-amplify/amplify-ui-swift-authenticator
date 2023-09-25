@@ -58,4 +58,23 @@ class AuthenticatorBaseTestCase: XCTestCase {
         app.launch()
     }
 
+    func launchAppAndLogin(with args: [ProcessArgument]) {
+
+        // Launch Application
+        launchApp(with: args)
+        // Get app instance
+        let app = XCUIApplication()
+
+        // Enter some username
+        app.textFields.firstMatch.tap()
+        app.textFields.firstMatch.typeText("username")
+
+        // Enter some password
+        app.secureTextFields.firstMatch.tap()
+        app.secureTextFields.firstMatch.typeText("password")
+
+        // Tap Sign in button
+        app.buttons["Sign In"].firstMatch.tap()
+    }
+
 }

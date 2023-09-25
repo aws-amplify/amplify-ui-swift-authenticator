@@ -57,7 +57,3 @@ class AuthCategoryConfigurationFactory {
         usernameAttributes = userAttributesArg.map({ .string($0.rawValue) })
     }
 }
-
-
-
-

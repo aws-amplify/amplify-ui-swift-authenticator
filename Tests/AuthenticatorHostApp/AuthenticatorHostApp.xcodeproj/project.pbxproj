@@ -14,6 +14,7 @@
 		482D011D2AC1E839000A3140 /* SignUpViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D011C2AC1E839000A3140 /* SignUpViewTests.swift */; };
 		482D011F2AC1E85C000A3140 /* ResetPasswordViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D011E2AC1E85C000A3140 /* ResetPasswordViewTests.swift */; };
 		482D01212AC1EB69000A3140 /* ProcessArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D01122ABE21F7000A3140 /* ProcessArgument.swift */; };
+		482D01242AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D01232AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift */; };
 		483E09412ABBC0D800EFD1D7 /* AuthenticatorHostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E09402ABBC0D800EFD1D7 /* AuthenticatorHostApp.swift */; };
 		483E09432ABBC0D800EFD1D7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E09422ABBC0D800EFD1D7 /* ContentView.swift */; };
 		483E09452ABBC0D900EFD1D7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 483E09442ABBC0D900EFD1D7 /* Assets.xcassets */; };
@@ -43,6 +44,7 @@
 		482D011C2AC1E839000A3140 /* SignUpViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewTests.swift; sourceTree = "<group>"; };
 		482D011E2AC1E85C000A3140 /* ResetPasswordViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewTests.swift; sourceTree = "<group>"; };
 		482D01222AC1EC3B000A3140 /* AuthenticatorHostApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AuthenticatorHostApp.xctestplan; sourceTree = "<group>"; };
+		482D01232AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmSignInWithTOTPCodeViewTests.swift; sourceTree = "<group>"; };
 		483E093D2ABBC0D800EFD1D7 /* AuthenticatorHostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AuthenticatorHostApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		483E09402ABBC0D800EFD1D7 /* AuthenticatorHostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorHostApp.swift; sourceTree = "<group>"; };
 		483E09422ABBC0D800EFD1D7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				482D011A2AC1E824000A3140 /* SignInViewTests.swift */,
 				482D011C2AC1E839000A3140 /* SignUpViewTests.swift */,
 				482D011E2AC1E85C000A3140 /* ResetPasswordViewTests.swift */,
+				482D01232AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift */,
 			);
 			path = TestCases;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 				4873E7532ABC99E4001EDA1D /* ImageDiff.swift in Sources */,
 				482D011D2AC1E839000A3140 /* SignUpViewTests.swift in Sources */,
 				482D011F2AC1E85C000A3140 /* ResetPasswordViewTests.swift in Sources */,
+				482D01242AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift in Sources */,
 				4873E7552ABC9AF7001EDA1D /* Snapshot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
