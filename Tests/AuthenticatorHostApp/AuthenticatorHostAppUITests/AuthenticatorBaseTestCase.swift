@@ -35,7 +35,7 @@ class AuthenticatorBaseTestCase: XCTestCase {
             line: line)
 
         // Add the attachments to the test case
-        result.attachments.forEach( {add($0) })
+        result.attachments.forEach( { add($0) })
         
         XCTAssertTrue(
             result.didSucceed,

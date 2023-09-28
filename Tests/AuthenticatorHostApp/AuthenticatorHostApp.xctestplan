@@ -9,7 +9,6 @@
     }
   ],
   "defaultOptions" : {
-    "preferredScreenCaptureFormat" : "screenshot",
     "targetForVariableExpansion" : {
       "containerPath" : "container:AuthenticatorHostApp.xcodeproj",
       "identifier" : "483E093C2ABBC0D800EFD1D7",

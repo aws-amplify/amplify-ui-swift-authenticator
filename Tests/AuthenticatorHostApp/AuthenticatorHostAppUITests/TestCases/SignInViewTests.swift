@@ -17,4 +17,13 @@ final class SignInViewTests: AuthenticatorBaseTestCase {
         ])
         assertSnapshot()
     }
+
+    func testSignInViewWithoutSignUp() throws {
+        launchApp(with: [
+            .hidesSignUpButton(true),
+            .initialStep(.signIn),
+            .userAttributes([ .phoneNumber ])
+        ])
+        assertSnapshot()
+    }
 }

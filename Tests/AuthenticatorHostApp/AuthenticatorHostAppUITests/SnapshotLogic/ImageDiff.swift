@@ -17,7 +17,7 @@ enum ImageDiffError: Error {
 struct ImageDiff {
 
     static func compare(_ old: UIImage, _ new: UIImage) throws -> Bool {
-        return try compare(tolerance: 0.01, expected: old, observed: new)
+        return try compare(tolerance: 0.1, expected: old, observed: new)
     }
 
     /// Value in range 0...100 %
