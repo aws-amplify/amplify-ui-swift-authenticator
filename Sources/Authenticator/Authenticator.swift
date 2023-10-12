@@ -112,7 +112,7 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder continueSignInWithMFASelectionContent: (ContinueSignInWithMFASelectionState) -> ContinueSignInWithMFASelectionContent = { state in
             ContinueSignInWithMFASelectionView(state: state)
         },
-        @ViewBuilder continueSignInWithTOTPSetupContent: (ConfirmSignInWithCodeState) -> ContinueSignInWithTOTPSetupContent = { state in
+        @ViewBuilder continueSignInWithTOTPSetupContent: (ContinueSignInWithTOTPSetupState) -> ContinueSignInWithTOTPSetupContent = { state in
             ContinueSignInWithTOTPSetupView(state: state)
         },
         @ViewBuilder confirmSignInWithCustomChallengeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithCustomChallengeContent = { state in
@@ -173,7 +173,8 @@ public struct Authenticator<LoadingContent: View,
             continueSignInWithMFASelectionState
         )
 
-        let continueSignInWithTOTPSetupState = ConfirmSignInWithCodeState(credentials: credentials)
+        let continueSignInWithTOTPSetupState = ContinueSignInWithTOTPSetupState(
+            credentials: credentials, issuer: totpOptions?.issuer)
         contentStates.add(continueSignInWithTOTPSetupState)
         self.continueSignInWithTOTPSetupContent = continueSignInWithTOTPSetupContent(
             continueSignInWithTOTPSetupState
@@ -241,7 +242,6 @@ public struct Authenticator<LoadingContent: View,
         }
         .animation(viewModifiers.contentAnimation, value: currentStep)
         .environment(\.authenticatorOptions.hidesSignUpButton, viewModifiers.hidesSignUpButton)
-        .environment(\.authenticatorOptions.totpOptions, totpOptions)
         .environment(\.authenticatorOptions.contentAnimation, viewModifiers.contentAnimation)
         .environment(\.authenticatorOptions.contentTransition, viewModifiers.contentTransition)
         .environment(\.authenticatorOptions.signUpFields, viewModifiers.signUpFields)

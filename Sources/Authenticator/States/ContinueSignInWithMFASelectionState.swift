@@ -11,7 +11,7 @@ import SwiftUI
 
 /// The state observed by the Continue Sign In With MFA Selection content views, representing the ``Authenticator`` is in  ``AuthenticatorStep/continueSignInWithMFASelection``  step.
 public class ContinueSignInWithMFASelectionState: AuthenticatorBaseState {
-    /// The confirmation code provided by the user
+    /// The MFA selection  provided by the user
     @Published public var selectedMFAType: MFAType?
 
     /// The `Amplify.AllowedMFATypes` associated with this state. If the Authenticator is not in the `.continueSignInWithMFASelection` step, it returns `empty` result
