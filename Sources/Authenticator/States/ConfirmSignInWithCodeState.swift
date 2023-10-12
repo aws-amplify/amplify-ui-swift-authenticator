@@ -23,15 +23,6 @@ public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
         return deliveryDetails
     }
 
-    /// The `Amplify.AllowedMFATypes` associated with this state. If the Authenticator is not in the `.continueSignInWithMFASelection` step, it returns `empty` result
-    public var allowedMFATypes: AllowedMFATypes {
-        guard case .continueSignInWithMFASelection(let allowedMFATypes) = authenticatorState.step else {
-            return []
-        }
-
-        return allowedMFATypes
-    }
-
     /// The `Amplify.TOTPSetupDetails` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step, it returns `nil` result
     public var totpSetupDetails: TOTPSetupDetails? {
         guard case .continueSignInWithTOTPSetup(let totpSetupDetails) = authenticatorState.step else {

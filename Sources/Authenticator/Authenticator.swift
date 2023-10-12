@@ -109,7 +109,7 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder confirmSignInWithTOTPContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPContent = { state in
             ConfirmSignInWithTOTPView(state: state)
         },
-        @ViewBuilder continueSignInWithMFASelectionContent: (ConfirmSignInWithCodeState) -> ContinueSignInWithMFASelectionContent = { state in
+        @ViewBuilder continueSignInWithMFASelectionContent: (ContinueSignInWithMFASelectionState) -> ContinueSignInWithMFASelectionContent = { state in
             ContinueSignInWithMFASelectionView(state: state)
         },
         @ViewBuilder continueSignInWithTOTPSetupContent: (ConfirmSignInWithCodeState) -> ContinueSignInWithTOTPSetupContent = { state in
@@ -167,7 +167,7 @@ public struct Authenticator<LoadingContent: View,
             confirmSignInWithTOTPState
         )
 
-        let continueSignInWithMFASelectionState = ConfirmSignInWithCodeState(credentials: credentials)
+        let continueSignInWithMFASelectionState = ContinueSignInWithMFASelectionState(credentials: credentials)
         contentStates.add(continueSignInWithMFASelectionState)
         self.continueSignInWithMFASelectionContent = continueSignInWithMFASelectionContent(
             continueSignInWithMFASelectionState
