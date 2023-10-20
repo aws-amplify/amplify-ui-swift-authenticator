@@ -92,7 +92,6 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
             .keyboardType(.default)
 #endif
 
-
             Button("authenticator.continueSignInWithTOTPSetup.button.submit".localized()) {
                 Task { await continueSignIn() }
             }

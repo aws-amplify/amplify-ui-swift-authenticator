@@ -17,18 +17,20 @@ public class ContinueSignInWithTOTPSetupState: AuthenticatorBaseState {
     private let issuer: String?
     private let totpSetupDetails: TOTPSetupDetails
 
-    init(credentials: Credentials, issuer: String?, totpSetupDetails: TOTPSetupDetails) {
+    init(authenticatorState: AuthenticatorState,
+         issuer: String?,
+         totpSetupDetails: TOTPSetupDetails) {
         self.totpSetupDetails = totpSetupDetails
         self.issuer = issuer
-        super.init(credentials: credentials)
+        super.init(authenticatorState: authenticatorState)
     }
 
-    /// The `Amplify.TOTPSetupDetails.sharedSecret` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step, it returns `nil` result
+    /// The `Amplify.TOTPSetupDetails.sharedSecret` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step
     public var sharedSecret: String {
         return totpSetupDetails.sharedSecret
     }
 
-    /// The `Amplify.TOTPSetupDetails.getSetupURI` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step, it returns `nil` result
+    /// The `Amplify.TOTPSetupDetails.getSetupURI` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step
     public var setupUri: String {
         let finalSetupUri: String
         var setupUriAccountName: String = ""

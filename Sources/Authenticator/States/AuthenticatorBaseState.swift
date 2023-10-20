@@ -30,6 +30,12 @@ public class AuthenticatorBaseState: ObservableObject {
         self.credentials = credentials
     }
 
+    init(authenticatorState: AuthenticatorStateProtocol,
+         credentials: Credentials = Credentials()) {
+        self.authenticatorState = authenticatorState
+        self.credentials = credentials
+    }
+
     func configure(with authenticatorState: AuthenticatorStateProtocol) {
         self.authenticatorState = authenticatorState
     }

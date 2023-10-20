@@ -32,14 +32,14 @@ public struct Authenticator<LoadingContent: View,
     @State private var currentStep: Step = .loading
     @State private var previousStep: Step = .loading
     private var initialStep: AuthenticatorInitialStep
-    private var totpOptions: TOTPOptions?
+    private var totpOptions: TOTPOptions
     private var viewModifiers = ViewModifiers()
     private var contentStates: NSHashTable<AuthenticatorBaseState> = .weakObjects()
     private let loadingContent: LoadingContent
     private let signInContent: SignInContent
     private let confirmSignInContentWithMFACodeContent: ConfirmSignInWithMFACodeContent
-    private let confirmSignInWithTOTPCodeContent: ConfirmSignInWithTOTPCodeContent
-    private let continueSignInWithMFASelectionContent: ContinueSignInWithMFASelectionContent
+    private let confirmSignInWithTOTPCodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPCodeContent
+    private let continueSignInWithMFASelectionContent: (ContinueSignInWithMFASelectionState) -> ContinueSignInWithMFASelectionContent
     private let continueSignInWithTOTPSetupContent: (ContinueSignInWithTOTPSetupState) -> ContinueSignInWithTOTPSetupContent
     private let confirmSignInContentWithCustomChallengeContent: ConfirmSignInWithCustomChallengeContent
     private let confirmSignInContentWithNewPasswordContent: ConfirmSignInWithNewPasswordContent
@@ -106,10 +106,10 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder confirmSignInWithMFACodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithMFACodeContent = { state in
             ConfirmSignInWithMFACodeView(state: state)
         },
-        @ViewBuilder confirmSignInWithTOTPCodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPCodeContent = { state in
+        @ViewBuilder confirmSignInWithTOTPCodeContent: @escaping (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPCodeContent = { state in
             ConfirmSignInWithTOTPView(state: state)
         },
-        @ViewBuilder continueSignInWithMFASelectionContent: (ContinueSignInWithMFASelectionState) -> ContinueSignInWithMFASelectionContent = { state in
+        @ViewBuilder continueSignInWithMFASelectionContent: @escaping (ContinueSignInWithMFASelectionState) -> ContinueSignInWithMFASelectionContent = { state in
             ContinueSignInWithMFASelectionView(state: state)
         },
         @ViewBuilder continueSignInWithTOTPSetupContent: @escaping (ContinueSignInWithTOTPSetupState) -> ContinueSignInWithTOTPSetupContent = { state in
@@ -161,18 +161,8 @@ public struct Authenticator<LoadingContent: View,
             confirmSignInWithMFACodeState
         )
 
-        let confirmSignInWithTOTPState = ConfirmSignInWithCodeState(credentials: credentials)
-        contentStates.add(confirmSignInWithMFACodeState)
-        self.confirmSignInWithTOTPCodeContent = confirmSignInWithTOTPCodeContent(
-            confirmSignInWithTOTPState
-        )
-
-        let continueSignInWithMFASelectionState = ContinueSignInWithMFASelectionState(credentials: credentials)
-        contentStates.add(continueSignInWithMFASelectionState)
-        self.continueSignInWithMFASelectionContent = continueSignInWithMFASelectionContent(
-            continueSignInWithMFASelectionState
-        )
-
+        self.confirmSignInWithTOTPCodeContent = confirmSignInWithTOTPCodeContent
+        self.continueSignInWithMFASelectionContent = continueSignInWithMFASelectionContent
         self.continueSignInWithTOTPSetupContent = continueSignInWithTOTPSetupContent
 
         let confirmSignInWithCustomChallengeState = ConfirmSignInWithCodeState(credentials: credentials)
@@ -342,17 +332,22 @@ public struct Authenticator<LoadingContent: View,
             confirmSignInContentWithNewPasswordContent
         case .confirmSignInWithMFACode:
             confirmSignInContentWithMFACodeContent
-        case .continueSignInWithMFASelection:
-            continueSignInWithMFASelectionContent
+        case .continueSignInWithMFASelection(let allowedMFATypes):
+            let continueSignInWithMFASelection = ContinueSignInWithMFASelectionState(
+                authenticatorState: state,
+                allowedMFATypes: allowedMFATypes)
+            continueSignInWithMFASelectionContent(continueSignInWithMFASelection)
         case .confirmSignInWithTOTP:
-            confirmSignInWithTOTPCodeContent
+            let confirmSignInWithCodeState = ConfirmSignInWithCodeState(
+                authenticatorState: state)
+            confirmSignInWithTOTPCodeContent(confirmSignInWithCodeState)
         case .continueSignInWithTOTPSetup(let totpSetupDetails):
-            let state = ContinueSignInWithTOTPSetupState(
-                credentials: Credentials(),
-                issuer: "issuer",
+            let totpStupState = ContinueSignInWithTOTPSetupState(
+                authenticatorState: state,
+                issuer: totpOptions.issuer,
                 totpSetupDetails: totpSetupDetails
             )
-            continueSignInWithTOTPSetupContent(state)
+            continueSignInWithTOTPSetupContent(totpStupState)
         case .confirmSignInWithCustomChallenge:
             confirmSignInContentWithCustomChallengeContent
         case .resetPassword:

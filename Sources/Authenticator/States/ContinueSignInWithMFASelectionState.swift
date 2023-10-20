@@ -14,15 +14,15 @@ public class ContinueSignInWithMFASelectionState: AuthenticatorBaseState {
     /// The MFA selection  provided by the user
     @Published public var selectedMFAType: MFAType?
 
-    /// The `Amplify.AllowedMFATypes` associated with this state. If the Authenticator is not in the `.continueSignInWithMFASelection` step, it returns `empty` result
-    public var allowedMFATypes: AllowedMFATypes {
-        guard case .continueSignInWithMFASelection(let allowedMFATypes) = authenticatorState.step else {
-            return []
-        }
-
-        return allowedMFATypes
+    init(authenticatorState: AuthenticatorState,
+         allowedMFATypes: AllowedMFATypes) {
+        self.allowedMFATypes = allowedMFATypes
+        super.init(authenticatorState: authenticatorState)
     }
 
+    /// The `Amplify.AllowedMFATypes` associated with this state. If the Authenticator is not in the `.continueSignInWithMFASelection` step.
+    public let allowedMFATypes: AllowedMFATypes
+    
     /// Attempts to continue the user's sign in using the provided confirmation code.
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
