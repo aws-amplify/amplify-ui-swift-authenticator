@@ -15,40 +15,33 @@ public class ContinueSignInWithTOTPSetupState: AuthenticatorBaseState {
     @Published public var confirmationCode: String = ""
 
     private let issuer: String?
+    private let totpSetupDetails: TOTPSetupDetails
 
-    init(credentials: Credentials, issuer: String?) {
+    init(credentials: Credentials, issuer: String?, totpSetupDetails: TOTPSetupDetails) {
+        self.totpSetupDetails = totpSetupDetails
         self.issuer = issuer
         super.init(credentials: credentials)
     }
 
     /// The `Amplify.TOTPSetupDetails.sharedSecret` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step, it returns `nil` result
-    public var sharedSecret: String? {
-        guard case .continueSignInWithTOTPSetup(let totpSetupDetails) = authenticatorState.step else {
-            return nil
-        }
-
+    public var sharedSecret: String {
         return totpSetupDetails.sharedSecret
     }
 
     /// The `Amplify.TOTPSetupDetails.getSetupURI` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step, it returns `nil` result
-    public var setupUri: String? {
-        guard case .continueSignInWithTOTPSetup(let totpSetupDetails) = authenticatorState.step else {
-            return nil
-        }
+    public var setupUri: String {
+        let finalSetupUri: String
+        var setupUriAccountName: String = ""
+        let baseTOTPUri = "otpauth://totp/\(setupUriAccountName)?secret=\(sharedSecret)"
 
-        guard let issuer = extractIssuerForQRCodeGeneration() else {
-            return nil
+        if let issuer = extractIssuerForQRCodeGeneration() {
+            setupUriAccountName = issuer + ":" + totpSetupDetails.username
+            finalSetupUri = baseTOTPUri + "&issuer=\(issuer)"
+        } else {
+            setupUriAccountName = totpSetupDetails.username
+            finalSetupUri = baseTOTPUri
         }
-
-        let qrCodeURIString: String
-        do {
-            qrCodeURIString = try totpSetupDetails.getSetupURI(appName: issuer).absoluteString
-        } catch {
-            log.error(error: error)
-            return nil
-        }
-
-        return qrCodeURIString
+        return finalSetupUri
     }
 
     private func extractIssuerForQRCodeGeneration() -> String? {

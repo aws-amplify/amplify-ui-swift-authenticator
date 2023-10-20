@@ -17,18 +17,16 @@ public struct ContinueSignInWithTOTPCopyKeyView: View {
     }
 
     public var body: some View {
-        if let sharedSecret = state.sharedSecret {
-            Button("authenticator.continueSignInWithTOTPSetup.button.copyKey".localized()) {
+        Button("authenticator.continueSignInWithTOTPSetup.button.copyKey".localized()) {
 #if os(iOS)
-                UIPasteboard.general.string = sharedSecret
+            UIPasteboard.general.string = state.sharedSecret
 #elseif os(macOS)
-                let pasteboard = NSPasteboard.general
-                pasteboard.clearContents()
-                pasteboard.setString(sharedSecret, forType: .string)
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.setString(sharedSecret, forType: .string)
 #endif
-            }
-            .buttonStyle(.capsule)
         }
+        .buttonStyle(.capsule)
     }
 
 }
