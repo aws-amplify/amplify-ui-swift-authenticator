@@ -23,15 +23,6 @@ public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
         return deliveryDetails
     }
 
-    /// The `Amplify.TOTPSetupDetails` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step, it returns `nil` result
-    public var totpSetupDetails: TOTPSetupDetails? {
-        guard case .continueSignInWithTOTPSetup(let totpSetupDetails) = authenticatorState.step else {
-            return nil
-        }
-
-        return totpSetupDetails
-    }
-
     /// Attempts to confirm the user's sign in using the provided confirmation code.
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the

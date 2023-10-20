@@ -23,12 +23,12 @@ public class ContinueSignInWithMFASelectionState: AuthenticatorBaseState {
         return allowedMFATypes
     }
 
-    /// Attempts to confirm the user's sign in using the provided confirmation code.
+    /// Attempts to continue the user's sign in using the provided confirmation code.
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
     /// - Throws: An `Amplify.AuthenticationError` if the operation fails
-    public func confirmSignIn() async throws {
+    public func continueSignIn() async throws {
         setBusy(true)
 
         guard let selectedMFAType = selectedMFAType else {

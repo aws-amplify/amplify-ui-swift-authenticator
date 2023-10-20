@@ -63,7 +63,7 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
             }
 
             Button("authenticator.continueSignInWithMFASelection.button.submit".localized()) {
-                Task { await confirmSignIn() }
+                Task { await continueSignIn() }
             }
             .buttonStyle(.primary)
             .disabled(state.selectedMFAType == nil)
@@ -74,7 +74,7 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
         .messageBanner($state.message)
         .onSubmit {
             Task {
-                await confirmSignIn()
+                await continueSignIn()
             }
         }
         .onDisappear{
@@ -82,8 +82,8 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
         }
     }
 
-    private func confirmSignIn() async {
-        try? await state.confirmSignIn()
+    private func continueSignIn() async {
+        try? await state.continueSignIn()
     }
     
     /// Sets a custom error mapping function for the `AuthError`s that are displayed

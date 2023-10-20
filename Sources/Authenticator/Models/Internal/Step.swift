@@ -50,7 +50,7 @@ enum Step {
         case .confirmSignInWithCustomChallenge:
             return .confirmSignInWithCustomChallenge
         case .confirmSignInWithTOTP:
-            return .confirmSignInWithTOTP
+            return .confirmSignInWithTOTPCode
         case .continueSignInWithTOTPSetup:
             return .continueSignInWithTOTPSetup
         case .continueSignInWithMFASelection:

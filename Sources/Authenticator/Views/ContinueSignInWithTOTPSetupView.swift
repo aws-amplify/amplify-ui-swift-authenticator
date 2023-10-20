@@ -25,8 +25,8 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
     private let copyKeyContent: CopyKeyContent
     private let footerContent: Footer
 
-    /// Creates a `ConfirmSignInWithTOTPView`
-    /// - Parameter state: The ``ConfirmSignInWithCodeState`` that is observed by this view
+    /// Creates a `ContinueSignInWithTOTPSetupView`
+    /// - Parameter state: The ``ContinueSignInWithTOTPSetupState`` that is observed by this view
     /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``ContinueSignInWithTOTPSetupHeader``
     /// - Parameter qrCodeContent: The content displayed for the QR code. Defaults to  ``ContinueSignInWithTOTPSetupQRCodeView``
     /// - Parameter copyKeyContent: The content displayed for copying the code. Defaults to  ``ContinueSignInWithTOTPCopyKeyView``
@@ -94,7 +94,7 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
 
 
             Button("authenticator.continueSignInWithTOTPSetup.button.submit".localized()) {
-                Task { await confirmSignIn() }
+                Task { await continueSignIn() }
             }
             .buttonStyle(.primary)
             .disabled(state.confirmationCode.isEmpty)
@@ -105,18 +105,18 @@ public struct ContinueSignInWithTOTPSetupView<Header: View,
         .messageBanner($state.message)
         .onSubmit {
             Task {
-                await confirmSignIn()
+                await continueSignIn()
             }
         }
     }
 
-    private func confirmSignIn() async {
+    private func continueSignIn() async {
         guard codeValidator.validate() else {
             log.verbose("Code validation failed")
             return
         }
 
-        try? await state.confirmSignIn()
+        try? await state.continueSignIn()
     }
 
     /// Sets a custom error mapping function for the `AuthError`s that are displayed
