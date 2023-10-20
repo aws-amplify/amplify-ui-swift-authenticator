@@ -17,7 +17,7 @@ public class ContinueSignInWithTOTPSetupState: AuthenticatorBaseState {
     private let issuer: String?
     private let totpSetupDetails: TOTPSetupDetails
 
-    init(authenticatorState: AuthenticatorState,
+    init(authenticatorState: AuthenticatorStateProtocol,
          issuer: String?,
          totpSetupDetails: TOTPSetupDetails) {
         self.totpSetupDetails = totpSetupDetails
@@ -32,18 +32,14 @@ public class ContinueSignInWithTOTPSetupState: AuthenticatorBaseState {
 
     /// The `Amplify.TOTPSetupDetails.getSetupURI` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step
     public var setupUri: String {
-        let finalSetupUri: String
         var setupUriAccountName: String = ""
-        let baseTOTPUri = "otpauth://totp/\(setupUriAccountName)?secret=\(sharedSecret)"
-
         if let issuer = extractIssuerForQRCodeGeneration() {
             setupUriAccountName = issuer + ":" + totpSetupDetails.username
-            finalSetupUri = baseTOTPUri + "&issuer=\(issuer)"
+            return "otpauth://totp/\(setupUriAccountName)?secret=\(sharedSecret)" + "&issuer=\(issuer)"
         } else {
-            setupUriAccountName = totpSetupDetails.username
-            finalSetupUri = baseTOTPUri
+            return "otpauth://totp/\(setupUriAccountName)?secret=\(sharedSecret)"
+
         }
-        return finalSetupUri
     }
 
     private func extractIssuerForQRCodeGeneration() -> String? {

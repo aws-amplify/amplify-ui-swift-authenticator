@@ -13,6 +13,10 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
                                                  Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState
     @ObservedObject private var state: ContinueSignInWithMFASelectionState
+
+    /// The MFA selection  provided by the user
+    @State private var selectedMFAType: MFAType?
+
     private let headerContent: Header
     private let footerContent: Footer
     
@@ -42,32 +46,32 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
             if(state.allowedMFATypes.contains(.totp)) {
                 RadioButton(
                     label: "authenticator.continueSignInWithMFASelection.totp.radioButton.title".localized(),
-                    isSelected: .constant(state.selectedMFAType == .totp)
+                    isSelected: .constant(selectedMFAType == .totp)
                 ) {
-                    state.selectedMFAType = .totp
+                    selectedMFAType = .totp
                 }
-                .accessibilityAddTraits(state.selectedMFAType == .totp ? .isSelected : .isButton)
-                .animation(.none, value: state.selectedMFAType)
+                .accessibilityAddTraits(selectedMFAType == .totp ? .isSelected : .isButton)
+                .animation(.none, value: selectedMFAType)
             }
 
             /// Only add SMS option if it is allowed for selection by the service
             if(state.allowedMFATypes.contains(.sms)) {
                 RadioButton(
                     label: "authenticator.continueSignInWithMFASelection.sms.radioButton.title".localized(),
-                    isSelected: .constant(state.selectedMFAType == .sms)
+                    isSelected: .constant(selectedMFAType == .sms)
                 ) {
-                    state.selectedMFAType = .sms
+                    selectedMFAType = .sms
                 }
-                .accessibilityAddTraits(state.selectedMFAType == .sms ? .isSelected : .isButton)
-                .animation(.none, value: state.selectedMFAType)
+                .accessibilityAddTraits(selectedMFAType == .sms ? .isSelected : .isButton)
+                .animation(.none, value: selectedMFAType)
             }
 
             Button("authenticator.continueSignInWithMFASelection.button.submit".localized()) {
                 Task { await continueSignIn() }
             }
             .buttonStyle(.primary)
-            .disabled(state.selectedMFAType == nil)
-            .opacity(state.selectedMFAType == nil ? 0.5 : 1)
+            .disabled(selectedMFAType == nil)
+            .opacity(selectedMFAType == nil ? 0.5 : 1)
 
             footerContent
         }
@@ -78,12 +82,16 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
             }
         }
         .onDisappear{
-            state.selectedMFAType = nil
+            selectedMFAType = nil
         }
     }
 
     private func continueSignIn() async {
-        try? await state.continueSignIn()
+        guard let selectedMFAType = selectedMFAType else {
+            log.error("MFA type not selected")
+            return
+        }
+        try? await state.continueSignIn(selectedMFAType: selectedMFAType)
     }
     
     /// Sets a custom error mapping function for the `AuthError`s that are displayed
@@ -93,6 +101,8 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
         return self
     }
 }
+
+extension ContinueSignInWithMFASelectionView: AuthenticatorLogging {}
 
 /// Default header for the ``ContinueSignInWithMFASelectionView``. It displays the view's title
 public struct ConfirmSignInWithMFASelectionHeader: View {

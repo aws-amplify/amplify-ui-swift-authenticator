@@ -337,7 +337,7 @@ public struct Authenticator<LoadingContent: View,
                 authenticatorState: state,
                 allowedMFATypes: allowedMFATypes)
             continueSignInWithMFASelectionContent(continueSignInWithMFASelection)
-        case .confirmSignInWithTOTP:
+        case .confirmSignInWithTOTPCode:
             let confirmSignInWithCodeState = ConfirmSignInWithCodeState(
                 authenticatorState: state)
             confirmSignInWithTOTPCodeContent(confirmSignInWithCodeState)

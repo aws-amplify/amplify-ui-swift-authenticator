@@ -111,7 +111,7 @@ public class AuthenticatorBaseState: ObservableObject {
                 return .verifyUser(attributes: unverifiedAttributes)
             }
         case .confirmSignInWithTOTPCode:
-            return .confirmSignInWithTOTP
+            return .confirmSignInWithTOTPCode
         case .continueSignInWithMFASelection(let allowedMFATypes):
             return .continueSignInWithMFASelection(allowedMFATypes: allowedMFATypes)
         case .continueSignInWithTOTPSetup(let totpSetupDetails):

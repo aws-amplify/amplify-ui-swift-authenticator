@@ -11,10 +11,8 @@ import SwiftUI
 
 /// The state observed by the Continue Sign In With MFA Selection content views, representing the ``Authenticator`` is in  ``AuthenticatorStep/continueSignInWithMFASelection``  step.
 public class ContinueSignInWithMFASelectionState: AuthenticatorBaseState {
-    /// The MFA selection  provided by the user
-    @Published public var selectedMFAType: MFAType?
 
-    init(authenticatorState: AuthenticatorState,
+    init(authenticatorState: AuthenticatorStateProtocol,
          allowedMFATypes: AllowedMFATypes) {
         self.allowedMFATypes = allowedMFATypes
         super.init(authenticatorState: authenticatorState)
@@ -28,13 +26,8 @@ public class ContinueSignInWithMFASelectionState: AuthenticatorBaseState {
     /// Automatically sets the Authenticator's next step accordingly, as well as the
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
     /// - Throws: An `Amplify.AuthenticationError` if the operation fails
-    public func continueSignIn() async throws {
+    public func continueSignIn(selectedMFAType: MFAType) async throws {
         setBusy(true)
-
-        guard let selectedMFAType = selectedMFAType else {
-            log.error("MFA type not selected")
-            return
-        }
 
         do {
             log.verbose("Attempting to confirm Sign Up")
