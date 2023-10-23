@@ -19,6 +19,7 @@ class ContinueSignInWithMFASelectionStateTests: XCTestCase {
         state = ContinueSignInWithMFASelectionState(
             authenticatorState: authenticatorState,
             allowedMFATypes: [.sms, .totp])
+        state.selectedMFAType = .totp
 
         authenticationService = MockAuthenticationService()
         authenticatorState.authenticationService = authenticationService
@@ -38,7 +39,7 @@ class ContinueSignInWithMFASelectionStateTests: XCTestCase {
             userId: "userId"
         )
 
-        try await state.continueSignIn(selectedMFAType: .totp)
+        try await state.continueSignIn()
         XCTAssertEqual(authenticationService.confirmSignInCount, 1)
         XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
         let currentStep = try XCTUnwrap(authenticatorState.setCurrentStepValue)
@@ -50,7 +51,7 @@ class ContinueSignInWithMFASelectionStateTests: XCTestCase {
 
     func testContinueSignIn_withError_shouldSetErrorMessage() async throws {
         do {
-            try await state.continueSignIn(selectedMFAType: .totp)
+            try await state.continueSignIn()
             XCTFail("Should not succeed")
         } catch {
             guard let authenticatorError = error as? AuthenticatorError else {
@@ -69,7 +70,7 @@ class ContinueSignInWithMFASelectionStateTests: XCTestCase {
     func testContinueSignIn_withSuccess_andFailedToSignIn_shouldSetErrorMessage() async throws {
         authenticationService.mockedConfirmSignInResult = .init(nextStep: .done)
         do {
-            try await state.continueSignIn(selectedMFAType: .totp)
+            try await state.continueSignIn()
             XCTFail("Should not succeed")
         } catch {
             XCTAssertEqual(authenticationService.confirmSignInCount, 1)

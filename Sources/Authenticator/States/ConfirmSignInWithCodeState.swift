@@ -32,7 +32,7 @@ public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
         setBusy(true)
 
         do {
-            log.verbose("Attempting to confirm Sign Up")
+            log.verbose("Attempting to confirm Sign In with Code")
             let result = try await authenticationService.confirmSignIn(
                 challengeResponse: confirmationCode,
                 options: nil

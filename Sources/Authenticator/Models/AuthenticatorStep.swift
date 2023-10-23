@@ -49,7 +49,7 @@ public struct AuthenticatorStep: Equatable {
 
     /// A user has successfully provided valid Sign In credentials but is required TOTP code from their associated authenticator token generator
     /// so they are presented with the Confirm Sign In with TOTP Code View
-    public static let confirmSignInWithTOTPCode = AuthenticatorStep("confirmSignInWithTOTP")
+    public static let confirmSignInWithTOTPCode = AuthenticatorStep("confirmSignInWithTOTPCode")
 
     /// A user has successfully provided valid Sign In credentials but is required to setup TOTP before continuing sign in
     /// so they are presented with the  TOTP Setup View

@@ -25,12 +25,12 @@ public class ContinueSignInWithTOTPSetupState: AuthenticatorBaseState {
         super.init(authenticatorState: authenticatorState)
     }
 
-    /// The `Amplify.TOTPSetupDetails.sharedSecret` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step
+    /// The `Amplify.TOTPSetupDetails.sharedSecret` associated with this state.
     public var sharedSecret: String {
         return totpSetupDetails.sharedSecret
     }
 
-    /// The `Amplify.TOTPSetupDetails.getSetupURI` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step
+    /// The `Amplify.TOTPSetupDetails.getSetupURI` associated with this state.
     public var setupUri: String {
         var setupUriAccountName: String = ""
         if let issuer = extractIssuerForQRCodeGeneration() {
@@ -64,7 +64,7 @@ public class ContinueSignInWithTOTPSetupState: AuthenticatorBaseState {
         setBusy(true)
 
         do {
-            log.verbose("Attempting to confirm Sign Up")
+            log.verbose("Attempting to confirm Sign In with Code")
             let result = try await authenticationService.confirmSignIn(
                 challengeResponse: confirmationCode,
                 options: nil
