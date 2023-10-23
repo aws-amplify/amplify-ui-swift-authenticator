@@ -18,7 +18,8 @@ public class ContinueSignInWithMFASelectionState: AuthenticatorBaseState {
     init(authenticatorState: AuthenticatorStateProtocol,
          allowedMFATypes: AllowedMFATypes) {
         self.allowedMFATypes = allowedMFATypes
-        super.init(authenticatorState: authenticatorState)
+        super.init(authenticatorState: authenticatorState,
+                   credentials: Credentials())
     }
 
     /// The `Amplify.AllowedMFATypes` associated with this state.

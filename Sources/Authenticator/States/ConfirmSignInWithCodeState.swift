@@ -14,6 +14,15 @@ public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
     /// The confirmation code provided by the user
     @Published public var confirmationCode: String = ""
 
+    override init(credentials: Credentials) {
+        super.init(credentials: credentials)
+    }
+
+    init(authenticatorState: AuthenticatorStateProtocol) {
+        super.init(authenticatorState: authenticatorState,
+                   credentials: Credentials())
+    }
+
     /// The `Amplify.AuthCodeDeliveryDetails` associated with this state. If the Authenticator is not in the `.confirmSignInWithMFACode` step, it returns `nil`
     public var deliveryDetails: AuthCodeDeliveryDetails? {
         guard case .confirmSignInWithMFACode(let deliveryDetails) = authenticatorState.step else {

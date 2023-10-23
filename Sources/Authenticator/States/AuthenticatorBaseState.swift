@@ -31,7 +31,7 @@ public class AuthenticatorBaseState: ObservableObject {
     }
 
     init(authenticatorState: AuthenticatorStateProtocol,
-         credentials: Credentials = Credentials()) {
+         credentials: Credentials) {
         self.authenticatorState = authenticatorState
         self.credentials = credentials
     }

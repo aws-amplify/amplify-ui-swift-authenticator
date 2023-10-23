@@ -96,7 +96,7 @@ public struct Authenticator<LoadingContent: View,
     /// - Parameter content: The content associated with the ``AuthenticatorStep/signedIn`` step, i.e. once the user has successfully authenticated.
     public init(
         initialStep: AuthenticatorInitialStep = .signIn,
-        totpOptions: TOTPOptions = .init(issuer: Bundle.main.applicationName),
+        totpOptions: TOTPOptions = .init(),
         @ViewBuilder loadingContent: () -> LoadingContent = {
             ProgressView()
         },

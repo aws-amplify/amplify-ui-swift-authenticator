@@ -22,7 +22,8 @@ public class ContinueSignInWithTOTPSetupState: AuthenticatorBaseState {
          totpSetupDetails: TOTPSetupDetails) {
         self.totpSetupDetails = totpSetupDetails
         self.issuer = issuer
-        super.init(authenticatorState: authenticatorState)
+        super.init(authenticatorState: authenticatorState,
+                   credentials: Credentials())
     }
 
     /// The `Amplify.TOTPSetupDetails.sharedSecret` associated with this state.

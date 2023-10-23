@@ -9,7 +9,7 @@ import Foundation
 
 extension Bundle {
 
-    public var applicationName: String? {
+    var applicationName: String? {
         if let localizedName = Bundle.main.infoDictionary?[kCFBundleLocalizationsKey as String] as? String {
             return localizedName
         }
