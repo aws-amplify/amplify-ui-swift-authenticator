@@ -14,6 +14,15 @@ public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
     /// The confirmation code provided by the user
     @Published public var confirmationCode: String = ""
 
+    override init(credentials: Credentials) {
+        super.init(credentials: credentials)
+    }
+
+    init(authenticatorState: AuthenticatorStateProtocol) {
+        super.init(authenticatorState: authenticatorState,
+                   credentials: Credentials())
+    }
+
     /// The `Amplify.AuthCodeDeliveryDetails` associated with this state. If the Authenticator is not in the `.confirmSignInWithMFACode` step, it returns `nil`
     public var deliveryDetails: AuthCodeDeliveryDetails? {
         guard case .confirmSignInWithMFACode(let deliveryDetails) = authenticatorState.step else {
@@ -21,24 +30,6 @@ public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
         }
 
         return deliveryDetails
-    }
-
-    /// The `Amplify.AllowedMFATypes` associated with this state. If the Authenticator is not in the `.continueSignInWithMFASelection` step, it returns `empty` result
-    public var allowedMFATypes: AllowedMFATypes {
-        guard case .continueSignInWithMFASelection(let allowedMFATypes) = authenticatorState.step else {
-            return []
-        }
-
-        return allowedMFATypes
-    }
-
-    /// The `Amplify.TOTPSetupDetails` associated with this state. If the Authenticator is not in the `.continueSignInWithTOTPSetup` step, it returns `nil` result
-    public var totpSetupDetails: TOTPSetupDetails? {
-        guard case .continueSignInWithTOTPSetup(let totpSetupDetails) = authenticatorState.step else {
-            return nil
-        }
-
-        return totpSetupDetails
     }
 
     /// Attempts to confirm the user's sign in using the provided confirmation code.
@@ -50,7 +41,7 @@ public class ConfirmSignInWithCodeState: AuthenticatorBaseState {
         setBusy(true)
 
         do {
-            log.verbose("Attempting to confirm Sign Up")
+            log.verbose("Attempting to confirm Sign In with Code")
             let result = try await authenticationService.confirmSignIn(
                 challengeResponse: confirmationCode,
                 options: nil

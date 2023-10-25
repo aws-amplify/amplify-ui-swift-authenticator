@@ -8,7 +8,6 @@
 import SwiftUI
 
 class AuthenticatorOptions: ObservableObject {
-    @Published var totpOptions: TOTPOptions? = nil
     @Published var hidesSignUpButton = false
     @Published var contentAnimation: Animation = .easeInOut(duration: 0.25)
     @Published var contentTransition: AnyTransition = .opacity

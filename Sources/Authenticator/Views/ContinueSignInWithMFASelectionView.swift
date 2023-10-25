@@ -12,7 +12,8 @@ import SwiftUI
 public struct ContinueSignInWithMFASelectionView<Header: View,
                                                  Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState
-    @ObservedObject private var state: ConfirmSignInWithCodeState
+    @ObservedObject private var state: ContinueSignInWithMFASelectionState
+
     private let headerContent: Header
     private let footerContent: Footer
     
@@ -21,7 +22,7 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
     /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``ConfirmSignInWithMFASelectionHeader``
     /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  ``ConfirmSignInWithMFASelectionFooter``
     public init(
-        state: ConfirmSignInWithCodeState,
+        state: ContinueSignInWithMFASelectionState,
         @ViewBuilder headerContent: () -> Header = {
             ConfirmSignInWithMFASelectionHeader()
         },
@@ -42,48 +43,48 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
             if(state.allowedMFATypes.contains(.totp)) {
                 RadioButton(
                     label: "authenticator.continueSignInWithMFASelection.totp.radioButton.title".localized(),
-                    isSelected: .constant(state.confirmationCode.elementsEqual(MFAType.totp.challengeResponse))
+                    isSelected: .constant(state.selectedMFAType == .totp)
                 ) {
-                    state.confirmationCode = MFAType.totp.challengeResponse
+                    state.selectedMFAType = .totp
                 }
-                .accessibilityAddTraits(state.confirmationCode.elementsEqual(MFAType.totp.challengeResponse) ? .isSelected : .isButton)
-                .animation(.none, value: state.confirmationCode)
+                .accessibilityAddTraits(state.selectedMFAType == .totp ? .isSelected : .isButton)
+                .animation(.none, value: state.selectedMFAType)
             }
 
             /// Only add SMS option if it is allowed for selection by the service
             if(state.allowedMFATypes.contains(.sms)) {
                 RadioButton(
                     label: "authenticator.continueSignInWithMFASelection.sms.radioButton.title".localized(),
-                    isSelected: .constant(state.confirmationCode.elementsEqual(MFAType.sms.challengeResponse))
+                    isSelected: .constant(state.selectedMFAType == .sms)
                 ) {
-                    state.confirmationCode = MFAType.sms.challengeResponse
+                    state.selectedMFAType = .sms
                 }
-                .accessibilityAddTraits(state.confirmationCode.elementsEqual(MFAType.sms.challengeResponse) ? .isSelected : .isButton)
-                .animation(.none, value: state.confirmationCode)
+                .accessibilityAddTraits(state.selectedMFAType == .sms ? .isSelected : .isButton)
+                .animation(.none, value: state.selectedMFAType)
             }
 
             Button("authenticator.continueSignInWithMFASelection.button.submit".localized()) {
-                Task { await confirmSignIn() }
+                Task { await continueSignIn() }
             }
             .buttonStyle(.primary)
-            .disabled(state.confirmationCode.isEmpty)
-            .opacity(state.confirmationCode.isEmpty ? 0.5 : 1)
+            .disabled(state.selectedMFAType == nil)
+            .opacity(state.selectedMFAType == nil ? 0.5 : 1)
 
             footerContent
         }
         .messageBanner($state.message)
         .onSubmit {
             Task {
-                await confirmSignIn()
+                await continueSignIn()
             }
         }
         .onDisappear{
-            state.confirmationCode = ""
+            state.selectedMFAType = nil
         }
     }
 
-    private func confirmSignIn() async {
-        try? await state.confirmSignIn()
+    private func continueSignIn() async {
+        try? await state.continueSignIn()
     }
     
     /// Sets a custom error mapping function for the `AuthError`s that are displayed
@@ -93,6 +94,8 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
         return self
     }
 }
+
+extension ContinueSignInWithMFASelectionView: AuthenticatorLogging {}
 
 /// Default header for the ``ContinueSignInWithMFASelectionView``. It displays the view's title
 public struct ConfirmSignInWithMFASelectionHeader: View {

@@ -13,11 +13,11 @@ public struct TOTPOptions {
     /// account name. In most cases, this should be the name of your app.
     /// For example, if your app is called "My App", your user will see
     /// "My App" - "username" in their TOTP app.
-    public let issuer: String
+    public let issuer: String?
 
     /// Creates a `TOTPOptions`
     /// - Parameter issuer: The `issuer` is the title displayed in a user's TOTP App
-    public init(issuer: String) {
+    public init(issuer: String? = nil) {
         self.issuer = issuer
     }
 }
