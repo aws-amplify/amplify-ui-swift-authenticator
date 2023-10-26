@@ -94,8 +94,8 @@ class ContinueSignInWithTOTPSetupStateTests: XCTestCase {
         let sharedSecret = try XCTUnwrap(state.sharedSecret)
         XCTAssertEqual("sharedSecret", sharedSecret)
 
-        let setupUri = try XCTUnwrap(state.setupUri)
-        XCTAssertEqual("otpauth://totp/issuer:username?secret=sharedSecret&issuer=issuer", setupUri)
+        let setupURI = try XCTUnwrap(state.setupURI)
+        XCTAssertEqual("otpauth://totp/issuer:username?secret=sharedSecret&issuer=issuer", setupURI)
     }
 
     func testSetupUriWithoutWithIssuer_onContinueSignInWithTOTPSetup_shouldReturnDetails() throws {
@@ -110,7 +110,7 @@ class ContinueSignInWithTOTPSetupStateTests: XCTestCase {
         let sharedSecret = try XCTUnwrap(state.sharedSecret)
         XCTAssertEqual("sharedSecret", sharedSecret)
 
-        let setupUri = try XCTUnwrap(state.setupUri)
-        XCTAssertEqual("otpauth://totp/xctest:username?secret=sharedSecret&issuer=xctest", setupUri)
+        let setupURI = try XCTUnwrap(state.setupURI)
+        XCTAssertEqual("otpauth://totp/xctest:username?secret=sharedSecret&issuer=xctest", setupURI)
     }
 }
