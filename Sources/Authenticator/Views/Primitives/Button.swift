@@ -198,29 +198,26 @@ private struct AuthenticatorButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Self.Configuration) -> some View {
         if useOverlay {
-            configuration.label
-                .font(font)
-                .padding(padding)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: maxWidth)
-                .foregroundColor(configuration.isPressed ? foregroundColor.opacity(0.5) : foregroundColor)
-                .background(configuration.isPressed ? backgroundColor.opacity(0.5) : backgroundColor)
+            content(for: configuration)
                 .overlay(
                     RoundedRectangle(cornerRadius: .infinity)
                         .stroke(borderColor,
                                 lineWidth: borderWidth)
                 )
+
         } else {
-            configuration.label
-                .font(font)
-                .padding(padding)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: maxWidth)
-                .foregroundColor(configuration.isPressed ? foregroundColor.opacity(0.5) : foregroundColor)
-                .background(configuration.isPressed ? backgroundColor.opacity(0.5) : backgroundColor)
-                .cornerRadius(cornerRadius)
+            content(for: configuration)
                 .border(borderColor, width: borderWidth)
         }
+    }
 
+    @ViewBuilder private func content(for configuration: Self.Configuration) -> some View {
+        configuration.label
+            .font(font)
+            .padding(padding)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: maxWidth)
+            .foregroundColor(configuration.isPressed ? foregroundColor.opacity(0.5) : foregroundColor)
+            .background(configuration.isPressed ? backgroundColor.opacity(0.5) : backgroundColor)
     }
 }

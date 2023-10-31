@@ -58,14 +58,14 @@ public struct Authenticator<LoadingContent: View,
     /// - Parameter initialStep: The initial step displayed to unauthorized users.
     /// Defaults to ``AuthenticatorInitialStep/signIn``
     /// - Parameter totpOptions: The TOTP Options that would be used by the Authenticator
-    /// Defaults to ``nil``
+    /// Defaults to ``.init()``
     /// - Parameter loadingContent: The content that is associated with the ``AuthenticatorStep/loading`` step.
     /// Defaults to a `SwiftUI.ProgressView`.
     /// - Parameter signInContent: The content associated with the ``AuthenticatorStep/signIn`` step.
     /// Defaults to a ``SignInView``.
     /// - Parameter confirmSignInWithMFACodeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithMFACode`` step.
     /// Defaults to a ``ConfirmSignInWithMFACodeView``.
-    ///- Parameter confirmSignInWithTOTPContent: The content associated with the ``AuthenticatorStep/confirmSignInWithTOTP`` step.
+    ///- Parameter confirmSignInWithTOTPCodeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithTOTPCode`` step.
     /// Defaults to a ``ConfirmSignInWithMFACodeView``.
     ///- Parameter continueSignInWithMFASelectionContent: The content associated with the ``AuthenticatorStep/continueSignInWithMFASelection`` step.
     /// Defaults to a ``ContinueSignInWithMFASelectionView``.

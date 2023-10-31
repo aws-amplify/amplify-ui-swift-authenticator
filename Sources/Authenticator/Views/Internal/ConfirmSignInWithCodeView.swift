@@ -37,7 +37,7 @@ struct ConfirmSignInWithCodeView<Header: View,
         self.mfaType = mfaType
     }
 
-    var textFieldLabel: String {
+    private var textFieldLabel: String {
         switch mfaType {
         case .sms, .none:
             return "authenticator.field.code.label".localized()
@@ -46,7 +46,7 @@ struct ConfirmSignInWithCodeView<Header: View,
         }
     }
 
-    var textFieldPlaceholder: String {
+    private var textFieldPlaceholder: String {
         switch mfaType {
         case .sms, .none:
             return "authenticator.field.code.placeholder".localized()
@@ -55,7 +55,7 @@ struct ConfirmSignInWithCodeView<Header: View,
         }
     }
 
-    var submitButtonTitle: String {
+    private var submitButtonTitle: String {
         switch mfaType {
         case .sms, .none:
             return "authenticator.confirmSignInWithCode.button.submit".localized()
