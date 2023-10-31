@@ -23,7 +23,7 @@ public struct ContinueSignInWithTOTPCopyKeyView: View {
 #elseif os(macOS)
             let pasteboard = NSPasteboard.general
             pasteboard.clearContents()
-            pasteboard.setString(sharedSecret, forType: .string)
+            pasteboard.setString(state.sharedSecret, forType: .string)
 #endif
         }
         .buttonStyle(.capsule)
