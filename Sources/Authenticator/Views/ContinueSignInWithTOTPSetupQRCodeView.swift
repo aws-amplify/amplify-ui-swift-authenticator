@@ -18,7 +18,7 @@ public struct ContinueSignInWithTOTPSetupQRCodeView: View {
     }
 
     public var body: some View {
-        if let qrCodeImage = generateQRCode(qrCodeURIString: state.setupUri) {
+        if let qrCodeImage = generateQRCode(qrCodeURIString: state.setupURI) {
             Image(decorative: qrCodeImage, scale: 1)
                 .interpolation(.none)
                 .resizable()

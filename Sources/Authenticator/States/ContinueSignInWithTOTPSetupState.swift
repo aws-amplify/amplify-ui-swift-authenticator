@@ -32,13 +32,13 @@ public class ContinueSignInWithTOTPSetupState: AuthenticatorBaseState {
     }
 
     /// The `Amplify.TOTPSetupDetails.getSetupURI` associated with this state.
-    public var setupUri: String {
-        var setupUriAccountName: String = ""
+    public var setupURI: String {
+        var setupURIAccountName: String = ""
         if let issuer = extractIssuerForQRCodeGeneration() {
-            setupUriAccountName = issuer + ":" + totpSetupDetails.username
-            return "otpauth://totp/\(setupUriAccountName)?secret=\(sharedSecret)" + "&issuer=\(issuer)"
+            setupURIAccountName = issuer + ":" + totpSetupDetails.username
+            return "otpauth://totp/\(setupURIAccountName)?secret=\(sharedSecret)" + "&issuer=\(issuer)"
         } else {
-            return "otpauth://totp/\(setupUriAccountName)?secret=\(sharedSecret)"
+            return "otpauth://totp/\(setupURIAccountName)?secret=\(sharedSecret)"
 
         }
     }
