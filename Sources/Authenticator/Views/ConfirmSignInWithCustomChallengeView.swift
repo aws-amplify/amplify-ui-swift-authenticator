@@ -31,7 +31,8 @@ public struct ConfirmSignInWithCustomChallengeView<Header: View,
         self.content = ConfirmSignInWithCodeView(
             state: state,
             headerContent: headerContent,
-            footerContent: footerContent
+            footerContent: footerContent,
+            mfaType: .none
         )
     }
 

@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "6A2C8881-BF18-41B8-8578-D487AB88126F",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:AuthenticatorHostApp.xcodeproj",
+      "identifier" : "483E093C2ABBC0D800EFD1D7",
+      "name" : "AuthenticatorHostApp"
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "AuthenticatorBaseTestCase"
+      ],
+      "target" : {
+        "containerPath" : "container:AuthenticatorHostApp.xcodeproj",
+        "identifier" : "483E095B2ABBC4AC00EFD1D7",
+        "name" : "AuthenticatorHostAppUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

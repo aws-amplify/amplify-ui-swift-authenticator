@@ -76,6 +76,34 @@
 
 /* Confirm Sign In with Code */
 "authenticator.confirmSignInWithCode.button.submit" = "Submit";
+"authenticator.confirmSignInWithCode.button.backToSignIn" = "Back to Sign In";
+
+/* Confirm Sign In with TOTP */
+"authenticator.confirmSignInWithCode.totp.title" = "Enter your one-time passcode";
+"authenticator.field.totp.code.label" = "Please enter the code from your registered Authenticator app";
+"authenticator.field.totp.code.placeholder" = "Verification Code";
+"authenticator.confirmSignInWithCode.totp.button.submit" = "Confirm";
+"authenticator.confirmSignInWithCode.totp.button.backToSignIn" = "Back to Sign In";
+
+/* Continue Sign In with MFA Selection */
+"authenticator.continueSignInWithMFASelection.title" = "Select your preferred Two-Factor Auth method";
+"authenticator.continueSignInWithMFASelection.sms.radioButton.title" = "Text Message (SMS)";
+"authenticator.continueSignInWithMFASelection.totp.radioButton.title" = "Authenticator App (TOTP)";
+"authenticator.continueSignInWithMFASelection.button.submit" = "Continue";
+"authenticator.continueSignInWithMFASelection.button.backToSignIn" = "Back to Sign In";
+
+/* Continue Sign In with TOTP Setup */
+"authenticator.continueSignInWithTOTPSetup.title" = "Enable Two-Factor Auth";
+"authenticator.continueSignInWithTOTPSetup.step1.label.title" = "Step 1: Download an Authenticator App";
+"authenticator.continueSignInWithTOTPSetup.step1.label.content" = "Authenticator app generates one-time codes that can be used to verify your identity";
+"authenticator.continueSignInWithTOTPSetup.step2.label.title" = "Step 2: Scan the QR code";
+"authenticator.continueSignInWithTOTPSetup.step2.label.content" = "Open the Authenticator app and scan the QR code or enter the key to get your verification code";
+"authenticator.continueSignInWithTOTPSetup.step3.label.title" = "Step 3: Verify your code";
+"authenticator.continueSignInWithTOTPSetup.step3.label.content" = "Enter the 6 digit code from your Authenticator app";
+"authenticator.continueSignInWithTOTPSetup.field.code.placeholder" = "Verification Code";
+"authenticator.continueSignInWithTOTPSetup.button.copyKey" = "Copy Key";
+"authenticator.continueSignInWithTOTPSetup.button.submit" = "Continue";
+"authenticator.continueSignInWithTOTPSetup.button.backToSignIn" = "Back to Sign In";
 
 /* Reset Password view */
 "authenticator.resetPassword.title" = "Reset your password";
@@ -136,9 +164,10 @@
 
 /* Authenticator Errors */
 "authenticator.authError.incorrectCredentials" = "Incorrect username or password";
+"authenticator.authError.continueSignInWithMFASelection.noSelectionError" = "Please select an MFA method to continue";
 "authenticator.unknownError" = "Sorry, something went wrong";
 
-"authenticator.cognitoError.codeDelivery" = "Could not send confirmation cde";
+"authenticator.cognitoError.codeDelivery" = "Could not send confirmation code";
 "authenticator.cognitoError.codeExpired" = "Confirmation code has expired";
 "authenticator.cognitoError.codeMismatch" = "Incorrect confirmation code";
 "authenticator.cognitoError.invalidPassword" = "The provided password is not valid";

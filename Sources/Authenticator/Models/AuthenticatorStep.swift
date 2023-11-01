@@ -43,15 +43,27 @@ public struct AuthenticatorStep: Equatable {
     /// An unauthenticated user is presented with the Sing In view
     public static let signIn = AuthenticatorStep("signIn")
 
-    /// A user has successfuly provided valid Sign In credentials but is required to provide an additional custom verification response,
+    /// A user has successfully provided valid Sign In credentials but is required to provide an additional custom verification response,
     /// so they are presented with the Confirm Sign In with Custom Challenge view
     public static let confirmSignInWithCustomChallenge = AuthenticatorStep("confirmSignInWithCustomChallenge")
 
-    /// A user has successfuly provided valid Sign In credentials but is required to provide a MFA code,
+    /// A user has successfully provided valid Sign In credentials but is required TOTP code from their associated authenticator token generator
+    /// so they are presented with the Confirm Sign In with TOTP Code View
+    public static let confirmSignInWithTOTPCode = AuthenticatorStep("confirmSignInWithTOTPCode")
+
+    /// A user has successfully provided valid Sign In credentials but is required to setup TOTP before continuing sign in
+    /// so they are presented with the  TOTP Setup View
+    public static let continueSignInWithTOTPSetup = AuthenticatorStep("continueSignInWithTOTPSetup")
+
+    /// A user has successfully provided valid Sign In credentials but is required to select  a MFA type to continue
+    /// so they are presented with the Confirm Sign In with MFA Selection View
+    public static let continueSignInWithMFASelection = AuthenticatorStep("continueSignInWithMFASelection")
+
+    /// A user has successfully provided valid Sign In credentials but is required to provide a MFA code,
     /// so they are presented with the Confirm Sign In with MFA Code view
     public static let confirmSignInWithMFACode = AuthenticatorStep("confirmSignInWithMFACode")
 
-    /// A user has sucessfuly provided valid Sign In credentials but is required to change their password,
+    /// A user has successfully provided valid Sign In credentials but is required to change their password,
     /// so they are presented with the Confirm Sign In with New Password view
     public static let confirmSignInWithNewPassword = AuthenticatorStep("confirmSignInWithNewPassword")
 
@@ -65,18 +77,22 @@ public struct AuthenticatorStep: Equatable {
     /// An unauthenticated user is presented with the Reset Password view
     public static let resetPassword = AuthenticatorStep("resetPassword")
 
-    /// An unauthenticated user successfuly requested a Password Reset and they need to provide a verification code along their new password,
+    /// An unauthenticated user successfully requested a Password Reset and they need to provide a verification code along their new password,
     /// so they are presented with the Confirm Reset Password view
     public static let confirmResetPassword = AuthenticatorStep("confirmResetPassword")
 
-    /// A user has successfuly signed in but they have no verified attributes,
+    /// A user has successfully signed in but they have no verified attributes,
     /// so they are presented with the Verify User view
     public static let verifyUser = AuthenticatorStep("verifyUser")
 
-    /// A user has successfuly requested to verify an attribute and they need to provide a verification code,
+    /// A user has successfully requested to verify an attribute and they need to provide a verification code,
     /// so they are presented with the Confirm Verify User view
     public static let confirmVerifyUser = AuthenticatorStep("confirmVerifyUser")
 
-    /// An authenticated user has successfuly signed in.
+    /// An authenticated user has successfully signed in.
     public static let signedIn = AuthenticatorStep("signedIn")
 }
+
+extension AuthenticatorInitialStep: Codable { }
+
+extension AuthenticatorStep: Codable { }

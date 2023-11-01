@@ -1,0 +1,618 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		482D01142ABE21F7000A3140 /* AuthenticatorUITestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D01122ABE21F7000A3140 /* AuthenticatorUITestUtils.swift */; };
+		482D01172ABE2344000A3140 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = 482D01162ABE2344000A3140 /* Authenticator */; };
+		482D01192ABE238E000A3140 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = 482D01182ABE238E000A3140 /* Authenticator */; };
+		482D011B2AC1E824000A3140 /* SignInViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D011A2AC1E824000A3140 /* SignInViewTests.swift */; };
+		482D011D2AC1E839000A3140 /* SignUpViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D011C2AC1E839000A3140 /* SignUpViewTests.swift */; };
+		482D011F2AC1E85C000A3140 /* ResetPasswordViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D011E2AC1E85C000A3140 /* ResetPasswordViewTests.swift */; };
+		482D01212AC1EB69000A3140 /* AuthenticatorUITestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D01122ABE21F7000A3140 /* AuthenticatorUITestUtils.swift */; };
+		482D01242AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D01232AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift */; };
+		483E09412ABBC0D800EFD1D7 /* AuthenticatorHostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E09402ABBC0D800EFD1D7 /* AuthenticatorHostApp.swift */; };
+		483E09432ABBC0D800EFD1D7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E09422ABBC0D800EFD1D7 /* ContentView.swift */; };
+		483E09452ABBC0D900EFD1D7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 483E09442ABBC0D900EFD1D7 /* Assets.xcassets */; };
+		483E09492ABBC0D900EFD1D7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 483E09482ABBC0D900EFD1D7 /* Preview Assets.xcassets */; };
+		483E09512ABBC17A00EFD1D7 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = 483E09502ABBC17A00EFD1D7 /* Authenticator */; };
+		483E09542ABBC26C00EFD1D7 /* MockAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E09532ABBC26C00EFD1D7 /* MockAuthenticationService.swift */; };
+		483E09572ABBC2C100EFD1D7 /* AuthCategoryConfigurationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E09562ABBC2C100EFD1D7 /* AuthCategoryConfigurationFactory.swift */; };
+		4873E7532ABC99E4001EDA1D /* ImageDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7522ABC99E4001EDA1D /* ImageDiff.swift */; };
+		4873E7572ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7562ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift */; };
+		4873E7592ABC9C58001EDA1D /* AuthenticatorBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873E7582ABC9C58001EDA1D /* AuthenticatorBaseTestCase.swift */; };
+		48DED8F12AC2011100F44908 /* ContinueSignInWithMFASelectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DED8F02AC2011100F44908 /* ContinueSignInWithMFASelectionViewTests.swift */; };
+		48DED8F32AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DED8F22AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift */; };
+		48DED8F52AC2050800F44908 /* Snapshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DED8F42AC2050800F44908 /* Snapshotter.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		483E09622ABBC4AC00EFD1D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 483E09352ABBC0D800EFD1D7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 483E093C2ABBC0D800EFD1D7;
+			remoteInfo = AuthenticatorHostApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		482D01122ABE21F7000A3140 /* AuthenticatorUITestUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorUITestUtils.swift; sourceTree = "<group>"; };
+		482D011A2AC1E824000A3140 /* SignInViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewTests.swift; sourceTree = "<group>"; };
+		482D011C2AC1E839000A3140 /* SignUpViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewTests.swift; sourceTree = "<group>"; };
+		482D011E2AC1E85C000A3140 /* ResetPasswordViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewTests.swift; sourceTree = "<group>"; };
+		482D01222AC1EC3B000A3140 /* AuthenticatorHostApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AuthenticatorHostApp.xctestplan; sourceTree = "<group>"; };
+		482D01232AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmSignInWithTOTPCodeViewTests.swift; sourceTree = "<group>"; };
+		483E093D2ABBC0D800EFD1D7 /* AuthenticatorHostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AuthenticatorHostApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		483E09402ABBC0D800EFD1D7 /* AuthenticatorHostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorHostApp.swift; sourceTree = "<group>"; };
+		483E09422ABBC0D800EFD1D7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		483E09442ABBC0D900EFD1D7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		483E09462ABBC0D900EFD1D7 /* AuthenticatorHostApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AuthenticatorHostApp.entitlements; sourceTree = "<group>"; };
+		483E09482ABBC0D900EFD1D7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		483E09532ABBC26C00EFD1D7 /* MockAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthenticationService.swift; sourceTree = "<group>"; };
+		483E09562ABBC2C100EFD1D7 /* AuthCategoryConfigurationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCategoryConfigurationFactory.swift; sourceTree = "<group>"; };
+		483E095C2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AuthenticatorHostAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4873E7522ABC99E4001EDA1D /* ImageDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDiff.swift; sourceTree = "<group>"; };
+		4873E7562ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanCounterBetweenTestCases.swift; sourceTree = "<group>"; };
+		4873E7582ABC9C58001EDA1D /* AuthenticatorBaseTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorBaseTestCase.swift; sourceTree = "<group>"; };
+		48DED8F02AC2011100F44908 /* ContinueSignInWithMFASelectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueSignInWithMFASelectionViewTests.swift; sourceTree = "<group>"; };
+		48DED8F22AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueSignInWithTOTPSetupViewTests.swift; sourceTree = "<group>"; };
+		48DED8F42AC2050800F44908 /* Snapshotter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Snapshotter.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		483E093A2ABBC0D800EFD1D7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				482D01172ABE2344000A3140 /* Authenticator in Frameworks */,
+				483E09512ABBC17A00EFD1D7 /* Authenticator in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		483E09592ABBC4AC00EFD1D7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				482D01192ABE238E000A3140 /* Authenticator in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		482D01202AC1E939000A3140 /* TestCases */ = {
+			isa = PBXGroup;
+			children = (
+				482D011A2AC1E824000A3140 /* SignInViewTests.swift */,
+				482D011C2AC1E839000A3140 /* SignUpViewTests.swift */,
+				482D011E2AC1E85C000A3140 /* ResetPasswordViewTests.swift */,
+				482D01232AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift */,
+				48DED8F02AC2011100F44908 /* ContinueSignInWithMFASelectionViewTests.swift */,
+				48DED8F22AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift */,
+			);
+			path = TestCases;
+			sourceTree = "<group>";
+		};
+		483E09342ABBC0D800EFD1D7 = {
+			isa = PBXGroup;
+			children = (
+				482D01222AC1EC3B000A3140 /* AuthenticatorHostApp.xctestplan */,
+				483E093F2ABBC0D800EFD1D7 /* AuthenticatorHostApp */,
+				483E095D2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests */,
+				483E093E2ABBC0D800EFD1D7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		483E093E2ABBC0D800EFD1D7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				483E093D2ABBC0D800EFD1D7 /* AuthenticatorHostApp.app */,
+				483E095C2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		483E093F2ABBC0D800EFD1D7 /* AuthenticatorHostApp */ = {
+			isa = PBXGroup;
+			children = (
+				483E09552ABBC2A800EFD1D7 /* Utils */,
+				483E09522ABBC25900EFD1D7 /* Mocks */,
+				483E09402ABBC0D800EFD1D7 /* AuthenticatorHostApp.swift */,
+				483E09422ABBC0D800EFD1D7 /* ContentView.swift */,
+				483E09442ABBC0D900EFD1D7 /* Assets.xcassets */,
+				483E09462ABBC0D900EFD1D7 /* AuthenticatorHostApp.entitlements */,
+				483E09472ABBC0D900EFD1D7 /* Preview Content */,
+			);
+			path = AuthenticatorHostApp;
+			sourceTree = "<group>";
+		};
+		483E09472ABBC0D900EFD1D7 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				483E09482ABBC0D900EFD1D7 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		483E09522ABBC25900EFD1D7 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				483E09532ABBC26C00EFD1D7 /* MockAuthenticationService.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		483E09552ABBC2A800EFD1D7 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				483E09562ABBC2C100EFD1D7 /* AuthCategoryConfigurationFactory.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		483E095D2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				482D01122ABE21F7000A3140 /* AuthenticatorUITestUtils.swift */,
+				4873E7582ABC9C58001EDA1D /* AuthenticatorBaseTestCase.swift */,
+				482D01202AC1E939000A3140 /* TestCases */,
+				4873E74E2ABC9944001EDA1D /* SnapshotLogic */,
+			);
+			path = AuthenticatorHostAppUITests;
+			sourceTree = "<group>";
+		};
+		4873E74E2ABC9944001EDA1D /* SnapshotLogic */ = {
+			isa = PBXGroup;
+			children = (
+				48DED8F42AC2050800F44908 /* Snapshotter.swift */,
+				4873E7522ABC99E4001EDA1D /* ImageDiff.swift */,
+				4873E7562ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift */,
+			);
+			path = SnapshotLogic;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		483E093C2ABBC0D800EFD1D7 /* AuthenticatorHostApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 483E094C2ABBC0D900EFD1D7 /* Build configuration list for PBXNativeTarget "AuthenticatorHostApp" */;
+			buildPhases = (
+				483E09392ABBC0D800EFD1D7 /* Sources */,
+				483E093A2ABBC0D800EFD1D7 /* Frameworks */,
+				483E093B2ABBC0D800EFD1D7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AuthenticatorHostApp;
+			packageProductDependencies = (
+				483E09502ABBC17A00EFD1D7 /* Authenticator */,
+				482D01162ABE2344000A3140 /* Authenticator */,
+			);
+			productName = AuthenticatorHostApp;
+			productReference = 483E093D2ABBC0D800EFD1D7 /* AuthenticatorHostApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		483E095B2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 483E09642ABBC4AC00EFD1D7 /* Build configuration list for PBXNativeTarget "AuthenticatorHostAppUITests" */;
+			buildPhases = (
+				483E09582ABBC4AC00EFD1D7 /* Sources */,
+				483E09592ABBC4AC00EFD1D7 /* Frameworks */,
+				483E095A2ABBC4AC00EFD1D7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				483E09632ABBC4AC00EFD1D7 /* PBXTargetDependency */,
+			);
+			name = AuthenticatorHostAppUITests;
+			packageProductDependencies = (
+				482D01182ABE238E000A3140 /* Authenticator */,
+			);
+			productName = AuthenticatorHostAppUITests;
+			productReference = 483E095C2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		483E09352ABBC0D800EFD1D7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					483E093C2ABBC0D800EFD1D7 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					483E095B2ABBC4AC00EFD1D7 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 483E093C2ABBC0D800EFD1D7;
+					};
+				};
+			};
+			buildConfigurationList = 483E09382ABBC0D800EFD1D7 /* Build configuration list for PBXProject "AuthenticatorHostApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 483E09342ABBC0D800EFD1D7;
+			packageReferences = (
+				482D01152ABE2344000A3140 /* XCLocalSwiftPackageReference "../.." */,
+			);
+			productRefGroup = 483E093E2ABBC0D800EFD1D7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				483E093C2ABBC0D800EFD1D7 /* AuthenticatorHostApp */,
+				483E095B2ABBC4AC00EFD1D7 /* AuthenticatorHostAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		483E093B2ABBC0D800EFD1D7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				483E09492ABBC0D900EFD1D7 /* Preview Assets.xcassets in Resources */,
+				483E09452ABBC0D900EFD1D7 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		483E095A2ABBC4AC00EFD1D7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		483E09392ABBC0D800EFD1D7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				483E09432ABBC0D800EFD1D7 /* ContentView.swift in Sources */,
+				482D01212AC1EB69000A3140 /* AuthenticatorUITestUtils.swift in Sources */,
+				483E09572ABBC2C100EFD1D7 /* AuthCategoryConfigurationFactory.swift in Sources */,
+				483E09542ABBC26C00EFD1D7 /* MockAuthenticationService.swift in Sources */,
+				483E09412ABBC0D800EFD1D7 /* AuthenticatorHostApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		483E09582ABBC4AC00EFD1D7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4873E7572ABC9B51001EDA1D /* CleanCounterBetweenTestCases.swift in Sources */,
+				4873E7592ABC9C58001EDA1D /* AuthenticatorBaseTestCase.swift in Sources */,
+				482D011B2AC1E824000A3140 /* SignInViewTests.swift in Sources */,
+				48DED8F52AC2050800F44908 /* Snapshotter.swift in Sources */,
+				482D01142ABE21F7000A3140 /* AuthenticatorUITestUtils.swift in Sources */,
+				4873E7532ABC99E4001EDA1D /* ImageDiff.swift in Sources */,
+				48DED8F12AC2011100F44908 /* ContinueSignInWithMFASelectionViewTests.swift in Sources */,
+				482D011D2AC1E839000A3140 /* SignUpViewTests.swift in Sources */,
+				482D011F2AC1E85C000A3140 /* ResetPasswordViewTests.swift in Sources */,
+				482D01242AC1F00D000A3140 /* ConfirmSignInWithTOTPCodeViewTests.swift in Sources */,
+				48DED8F32AC201E600F44908 /* ContinueSignInWithTOTPSetupViewTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		483E09632ABBC4AC00EFD1D7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 483E093C2ABBC0D800EFD1D7 /* AuthenticatorHostApp */;
+			targetProxy = 483E09622ABBC4AC00EFD1D7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		483E094A2ABBC0D900EFD1D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		483E094B2ABBC0D900EFD1D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		483E094D2ABBC0D900EFD1D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AuthenticatorHostApp/AuthenticatorHostApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"AuthenticatorHostApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 94KV3E626L;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.amplify.AuthenticatorHostApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		483E094E2ABBC0D900EFD1D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AuthenticatorHostApp/AuthenticatorHostApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"AuthenticatorHostApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 94KV3E626L;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.amplify.AuthenticatorHostApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		483E09652ABBC4AC00EFD1D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 94KV3E626L;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.amplify.AuthenticatorHostAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AuthenticatorHostApp;
+			};
+			name = Debug;
+		};
+		483E09662ABBC4AC00EFD1D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 94KV3E626L;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.amplify.AuthenticatorHostAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AuthenticatorHostApp;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		483E09382ABBC0D800EFD1D7 /* Build configuration list for PBXProject "AuthenticatorHostApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				483E094A2ABBC0D900EFD1D7 /* Debug */,
+				483E094B2ABBC0D900EFD1D7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		483E094C2ABBC0D900EFD1D7 /* Build configuration list for PBXNativeTarget "AuthenticatorHostApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				483E094D2ABBC0D900EFD1D7 /* Debug */,
+				483E094E2ABBC0D900EFD1D7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		483E09642ABBC4AC00EFD1D7 /* Build configuration list for PBXNativeTarget "AuthenticatorHostAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				483E09652ABBC4AC00EFD1D7 /* Debug */,
+				483E09662ABBC4AC00EFD1D7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		482D01152ABE2344000A3140 /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		482D01162ABE2344000A3140 /* Authenticator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Authenticator;
+		};
+		482D01182ABE238E000A3140 /* Authenticator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Authenticator;
+		};
+		483E09502ABBC17A00EFD1D7 /* Authenticator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Authenticator;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 483E09352ABBC0D800EFD1D7 /* Project object */;
+}

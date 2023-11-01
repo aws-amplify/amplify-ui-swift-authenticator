@@ -13,6 +13,7 @@ struct ConfirmSignInWithCodeView<Header: View,
     @Environment(\.authenticatorState) private var authenticatorState
     @StateObject private var codeValidator: Validator
     @ObservedObject private var state: ConfirmSignInWithCodeState
+    private let mfaType: AuthenticatorMFAType
     private let headerContent: Header
     private let footerContent: Footer
 
@@ -24,7 +25,8 @@ struct ConfirmSignInWithCodeView<Header: View,
         @ViewBuilder footerContent: () -> Footer = {
             EmptyView()
         },
-        errorTransform: ((AuthError) -> AuthenticatorError)? = nil
+        errorTransform: ((AuthError) -> AuthenticatorError)? = nil,
+        mfaType: AuthenticatorMFAType
     ) {
         self.state = state
         self.headerContent = headerContent()
@@ -32,6 +34,34 @@ struct ConfirmSignInWithCodeView<Header: View,
         self._codeValidator = StateObject(wrappedValue: Validator(
             using: FieldValidators.required
         ))
+        self.mfaType = mfaType
+    }
+
+    private var textFieldLabel: String {
+        switch mfaType {
+        case .sms, .none:
+            return "authenticator.field.code.label".localized()
+        case .totp:
+            return "authenticator.field.totp.code.label".localized()
+        }
+    }
+
+    private var textFieldPlaceholder: String {
+        switch mfaType {
+        case .sms, .none:
+            return "authenticator.field.code.placeholder".localized()
+        case .totp:
+            return "authenticator.field.totp.code.placeholder".localized()
+        }
+    }
+
+    private var submitButtonTitle: String {
+        switch mfaType {
+        case .sms, .none:
+            return "authenticator.confirmSignInWithCode.button.submit".localized()
+        case .totp:
+            return "authenticator.confirmSignInWithCode.totp.button.submit".localized()
+        }
     }
 
     var body: some View {
@@ -39,9 +69,9 @@ struct ConfirmSignInWithCodeView<Header: View,
             headerContent
 
             TextField(
-                "authenticator.field.code.label".localized(),
+                textFieldLabel,
                 text: $state.confirmationCode,
-                placeholder: "authenticator.field.code.placeholder".localized(),
+                placeholder: textFieldPlaceholder,
                 validator: codeValidator
             )
             .textContentType(.oneTimeCode)
@@ -49,7 +79,7 @@ struct ConfirmSignInWithCodeView<Header: View,
             .keyboardType(.default)
         #endif
 
-            Button("authenticator.confirmSignInWithCode.button.submit".localized()) {
+            Button(submitButtonTitle) {
                 Task { await confirmSignIn() }
             }
             .buttonStyle(.primary)

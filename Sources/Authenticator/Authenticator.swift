@@ -13,6 +13,9 @@ public struct Authenticator<LoadingContent: View,
                             SignInContent: View,
                             ConfirmSignInWithNewPasswordContent: View,
                             ConfirmSignInWithMFACodeContent: View,
+                            ConfirmSignInWithTOTPCodeContent: View,
+                            ContinueSignInWithMFASelectionContent: View,
+                            ContinueSignInWithTOTPSetupContent: View,
                             ConfirmSignInWithCustomChallengeContent: View,
                             SignUpContent: View,
                             ConfirmSignUpContent: View,
@@ -29,11 +32,15 @@ public struct Authenticator<LoadingContent: View,
     @State private var currentStep: Step = .loading
     @State private var previousStep: Step = .loading
     private var initialStep: AuthenticatorInitialStep
+    private var totpOptions: TOTPOptions
     private var viewModifiers = ViewModifiers()
     private var contentStates: NSHashTable<AuthenticatorBaseState> = .weakObjects()
     private let loadingContent: LoadingContent
     private let signInContent: SignInContent
     private let confirmSignInContentWithMFACodeContent: ConfirmSignInWithMFACodeContent
+    private let confirmSignInWithTOTPCodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPCodeContent
+    private let continueSignInWithMFASelectionContent: (ContinueSignInWithMFASelectionState) -> ContinueSignInWithMFASelectionContent
+    private let continueSignInWithTOTPSetupContent: (ContinueSignInWithTOTPSetupState) -> ContinueSignInWithTOTPSetupContent
     private let confirmSignInContentWithCustomChallengeContent: ConfirmSignInWithCustomChallengeContent
     private let confirmSignInContentWithNewPasswordContent: ConfirmSignInWithNewPasswordContent
     private let signUpContent: SignUpContent
@@ -50,13 +57,21 @@ public struct Authenticator<LoadingContent: View,
     /// Creates an `Authenticator` component
     /// - Parameter initialStep: The initial step displayed to unauthorized users.
     /// Defaults to ``AuthenticatorInitialStep/signIn``
+    /// - Parameter totpOptions: The TOTP Options that would be used by the Authenticator
+    /// Defaults to ``.init()``
     /// - Parameter loadingContent: The content that is associated with the ``AuthenticatorStep/loading`` step.
     /// Defaults to a `SwiftUI.ProgressView`.
     /// - Parameter signInContent: The content associated with the ``AuthenticatorStep/signIn`` step.
     /// Defaults to a ``SignInView``.
-    /// - Parameter confirmSignInWithMFACodeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithCustomChallenge`` step.
+    /// - Parameter confirmSignInWithMFACodeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithMFACode`` step.
     /// Defaults to a ``ConfirmSignInWithMFACodeView``.
-    /// - Parameter confirmSignInWithCustomChallengeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithMFACode`` step.
+    ///- Parameter confirmSignInWithTOTPCodeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithTOTPCode`` step.
+    /// Defaults to a ``ConfirmSignInWithMFACodeView``.
+    ///- Parameter continueSignInWithMFASelectionContent: The content associated with the ``AuthenticatorStep/continueSignInWithMFASelection`` step.
+    /// Defaults to a ``ContinueSignInWithMFASelectionView``.
+    ///- Parameter continueSignInWithTOTPSetupContent: The content associated with the ``AuthenticatorStep/continueSignInWithTOTPSetup`` step.
+    /// Defaults to a ``ContinueSignInWithTOTPSetupView``.
+    /// - Parameter confirmSignInWithCustomChallengeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithCustomChallenge`` step.
     /// Defaults to a ``ConfirmSignInWithCustomChallengeView``.
     /// - Parameter confirmSignInWithNewPasswordContent: The content associated with the ``AuthenticatorStep/confirmSignInWithNewPassword`` step.
     /// Defaults to a ``ConfirmSignInWithNewPasswordView``.
@@ -81,6 +96,7 @@ public struct Authenticator<LoadingContent: View,
     /// - Parameter content: The content associated with the ``AuthenticatorStep/signedIn`` step, i.e. once the user has successfully authenticated.
     public init(
         initialStep: AuthenticatorInitialStep = .signIn,
+        totpOptions: TOTPOptions = .init(),
         @ViewBuilder loadingContent: () -> LoadingContent = {
             ProgressView()
         },
@@ -89,6 +105,15 @@ public struct Authenticator<LoadingContent: View,
         },
         @ViewBuilder confirmSignInWithMFACodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithMFACodeContent = { state in
             ConfirmSignInWithMFACodeView(state: state)
+        },
+        @ViewBuilder confirmSignInWithTOTPCodeContent: @escaping (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPCodeContent = { state in
+            ConfirmSignInWithTOTPView(state: state)
+        },
+        @ViewBuilder continueSignInWithMFASelectionContent: @escaping (ContinueSignInWithMFASelectionState) -> ContinueSignInWithMFASelectionContent = { state in
+            ContinueSignInWithMFASelectionView(state: state)
+        },
+        @ViewBuilder continueSignInWithTOTPSetupContent: @escaping (ContinueSignInWithTOTPSetupState) -> ContinueSignInWithTOTPSetupContent = { state in
+            ContinueSignInWithTOTPSetupView(state: state)
         },
         @ViewBuilder confirmSignInWithCustomChallengeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithCustomChallengeContent = { state in
             ConfirmSignInWithCustomChallengeView(state: state)
@@ -122,6 +147,7 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder content: @escaping (SignedInState) -> SignedInContent
     ) {
         self.initialStep = initialStep
+        self.totpOptions = totpOptions
         self.loadingContent = loadingContent()
         let credentials = Credentials()
 
@@ -134,6 +160,10 @@ public struct Authenticator<LoadingContent: View,
         self.confirmSignInContentWithMFACodeContent = confirmSignInWithMFACodeContent(
             confirmSignInWithMFACodeState
         )
+
+        self.confirmSignInWithTOTPCodeContent = confirmSignInWithTOTPCodeContent
+        self.continueSignInWithMFASelectionContent = continueSignInWithMFASelectionContent
+        self.continueSignInWithTOTPSetupContent = continueSignInWithTOTPSetupContent
 
         let confirmSignInWithCustomChallengeState = ConfirmSignInWithCodeState(credentials: credentials)
         contentStates.add(confirmSignInWithMFACodeState)
@@ -302,6 +332,24 @@ public struct Authenticator<LoadingContent: View,
             confirmSignInContentWithNewPasswordContent
         case .confirmSignInWithMFACode:
             confirmSignInContentWithMFACodeContent
+        case .continueSignInWithMFASelection(let allowedMFATypes):
+            let continueSignInWithMFASelection = ContinueSignInWithMFASelectionState(
+                authenticatorState: state,
+                allowedMFATypes: allowedMFATypes
+            )
+            continueSignInWithMFASelectionContent(continueSignInWithMFASelection)
+        case .confirmSignInWithTOTPCode:
+            let confirmSignInWithCodeState = ConfirmSignInWithCodeState(
+                authenticatorState: state
+            )
+            confirmSignInWithTOTPCodeContent(confirmSignInWithCodeState)
+        case .continueSignInWithTOTPSetup(let totpSetupDetails):
+            let totpStupState = ContinueSignInWithTOTPSetupState(
+                authenticatorState: state,
+                issuer: totpOptions.issuer,
+                totpSetupDetails: totpSetupDetails
+            )
+            continueSignInWithTOTPSetupContent(totpStupState)
         case .confirmSignInWithCustomChallenge:
             confirmSignInContentWithCustomChallengeContent
         case .resetPassword:

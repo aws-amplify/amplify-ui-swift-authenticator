@@ -30,6 +30,12 @@ public class AuthenticatorBaseState: ObservableObject {
         self.credentials = credentials
     }
 
+    init(authenticatorState: AuthenticatorStateProtocol,
+         credentials: Credentials) {
+        self.authenticatorState = authenticatorState
+        self.credentials = credentials
+    }
+
     func configure(with authenticatorState: AuthenticatorStateProtocol) {
         self.authenticatorState = authenticatorState
     }
@@ -104,10 +110,12 @@ public class AuthenticatorBaseState: ObservableObject {
                 log.verbose("User has attributes pending verification: \(unverifiedAttributes)")
                 return .verifyUser(attributes: unverifiedAttributes)
             }
-        case .confirmSignInWithTOTPCode,
-             .continueSignInWithTOTPSetup(_):
-            log.error("The Authenticator does not yet support TOTP workflows.")
-            fallthrough
+        case .confirmSignInWithTOTPCode:
+            return .confirmSignInWithTOTPCode
+        case .continueSignInWithMFASelection(let allowedMFATypes):
+            return .continueSignInWithMFASelection(allowedMFATypes: allowedMFATypes)
+        case .continueSignInWithTOTPSetup(let totpSetupDetails):
+            return .continueSignInWithTOTPSetup(totpSetupDetails: totpSetupDetails)
         default:
             throw AuthError.unknown("Unsupported next step: \(result.nextStep)", nil)
         }
@@ -191,6 +199,18 @@ public class AuthenticatorBaseState: ObservableObject {
     private func localizedMessage(for error: AuthError) -> String? {
         if case .notAuthorized(_, _, _) = error {
             return "authenticator.authError.incorrectCredentials".localized()
+        }
+
+        if case .validation(let field, _, _, _) = error {
+            switch authenticatorState.step {
+            case .continueSignInWithMFASelection:
+                if field.elementsEqual("challengeResponse") {
+                    return "authenticator.authError.continueSignInWithMFASelection.noSelectionError".localized()
+                }
+                return nil
+            default:
+                return nil
+            }
         }
 
         guard let cognitoError = error.underlyingError as? AWSCognitoAuthError else {

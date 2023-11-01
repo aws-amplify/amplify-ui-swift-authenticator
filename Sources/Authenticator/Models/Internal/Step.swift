@@ -13,6 +13,9 @@ enum Step {
     case error(_ error: Error)
     case signIn
     case confirmSignInWithCustomChallenge
+    case confirmSignInWithTOTPCode
+    case continueSignInWithMFASelection(allowedMFATypes: AllowedMFATypes)
+    case continueSignInWithTOTPSetup(totpSetupDetails: TOTPSetupDetails)
     case confirmSignInWithMFACode(deliveryDetails: AuthCodeDeliveryDetails?)
     case confirmSignInWithNewPassword
     case signUp
@@ -46,6 +49,12 @@ enum Step {
             return .signIn
         case .confirmSignInWithCustomChallenge:
             return .confirmSignInWithCustomChallenge
+        case .confirmSignInWithTOTPCode:
+            return .confirmSignInWithTOTPCode
+        case .continueSignInWithTOTPSetup:
+            return .continueSignInWithTOTPSetup
+        case .continueSignInWithMFASelection:
+            return .continueSignInWithMFASelection
         case .confirmSignInWithMFACode:
             return .confirmSignInWithMFACode
         case .confirmSignInWithNewPassword:
@@ -74,6 +83,9 @@ extension Step: Equatable {
         case (.loading, .loading),
              (.error, .error),
              (.signIn, .signIn),
+             (.continueSignInWithMFASelection, .continueSignInWithMFASelection),
+             (.confirmSignInWithTOTPCode, .confirmSignInWithTOTPCode),
+             (.continueSignInWithTOTPSetup, .continueSignInWithTOTPSetup),
              (.confirmSignInWithCustomChallenge, .confirmSignInWithCustomChallenge),
              (.confirmSignInWithNewPassword, .confirmSignInWithNewPassword),
              (.signUp, .signUp),

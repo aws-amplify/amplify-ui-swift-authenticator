@@ -8,24 +8,24 @@
 import Amplify
 import SwiftUI
 
-/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignInWithMFACode`` step.
-public struct ConfirmSignInWithMFACodeView<Header: View,
-                                           Footer: View>: View {
+/// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignInWithTOTPCode`` step.
+public struct ConfirmSignInWithTOTPView<Header: View,
+                                        Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState
     @ObservedObject private var state: ConfirmSignInWithCodeState
     private let content: ConfirmSignInWithCodeView<Header, Footer>
 
-    /// Creates a `ConfirmSignInWithMFACodeView`
+    /// Creates a `ConfirmSignInWithTOTPView`
     /// - Parameter state: The ``ConfirmSignInWithCodeState`` that is observed by this view
-    /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``ConfirmSignInWithMFACodeHeader``
-    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  ``ConfirmSignInWithMFACodeFooter``
+    /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``ConfirmSignInWithTOTPHeader``
+    /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  ``ConfirmSignInWithTOTPFooter``
     public init(
         state: ConfirmSignInWithCodeState,
         @ViewBuilder headerContent: () -> Header = {
-            ConfirmSignInWithMFACodeHeader()
+            ConfirmSignInWithTOTPHeader()
         },
         @ViewBuilder footerContent: () -> Footer = {
-            ConfirmSignInWithMFACodeFooter()
+            ConfirmSignInWithTOTPFooter()
         }
     ) {
         self.state = state
@@ -33,17 +33,12 @@ public struct ConfirmSignInWithMFACodeView<Header: View,
             state: state,
             headerContent: headerContent,
             footerContent: footerContent,
-            mfaType: .sms
+            mfaType: .totp
         )
     }
 
     public var body: some View {
         content
-            .onAppear {
-                state.message = .info(
-                    message: state.localizedMessage(for: state.deliveryDetails)
-                )
-            }
     }
 
     /// Sets a custom error mapping function for the `AuthError`s that are displayed
@@ -54,23 +49,23 @@ public struct ConfirmSignInWithMFACodeView<Header: View,
     }
 }
 
-/// Default header for the ``ConfirmSignInWithMFACodeView``. It displays the view's title
-public struct ConfirmSignInWithMFACodeHeader: View {
+/// Default header for the ``ConfirmSignInWithTOTPCodeView``. It displays the view's title
+public struct ConfirmSignInWithTOTPHeader: View {
     public init() {}
     public var body: some View {
         DefaultHeader(
-            title: "authenticator.confirmSignInWithMFACode.title".localized()
+            title: "authenticator.confirmSignInWithCode.totp.title".localized()
         )
     }
 }
 
-/// Default footer for the ``ConfirmSignInWithMFACodeView``. It displays the "Back to Sign In" button
-public struct ConfirmSignInWithMFACodeFooter: View {
+/// Default footer for the ``ConfirmSignInWithTOTPCodeView``. It displays the "Back to Sign In" button
+public struct ConfirmSignInWithTOTPFooter: View {
     @Environment(\.authenticatorState) private var authenticatorState
 
     public init() {}
     public var body: some View {
-        Button("authenticator.confirmSignInWithCode.button.backToSignIn".localized()) {
+        Button("authenticator.confirmSignInWithCode.totp.button.backToSignIn".localized()) {
             authenticatorState.move(to: .signIn)
         }
         .buttonStyle(.link)
