@@ -7,11 +7,20 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  unit-test-ios:
 
     runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-      - name: Test Authenticator
+      - name: Unit test Authenticator on iOS
         run: xcodebuild test -scheme Authenticator -sdk 'iphonesimulator' -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
+
+  unit-test-macos:
+
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - name: Unit test Authenticator on macOS
+        run: xcodebuild test -scheme Authenticator -sdk 'macosx' -destination 'platform=macOS,arch=x86_64' | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
