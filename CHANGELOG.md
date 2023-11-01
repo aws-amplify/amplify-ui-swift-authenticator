@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 (2023-11-01)
+
+### Features
+- Adding TOTP support (See [#31](https://github.com/aws-amplify/amplify-ui-swift-authenticator/pull/43))
+
 ## 1.0.6 (2023-09-14)
 
 ### Misc. Updates
