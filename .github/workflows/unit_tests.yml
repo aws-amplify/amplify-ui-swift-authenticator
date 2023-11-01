@@ -1,4 +1,4 @@
-name: Run Tests
+name: Run Unit Tests
 
 on:
   push:
@@ -24,16 +24,3 @@ jobs:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Unit test Authenticator on macOS
         run: xcodebuild test -scheme Authenticator -sdk 'macosx' -destination 'platform=macOS,arch=x86_64' | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
-
-  ui-test-ios:
-
-    runs-on: macos-13
-
-    steps:
-
-      - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode_15.0.app
-
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-      - name: UI test Authenticator on iOS
-        run: xcodebuild test -project Tests/AuthenticatorHostApp/AuthenticatorHostApp.xcodeproj -scheme AuthenticatorHostApp -sdk 'iphonesimulator' -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max,OS=17.0' | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}

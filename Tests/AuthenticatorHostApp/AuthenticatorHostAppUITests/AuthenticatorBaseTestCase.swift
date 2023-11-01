@@ -45,6 +45,7 @@ class AuthenticatorBaseTestCase: XCTestCase {
     func launchApp(with args: [ProcessArgument]) {
         // Launch Application
         let app = XCUIApplication()
+        app.activate()
 
         if let encodedData = try? JSONEncoder().encode(args),
            let stringJSON = String(data: encodedData, encoding: .utf8) {
