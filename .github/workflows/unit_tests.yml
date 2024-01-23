@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Unit test Authenticator on iOS
         run: xcodebuild test -scheme Authenticator -sdk 'iphonesimulator' -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' -derivedDataPath Build/ -enableCodeCoverage YES -clonedSourcePackagesDirPath ~/Library/Developer/Xcode/DerivedData/Authenticator | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
-      - name: Upload Coverage report
+      - name: Generate Coverage Report
         continue-on-error: true
         run: |
           cd Build/Build/ProfileData
@@ -23,7 +23,11 @@ jobs:
           pathCoverage=Build/Build/ProfileData/${PWD##*/}/Coverage.profdata
           cd ${{ github.workspace }}
           xcrun llvm-cov export -format="lcov" -instr-profile $pathCoverage Build/Build/Products/Debug-iphonesimulator/Authenticator.o > Authenticator-Coverage.lcov
-          Scripts/codecov.sh -F 'Authenticator'
+      - name: Upload Report
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+        with:
+          flags: Authenticator
+          verbose: true
 
   unit-test-macos:
 
