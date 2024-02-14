@@ -34,13 +34,13 @@ class VerifyUserStateTests: XCTestCase {
 
     func testVerifyUser_withSuccess_shouldSetNextStep() async throws {
         let destination = DeliveryDestination.email("email@email.com")
-        authenticationService.mockedResendConfirmationCodeForAttributeResult = .init(destination: destination)
+        authenticationService.mockedSendVerificationCodeForAttributeResult = .init(destination: destination)
         let task = Task { @MainActor in
             state.selectedField = .email
         }
         await task.value
         try await state.verifyUser()
-        XCTAssertEqual(authenticationService.resendConfirmationCodeForAttributeCount, 1)
+        XCTAssertEqual(authenticationService.sendVerificationCodeForAttributeCount, 1)
         XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
         let currentStep = try XCTUnwrap(authenticatorState.setCurrentStepValue)
         guard case .confirmVerifyUser(let attribute, let deliveryDetails) = currentStep else {

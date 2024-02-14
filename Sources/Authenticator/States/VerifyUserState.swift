@@ -37,7 +37,7 @@ public class VerifyUserState: AuthenticatorBaseState {
 
         do {
             log.verbose("Attempting to verify user attribute \(key)")
-            let result = try await authenticationService.resendConfirmationCode(
+            let result = try await authenticationService.sendVerificationCode(
                 forUserAttributeKey: key,
                 options: nil
             )
