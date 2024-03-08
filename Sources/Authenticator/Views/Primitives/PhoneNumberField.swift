@@ -72,14 +72,24 @@ struct PhoneNumberField: View {
                 SwiftUI.TextField(placeholder, text: $phoneNumber)
                     .disableAutocorrection(true)
                     .focused($focusedField, equals: .phoneNumber)
-                    .onChange(of: phoneNumber) { text in
-                        if text.isEmpty {
+                    .onChange(of: phoneNumber) { newValue in
+                        // Only allow characters used for representing phone numbers, i.e. numbers, spaces, parentheses and hyphens.
+                        let allowedCharacters = newValue.filter("0123456789-() ".contains)
+                        guard phoneNumber == allowedCharacters else {
+                            phoneNumber = allowedCharacters
+                            return
+                        }
+
+                        if phoneNumber.isEmpty {
                             // If the phone number is empty, we consider this to be an empty input regardless of the calling code, as that one is automatically populated
                             self.text = ""
                         } else {
-                            self.text = "\(callingCode)\(text)"
+                            // Only numbers are allowed by the service, so remove other characters in the internally tracked full phone number
+                            let onlyNumbers = phoneNumber.filter("0123456789".contains)
+                            self.text = "\(callingCode)\(onlyNumbers)"
                         }
-                        if validator.state != .normal || !text.isEmpty {
+
+                        if validator.state != .normal || !phoneNumber.isEmpty {
                             validator.validate()
                         }
                     }
@@ -108,9 +118,6 @@ struct PhoneNumberField: View {
                 }
             }
             .focused($isFocused)
-            .onAppear {
-                validator.value = $phoneNumber
-            }
             .onChange(of: isFocused) { isFocused in
                 if isFocused && !Platform.isMacOS {
                     focusedField = .phoneNumber
