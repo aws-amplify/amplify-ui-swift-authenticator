@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 (2024-03-11)
+
+### Bug Fixes
+- Fixing phone numbers containing special characters being rejected by Cognito (See [#56](https://github.com/aws-amplify/amplify-ui-swift-authenticator/pull/56))
+
+### Misc. Updates
+- Using the new `sendVerificationCode` API (See [#54](https://github.com/aws-amplify/amplify-ui-swift-authenticator/pull/54))
+
 ## 1.1.0 (2023-11-01)
 
 ### Features
