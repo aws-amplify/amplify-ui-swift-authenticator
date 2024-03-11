@@ -1,0 +1,12 @@
+ignore:
+  - "**/Views"
+  - "**/Authenticator.swift"
+
+codecov:
+  branch: main
+
+coverage:
+  status:
+    project:
+      default:
+        threshold: 1%
