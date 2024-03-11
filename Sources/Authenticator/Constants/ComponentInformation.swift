@@ -8,6 +8,6 @@
 import Foundation
 
 public class ComponentInformation {
-    public static let version = "1.0.6"
+    public static let version = "1.1.1"
     public static let name = "amplify-ui-swift-authenticator"
 }
