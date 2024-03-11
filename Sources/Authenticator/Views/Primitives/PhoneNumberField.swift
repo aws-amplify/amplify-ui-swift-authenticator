@@ -60,8 +60,8 @@ struct PhoneNumberField: View {
                     .foregroundColor(foregroundColor)
                     .focused($focusedField, equals: .callingCode)
                     .onChange(of: callingCode) { code in
-                        if !phoneNumber.isEmpty {
-                            text = "\(code)\(phoneNumber)"
+                        if !numericPhoneNumber.isEmpty {
+                            text = "\(code)\(numericPhoneNumber)"
                         }
                     }
 
@@ -72,14 +72,22 @@ struct PhoneNumberField: View {
                 SwiftUI.TextField(placeholder, text: $phoneNumber)
                     .disableAutocorrection(true)
                     .focused($focusedField, equals: .phoneNumber)
-                    .onChange(of: phoneNumber) { text in
-                        if text.isEmpty {
+                    .onChange(of: phoneNumber) { newValue in
+                        // Only allow characters used for representing phone numbers, i.e. numbers, spaces, parentheses and hyphens.
+                        let allowedCharacters = newValue.filter("0123456789-() ".contains)
+                        guard phoneNumber == allowedCharacters else {
+                            phoneNumber = allowedCharacters
+                            return
+                        }
+
+                        if numericPhoneNumber.isEmpty {
                             // If the phone number is empty, we consider this to be an empty input regardless of the calling code, as that one is automatically populated
                             self.text = ""
                         } else {
-                            self.text = "\(callingCode)\(text)"
+                            self.text = "\(callingCode)\(numericPhoneNumber)"
                         }
-                        if validator.state != .normal || !text.isEmpty {
+
+                        if validator.state != .normal || !phoneNumber.isEmpty {
                             validator.validate()
                         }
                     }
@@ -108,9 +116,6 @@ struct PhoneNumberField: View {
                 }
             }
             .focused($isFocused)
-            .onAppear {
-                validator.value = $phoneNumber
-            }
             .onChange(of: isFocused) { isFocused in
                 if isFocused && !Platform.isMacOS {
                     focusedField = .phoneNumber
@@ -146,6 +151,10 @@ struct PhoneNumberField: View {
     private enum FieldType: Hashable {
         case callingCode
         case phoneNumber
+    }
+
+    private var numericPhoneNumber: String {
+        return phoneNumber.filter("0123456789".contains)
     }
 }
 
