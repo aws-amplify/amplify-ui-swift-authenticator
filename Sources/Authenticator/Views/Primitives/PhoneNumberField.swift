@@ -60,8 +60,8 @@ struct PhoneNumberField: View {
                     .foregroundColor(foregroundColor)
                     .focused($focusedField, equals: .callingCode)
                     .onChange(of: callingCode) { code in
-                        if !phoneNumber.isEmpty {
-                            text = "\(code)\(phoneNumber)"
+                        if !numericPhoneNumber.isEmpty {
+                            text = "\(code)\(numericPhoneNumber)"
                         }
                     }
 
@@ -80,13 +80,11 @@ struct PhoneNumberField: View {
                             return
                         }
 
-                        if phoneNumber.isEmpty {
+                        if numericPhoneNumber.isEmpty {
                             // If the phone number is empty, we consider this to be an empty input regardless of the calling code, as that one is automatically populated
                             self.text = ""
                         } else {
-                            // Only numbers are allowed by the service, so remove other characters in the internally tracked full phone number
-                            let onlyNumbers = phoneNumber.filter("0123456789".contains)
-                            self.text = "\(callingCode)\(onlyNumbers)"
+                            self.text = "\(callingCode)\(numericPhoneNumber)"
                         }
 
                         if validator.state != .normal || !phoneNumber.isEmpty {
@@ -153,6 +151,10 @@ struct PhoneNumberField: View {
     private enum FieldType: Hashable {
         case callingCode
         case phoneNumber
+    }
+
+    private var numericPhoneNumber: String {
+        return phoneNumber.filter("0123456789".contains)
     }
 }
 
