@@ -44,7 +44,7 @@ struct AmplifyConfiguration {
                 verificationMechanisms: configuration.verificationMechanisms
             )
         case .identityPools, .none:
-            Self.log.error("Unable to retrieve configuration")
+            Self.log.error("Unable to retrieve configuration from AWSCognitoAuthPlugin")
             throw AmplifyConfigurationError.missingConfiguration
         }
     }
