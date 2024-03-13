@@ -7,6 +7,7 @@
 
 import Amplify
 import SwiftUI
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 
 /// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/confirmSignInWithNewPassword`` step.
 public struct ConfirmSignInWithNewPasswordView<Header: View,
@@ -40,7 +41,7 @@ public struct ConfirmSignInWithNewPasswordView<Header: View,
             using: { value in
                 let configuration = state.configuration.passwordProtectionSettings
                 return FieldValidators.password(
-                    minLength: configuration.minLength,
+                    minLength: configuration.minLength ?? 0,
                     characterPolicy: configuration.characterPolicy.asPasswordCharactersPolicy()
                 )(value)
             }

@@ -7,6 +7,7 @@
 
 import Amplify
 import SwiftUI
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 
 /// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/signUp`` step.
 public struct SignUpView<Header: View,
@@ -199,7 +200,7 @@ extension SignUpView {
                     if case .password = field.attributeType {
                         let configuration = self.state.configuration.passwordProtectionSettings
                         return FieldValidators.password(
-                            minLength: configuration.minLength,
+                            minLength: configuration.minLength ?? 0,
                             characterPolicy: configuration.characterPolicy.asPasswordCharactersPolicy()
                         )(value)
                     } else if case .passwordConfirmation = field.attributeType, value != self.state.password {

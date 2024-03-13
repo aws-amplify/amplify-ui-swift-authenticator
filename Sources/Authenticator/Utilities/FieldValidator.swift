@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 
 /// Represents an error associated with a Field, typically displayed beneath it.
 public typealias FieldError = CustomStringConvertible
@@ -41,7 +42,7 @@ public struct FieldValidators {
         /// ~~~
         public static let requiresSymbols: Self = .init(name: "requiresSymbols")
 
-        init(from policy: CognitoConfiguration.PasswordCharacterPolicy) {
+        init(from policy: PasswordCharacterPolicy) {
             switch policy {
             case .lowercase:
                 self = .requiresLowercase
@@ -157,7 +158,7 @@ public struct FieldValidators {
     }
 }
 
-extension Array where Element == CognitoConfiguration.PasswordCharacterPolicy {
+extension Array where Element == PasswordCharacterPolicy {
 
     func asPasswordCharactersPolicy() -> [FieldValidators.PasswordCharactersPolicy] {
         return compactMap { FieldValidators.PasswordCharactersPolicy(from: $0) }

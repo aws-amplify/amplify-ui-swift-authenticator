@@ -14,6 +14,7 @@ import SwiftUI
 #if canImport(UIKit)
 import UIKit
 #endif
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 
 /// Represents to which Sign Up attribute a field is associated with.
 public enum SignUpAttribute: Equatable, Hashable {
@@ -145,7 +146,7 @@ public enum SignUpAttribute: Equatable, Hashable {
 #endif
 }
 
-extension CognitoConfiguration.VerificationMechanism {
+extension VerificationMechanism {
     var asSignUpAttribute: SignUpAttribute {
         switch self {
         case .email:
@@ -156,7 +157,7 @@ extension CognitoConfiguration.VerificationMechanism {
     }
 }
 
-extension CognitoConfiguration.SignUpAttribute {
+extension SignUpAttributeType {
     var asSignUpAttribute: SignUpAttribute {
         switch self {
         case .email:
@@ -189,7 +190,7 @@ extension CognitoConfiguration.SignUpAttribute {
     }
 }
 
-extension CognitoConfiguration.UsernameAttribute {
+extension UsernameAttribute {
     var asSignUpAttribute: SignUpAttribute {
         switch self {
         case .username:

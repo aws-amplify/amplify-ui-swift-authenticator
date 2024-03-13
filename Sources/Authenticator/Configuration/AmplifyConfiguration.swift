@@ -35,139 +35,25 @@ struct AmplifyConfiguration {
             throw AmplifyConfigurationError.missingPlugin
         }
 
-        guard let configuration = plugin.jsonConfiguration,
-              let cognitoConfiguration = configuration.value(at: "Auth.Default") else {
-            Self.log.error("Unable to read Auth.Default from the configuration")
+        switch plugin.authConfiguration {
+        case .userPools(let configuration), .userPoolsAndIdentityPools(let configuration, _):
+            self.cognito = CognitoConfiguration(
+                usernameAttributes: configuration.usernameAttributes,
+                signupAttributes: configuration.signUpAttributes,
+                passwordProtectionSettings: configuration.passwordProtectionSettings ?? .init(minLength: 0, characterPolicy: []),
+                verificationMechanisms: configuration.verificationMechanisms
+            )
+        case .identityPools, .none:
+            Self.log.error("Unable to retrieve configuration")
             throw AmplifyConfigurationError.missingConfiguration
         }
-
-        guard case .object(let passwordSettings) = cognitoConfiguration["passwordProtectionSettings"] else {
-            Self.log.error("passwordProtectionSettings is missing")
-            throw AmplifyConfigurationError.incorrectConfiguration
-        }
-
-        var minLength: Int
-        if case .number(let value) = passwordSettings["passwordPolicyMinLength"] {
-            minLength = Int(value)
-        } else if case .string(let value) = passwordSettings["passwordPolicyMinLength"],
-                  let intValue = Int(value) {
-            minLength = intValue
-        } else {
-            Self.log.error("passwordPolicyMinLength is missing")
-            throw AmplifyConfigurationError.incorrectConfiguration
-        }
-
-        var characterPolicy: [CognitoConfiguration.PasswordCharacterPolicy] = []
-        if case .array(let characters) = passwordSettings["passwordPolicyCharacters"] {
-            characterPolicy = characters.compactMap { value in
-                guard case .string(let string) = value else {
-                    return nil
-                }
-
-                return .init(rawValue: string)
-            }
-        }
-
-        let passwordProtectionSettings = CognitoConfiguration.PasswordProtectionSettings(
-            minLength: minLength,
-            characterPolicy: characterPolicy
-        )
-
-        var usernameAttributes: [CognitoConfiguration.UsernameAttribute] = []
-        if case .array(let attributes) = cognitoConfiguration["usernameAttributes"] {
-            usernameAttributes = attributes.compactMap { value in
-                guard case .string(let string) = value else {
-                    return nil
-                }
-
-                return .init(rawValue: string)
-            }
-        }
-
-        var signUpAttributes: [CognitoConfiguration.SignUpAttribute] = []
-        if case .array(let attributes) = cognitoConfiguration["signupAttributes"] {
-            signUpAttributes = attributes.compactMap { value in
-                guard case .string(let string) = value else {
-                    return nil
-                }
-
-                return .init(rawValue: string)
-            }
-        }
-
-        var verificationMechanisms: [CognitoConfiguration.VerificationMechanism] = []
-        if case .array(let attributes) = cognitoConfiguration["verificationMechanisms"] {
-            verificationMechanisms = attributes.compactMap { value in
-                guard case .string(let string) = value else {
-                    return nil
-                }
-
-                return .init(rawValue: string)
-            }
-        }
-
-        self.cognito = CognitoConfiguration(
-            usernameAttributes: usernameAttributes,
-            signupAttributes: signUpAttributes,
-            passwordProtectionSettings: passwordProtectionSettings,
-            verificationMechanisms: verificationMechanisms
-        )
     }
 }
 
 struct CognitoConfiguration {
-    enum UsernameAttribute: String, Decodable {
-        case username = "USERNAME"
-        case email = "EMAIL"
-        case phoneNumber = "PHONE_NUMBER"
-        
-        init?(from authUserAttributeKey: AuthUserAttributeKey) {
-            switch authUserAttributeKey {
-            case .email:
-                self = .email
-            case .phoneNumber:
-                self = .phoneNumber
-            default:
-                return nil
-            }
-        }
-    }
-
-    enum SignUpAttribute: String, Decodable {
-        case address = "ADDRESS"
-        case birthDate = "BIRTHDATE"
-        case email = "EMAIL"
-        case familyName = "FAMILY_NAME"
-        case gender = "GENDER"
-        case givenName = "GIVEN_NAME"
-        case middleName = "MIDDLE_NAME"
-        case name = "NAME"
-        case nickname = "NICKNAME"
-        case phoneNumber = "PHONE_NUMBER"
-        case preferredUsername = "PREFERRED_USERNAME"
-        case profile = "PROFILE"
-        case website = "WEBSITE"
-    }
-
-    enum VerificationMechanism: String, Decodable {
-        case email = "EMAIL"
-        case phoneNumber = "PHONE_NUMBER"
-    }
-
-    enum PasswordCharacterPolicy: String, Decodable {
-        case lowercase = "REQUIRES_LOWERCASE"
-        case uppercase = "REQUIRES_UPPERCASE"
-        case numbers = "REQUIRES_NUMBERS"
-        case symbols = "REQUIRES_SYMBOLS"
-    }
-
-    struct PasswordProtectionSettings: Decodable {
-        var minLength: Int
-        var characterPolicy: [PasswordCharacterPolicy]
-    }
 
     var usernameAttributes: [UsernameAttribute]
-    var signupAttributes: [SignUpAttribute]
+    var signupAttributes: [SignUpAttributeType]
     var passwordProtectionSettings: PasswordProtectionSettings
     var verificationMechanisms: [VerificationMechanism]
 
