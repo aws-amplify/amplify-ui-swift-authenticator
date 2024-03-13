@@ -200,7 +200,7 @@ extension SignUpView {
                     if case .password = field.attributeType {
                         let configuration = self.state.configuration.passwordProtectionSettings
                         return FieldValidators.password(
-                            minLength: configuration.minLength ?? 0,
+                            minLength: Int(configuration.minLength),
                             characterPolicy: configuration.characterPolicy.asPasswordCharactersPolicy()
                         )(value)
                     } else if case .passwordConfirmation = field.attributeType, value != self.state.password {

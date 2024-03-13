@@ -45,7 +45,7 @@ public struct ConfirmResetPasswordView<Header: View,
             using: { value in
                 let configuration = state.configuration.passwordProtectionSettings
                 return FieldValidators.password(
-                    minLength: configuration.minLength ?? 0,
+                    minLength: Int(configuration.minLength),
                     characterPolicy: configuration.characterPolicy.asPasswordCharactersPolicy()
                 )(value)
             }
