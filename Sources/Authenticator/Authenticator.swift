@@ -245,6 +245,12 @@ public struct Authenticator<LoadingContent: View,
             }
         }
         .onReceive(state.$step) {
+            // Currently, the only Step that can transition to itself is `.confirmSignUp(deliveryDetails)`,
+            // when new delivery details are populated by requesting a new code.
+            // We don't want to re-draw the Authenticator on said situations, so ignore it.
+            guard $0.authenticatorStep != self.currentStep.authenticatorStep else {
+                return
+            }
             self.previousStep = self.currentStep
             self.currentStep = $0
         }

@@ -65,6 +65,7 @@ public class ConfirmSignUpState: AuthenticatorBaseState {
             )
 
             setMessage(.info(message: localizedMessage(for: details)))
+            authenticatorState.setCurrentStep(.confirmSignUp(deliveryDetails: details))
         } catch {
             log.error("Unable to resend the Sign Up confirmation code")
             let authenticationError = self.error(for: error)
