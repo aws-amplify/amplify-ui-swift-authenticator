@@ -28,7 +28,6 @@ public struct AuthenticatorInitialStep: Equatable {
 /// An `AuthenticatorStep` represents a "state" or "view" for the Authenticator component within its lifecycle.
 public struct AuthenticatorStep: Equatable {
     private let name: String
-    //private(set) public var state: State = .signedOut
 
     private init(_ name: String) {
         self.name = name

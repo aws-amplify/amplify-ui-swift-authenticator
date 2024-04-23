@@ -48,9 +48,16 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
         }
     }
 
-    func move(to initialStep: AuthenticatorInitialStep) {
+    /// Manually moves the Authenticator to an initial step
+    /// - Parameter initialStep: The desired ``AuthenticatorInitialStep``
+    public func move(to initialStep: AuthenticatorInitialStep) {
         if case .signedIn(_) = step {
             log.error("Cannot move to \(initialStep), the user is currently signed in. Call signOut first.")
+            return
+        }
+
+        guard step != .init(from: initialStep) else {
+            log.warn("Attempted to move to \(initialStep), but the Authenticator is already in that step.")
             return
         }
 
