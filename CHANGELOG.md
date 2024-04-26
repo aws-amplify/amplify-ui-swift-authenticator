@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.2 (2024-04-26)
+
+### Bug Fixes
+
+- **AuthenticatorState**: Making `move(to:)` public (#66)
+- **ConfirmSignUp**: Updating the state's `deliveryDetails` property when a new code is sent (#65)
+
 ## 1.1.1 (2024-03-11)
 
 ### Bug Fixes
