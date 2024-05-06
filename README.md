@@ -1,6 +1,7 @@
 # Amplify UI Authenticator for SwiftUI
 
-[![GitHub](https://img.shields.io/github/license/aws-amplify/amplify-ui-swift-liveness)](LICENSE)
+[![GitHub](https://img.shields.io/github/license/aws-amplify/amplify-ui-swift-authenticator)](LICENSE)
+[![Code Coverage](https://codecov.io/gh/aws-amplify/amplify-ui-swift-authenticator/branch/main/graph/badge.svg)](https://codecov.io/gh/aws-amplify/amplify-ui-swift-authenticator)
 [![Discord](https://img.shields.io/discord/308323056592486420?logo=discord)](https://discord.gg/jWVbPfC)
 [![Open Bugs](https://img.shields.io/github/issues/aws-amplify/amplify-ui-swift-authenticator/bug?color=d73a4a&label=bugs)](https://github.com/aws-amplify/amplify-ui-swift-authenticator/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
 [![Feature Requests](https://img.shields.io/github/issues/aws-amplify/amplify-ui-swift-authenticator/feature-request?color=ff9001&label=feature%20requests)](https://github.com/aws-amplify/amplify-ui-swift-authenticator/issues?q=is%3Aissue+label%3Afeature-request+is%3Aopen)
