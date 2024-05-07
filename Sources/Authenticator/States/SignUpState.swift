@@ -51,10 +51,10 @@ public class SignUpState: AuthenticatorBaseState {
                 password: password,
                 options: .init(userAttributes: attributes)
             )
-            let nextStep = try await nextStep(for: result)
-            setBusy(false)
             credentials.username = username
             credentials.password = password
+            let nextStep = try await nextStep(for: result)
+            setBusy(false)
             authenticatorState.setCurrentStep(nextStep)
         } catch {
             log.error("Unable to Sign Up")
