@@ -8,9 +8,7 @@ on:
 
 jobs:
   unit-test-ios:
-
     runs-on: macos-latest
-
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Unit test Authenticator on iOS
@@ -24,15 +22,13 @@ jobs:
           cd ${{ github.workspace }}
           xcrun llvm-cov export -format="lcov" -instr-profile $pathCoverage Build/Build/Products/Debug-iphonesimulator/Authenticator.o > Authenticator-Coverage.lcov
       - name: Upload Report
-        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+        uses: codecov/codecov-action@84508663e988701840491b86de86b666e8a86bed # v4.3.0
         with:
           flags: Authenticator
-          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   unit-test-macos:
-
     runs-on: macos-latest
-
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Unit test Authenticator on macOS
