@@ -1,6 +1,7 @@
 ignore:
-  - "**/Views"
-  - "**/Authenticator.swift"
+  - "Sources/Authenticator/Views"
+  - "Sources/Authenticator/Theming"
+  - "Sources/Authenticator/Authenticator.swift"
 
 codecov:
   branch: main
