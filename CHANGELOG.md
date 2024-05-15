@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.3 (2024-05-15)
+
+### Bug Fixes
+
+- Sign in fails when user is auto confirmed after sign up (#72)
+
 ## 1.1.2 (2024-04-26)
 
 ### Bug Fixes
