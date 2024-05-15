@@ -10,6 +10,8 @@ The **Amplify UI Authenticator** is a component that supports several authentiat
 
 More information on setting up and using the Authenticator is in the [Amplify UI Authenticator documentation](https://ui.docs.amplify.aws/swift/connected-components/authenticator).
 
+This is a test change to validate the release workflow
+
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
