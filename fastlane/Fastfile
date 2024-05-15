@@ -9,12 +9,11 @@ platform :swift do
     sh('git', 'fetch')
   end
 
-  desc "Create a release version by building and committing a changelog, pushing a tag to GitHub"
-  lane :release do
+  desc "Preparing next release by building and committing a changelog, updating the component version, and creating a PR to main"
+  lane :prepare_release do
     next_version, commits = calculate_next_release_version
 
-    UI.message("Releasing version: #{next_version}")
-
+    UI.message("Kicking off new release for version: #{next_version}")
     # Increment all specs and plists
     increment_versions(version: next_version)
 
@@ -25,11 +24,16 @@ platform :swift do
     # Update Package dependencies
     sh('bundle', 'exec', 'swift', 'package', 'update')
 
-    # Commit and push
-    release_commit(version: next_version)
+    # Create and push the new branch
+    release_branch = "release/#{next_version}"
+    sh('git', 'checkout', '-b', release_branch)
+    sh('git', 'push', '--set-upstream', 'origin', release_branch)
 
-    # Create tag and push to origin
-    add_tag(version: next_version)
+    # Commit and push
+    pr_title = release_commit(version: next_version).to_s
+
+    # Open the PR to main
+    sh('gh', 'pr', 'create', '--title', pr_title, '--body', 'Kicking off new release', '--base', 'ruisebas/main', '--head', release_branch)
   end
 
   desc "Increment versions"
@@ -45,20 +49,29 @@ platform :swift do
     sh('git', 'config', '--global', 'user.email', ENV['GITHUB_EMAIL'])
     sh('git', 'config', '--global', 'user.name', ENV['GITHUB_USER'])
 
-    commit_message = "chore: Release #{next_version} [skip ci]"
+    commit_message = "chore: Release #{next_version}"
     sh('git', 'commit', '-am', commit_message)
+    sh('git', 'push')
+    commit_message
+  end
 
-    # push to origin
-    sh('git', 'push', 'origin', 'release')
-    sh('git', 'push', 'origin', 'release:main')
+  desc "Push a new tag to GitHub and creating a new draft release"
+  lane :perform_release do |options|
+    next_version = options[:version]
+    # Create and push the new tag
+    add_tag(version: next_version)
+
+    # Create draft release   
+    release_title = sh("echo $(date +%F)")
+    sh('gh', 'release', 'create', '--draft', '--verify-tag', '--title', release_title)
   end
 
   desc "Tag in git and push to GitHub"
   private_lane :add_tag do |options|
-    next_version = options[:version]
-    next_tag = "#{next_version}"
+    next_tag = options[:version].to_s
 
-    add_git_tag(tag: next_tag)
-    push_git_tags(tag: next_tag)
+    puts "Creating new tag #{next_tag}"
+    #add_git_tag(tag: next_tag)
+    #push_git_tags(tag: next_tag)
   end
 end
