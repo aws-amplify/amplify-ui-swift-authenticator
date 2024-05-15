@@ -3,16 +3,49 @@ on:
   workflow_dispatch:
 
 permissions:
+  id-token: write
   pull-requests: write
 
 jobs:
   release:
-    name: Release
-    runs-on: ubuntu-latest
-
+    environment: Release
+    name: Kick off new Authenticator release
+    runs-on: macos-latest
+    env:
+      GITHUB_EMAIL: aws-amplify-ops@amazon.com
+      GITHUB_USER: aws-amplify-ops
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
-      - name: Create PR to push main to release branch
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@8c3f20df09ac63af7b3ae3d7c91f105f857d8497 #v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: ${{ format('{0}.release', github.run_id) }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          mask-aws-account-id: true
+
+      - id: retrieve-token
+        name: Retrieve Token
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: "gh pr create --title 'chore: kickoff release' --body 'kickoff release' --head main --base release"
+          DEPLOY_SECRET_ARN: ${{ secrets.DEPLOY_SECRET_ARN }}
+        run: |
+          PAT=$(aws secretsmanager get-secret-value \
+          --secret-id "$DEPLOY_SECRET_ARN" \
+          | jq -r ".SecretString | fromjson | .Credential")
+          echo "token=$PAT" >> $GITHUB_OUTPUT
+
+      - name: Checkout repo
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        with:
+          fetch-depth: 10
+          token: ${{steps.retrieve-token.outputs.token}}
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@22fdc77bf4148f810455b226c90fb81b5cbc00a7 # v1.171.0
+        with:
+          ruby-version: '3.2.1'
+          bundler-cache: true
+
+      - name:  Kick off Authenticator release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bundle exec fastlane kickoff_release
