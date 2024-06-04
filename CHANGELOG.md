@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.3 (2024-06-04)
+
+### Bug Fixes
+- **SignUp**: Sign in fails when user is auto confirmed after sign up (#72)
+
+### Misc. Updates
+- Pinning the Amplify version up to 2.34.x
+
 ## 1.1.2 (2024-04-26)
 
 ### Bug Fixes
