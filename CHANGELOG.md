@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.4 (2024-06-07)
+
+### Bug Fixes
+- **Authenticator**: Showing the proper message when there's connectivity issues (#82)
+
+### Misc. Updates
+- Updating code to support Amplify 2.35+. (#82)
+
 ## 1.1.3 (2024-06-04)
 
 ### Bug Fixes
