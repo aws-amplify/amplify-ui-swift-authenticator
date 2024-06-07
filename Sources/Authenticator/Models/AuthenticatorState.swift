@@ -7,7 +7,7 @@
 
 import Amplify
 @_spi(InternalAmplifyPluginExtension) import AWSCognitoAuthPlugin
-@_spi(InternalAmplifyPluginExtension) import AWSPluginsCore
+@_spi(InternalAmplifyPluginExtension) import InternalAmplifyCredentials
 import Foundation
 
 /// An `ObservableObject` that represents the Authenticator's state
