@@ -123,6 +123,15 @@ class MockAuthenticationService: AuthenticationService {
         throw AuthenticatorError.error(message: "Unable to resend confirmation code for attribute")
     }
 
+    func sendVerificationCode(forUserAttributeKey userAttributeKey: AuthUserAttributeKey, options: AuthSendUserAttributeVerificationCodeRequest.Options?) async throws -> AuthCodeDeliveryDetails {
+        resendConfirmationCodeForAttributeCount += 1
+        if let mockedResendConfirmationCodeForAttributeResult = mockedResendConfirmationCodeForAttributeResult {
+            return mockedResendConfirmationCodeForAttributeResult
+        }
+
+        throw AuthenticatorError.error(message: "Unable to send verification code for attribute")
+    }
+
     var confirmUserAttributeCount = 0
     var mockedConfirmUserAttributeError: AuthenticatorError?
     func confirm(userAttribute: AuthUserAttributeKey, confirmationCode: String, options: AuthConfirmUserAttributeRequest.Options?) async throws {
