@@ -7,6 +7,7 @@
 
 import Foundation
 @testable import Authenticator
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 
 class MockAuthenticatorState: AuthenticatorStateProtocol {
     var authenticationService: AuthenticationService = MockAuthenticationService()

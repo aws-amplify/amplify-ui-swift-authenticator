@@ -7,6 +7,7 @@
 
 import Amplify
 import SwiftUI
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 
 /// Represents a field that is displayed in the Sign Up view
 public protocol SignUpField {
@@ -417,7 +418,7 @@ extension SignUpField where Self == BaseSignUpField {
     }
 
     static func signUpField(
-        from attribute: CognitoConfiguration.SignUpAttribute,
+        from attribute: SignUpAttributeType,
         isRequired: Bool
     ) -> SignUpField {
         switch attribute {
@@ -451,7 +452,7 @@ extension SignUpField where Self == BaseSignUpField {
     }
 
     static func signUpField(
-        from attribute: CognitoConfiguration.VerificationMechanism
+        from attribute: VerificationMechanism
     ) -> SignUpField {
         switch attribute {
         case .email:
@@ -462,7 +463,7 @@ extension SignUpField where Self == BaseSignUpField {
     }
 
     static func signUpField(
-        from attribute: CognitoConfiguration.UsernameAttribute
+        from attribute: UsernameAttribute
     ) -> SignUpField {
         switch attribute {
         case .username:

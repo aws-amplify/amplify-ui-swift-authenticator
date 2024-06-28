@@ -8,6 +8,7 @@
 import Amplify
 import Foundation
 import SwiftUI
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 
 /// The state observed by the Sign Up content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/signUp`` step.
 public class SignUpState: AuthenticatorBaseState {
@@ -37,7 +38,7 @@ public class SignUpState: AuthenticatorBaseState {
                         AuthUserAttribute(key, value: field.value)
                     )
                     // Check if the current AuthUserAttribute is defined to be the usernameAttribute in Cognito's config
-                    if configuration.usernameAttribute == CognitoConfiguration.UsernameAttribute(from: key) {
+                    if configuration.usernameAttribute == UsernameAttribute(from: key) {
                         username = field.value
                     }
                 }

@@ -6,7 +6,7 @@
 //
 
 import Amplify
-import AWSCognitoAuthPlugin
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 import SwiftUI
 
 /// The state observed by the Sign In content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/signIn`` step.
