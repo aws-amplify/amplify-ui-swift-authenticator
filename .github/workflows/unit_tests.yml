@@ -1,13 +1,21 @@
 name: Run Unit Tests
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_call:
+    inputs:
+      identifier:
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ inputs.identifier || github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref_name != 'main'}}
 
 jobs:
   unit-test-ios:
+    name: iOS Unit Tests
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
@@ -28,6 +36,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   unit-test-macos:
+    name: macOS Unit Tests
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
