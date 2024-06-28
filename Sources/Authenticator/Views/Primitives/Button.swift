@@ -200,13 +200,14 @@ private struct AuthenticatorButtonStyle: ButtonStyle {
         if useOverlay {
             content(for: configuration)
                 .overlay(
-                    RoundedRectangle(cornerRadius: .infinity)
+                    RoundedRectangle(cornerRadius: cornerRadius)
                         .stroke(borderColor,
                                 lineWidth: borderWidth)
                 )
 
         } else {
             content(for: configuration)
+                .cornerRadius(cornerRadius)
                 .border(borderColor, width: borderWidth)
         }
     }
