@@ -8,6 +8,7 @@
 import Amplify
 @testable import Authenticator
 import XCTest
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 
 class SignUpStateTests: XCTestCase {
     private var state: SignUpState!

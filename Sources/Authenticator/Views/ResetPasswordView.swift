@@ -7,6 +7,7 @@
 
 import Amplify
 import SwiftUI
+@_spi(InternalAmplifyConfiguration) import AWSCognitoAuthPlugin
 
 /// Represents the content being displayed when the ``Authenticator`` is in the ``AuthenticatorStep/resetPassword`` step.
 ///
@@ -75,7 +76,7 @@ public struct ResetPasswordView<Header: View,
     }
 
     @ViewBuilder private func createUsernameInput(
-        for usernameAttribute: CognitoConfiguration.UsernameAttribute
+        for usernameAttribute: UsernameAttribute
     ) -> some View {
         switch usernameAttribute {
         case .username:
