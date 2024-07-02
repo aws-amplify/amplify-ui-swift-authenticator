@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.5 (2024-07-02)
+
+### Bug Fixes
+- **Authenticator**: Settting corner radius according to the theme (#84)
+
 ## 1.1.4 (2024-06-07)
 
 ### Bug Fixes
