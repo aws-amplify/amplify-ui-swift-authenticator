@@ -88,9 +88,20 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             let authSession = try await authenticationService.fetchAuthSession(options: nil)
 
             if authSession.isSignedIn {
-                let user = try await authenticationService.getCurrentUser()
-                log.info("The user is signed in, going to signedIn step")
-                setCurrentStep(.signedIn(user: user))
+                // The user has previously signed in, but validate if they still have valid credentials
+                guard let cognitoSession = authSession as? AWSAuthCognitoSession else {
+                    // In the unlikely case of this happening, honour the `isSignedIn` flag
+                    try await setSignedInStep()
+                    return
+                }
+
+                if hasValidCredentials(session: cognitoSession) {
+                    try await setSignedInStep()
+                } else {
+                    log.info("The user's credentials have expired. Signing out and going to signedOut step")
+                    _ = await Amplify.Auth.signOut()
+                    setCurrentStep(signedOutStep)
+                }
             } else {
                 log.info("The user is not signed in, going to signedOut step")
                 setCurrentStep(signedOutStep)
@@ -101,6 +112,26 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             log.error("Error while attempting to determine signed in user, going signedOut step")
             setCurrentStep(signedOutStep)
         }
+    }
+
+    private func hasValidCredentials(session: AWSAuthCognitoSession) -> Bool {
+        if configuration.hasIdentityPool, case .failure(_) = session.getIdentityId() {
+            log.verbose("Could not fetch Identity ID")
+            return false
+        }
+
+        if configuration.hasUserPool, case .failure(_) = session.getCognitoTokens(){
+            log.verbose("Could not fetch Cognito Tokens")
+            return false
+        }
+
+        return true
+    }
+
+    private func setSignedInStep() async throws {
+        log.info("The user is signed in, going to signedIn step")
+        let user = try await authenticationService.getCurrentUser()
+        setCurrentStep(.signedIn(user: user))
     }
 
     private func setUserAgentSuffix() {

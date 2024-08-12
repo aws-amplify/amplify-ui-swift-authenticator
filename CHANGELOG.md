@@ -1,9 +1,14 @@
 # Changelog
 
+## 1.1.6 (2024-08-13)
+
+### Bug Fixes
+- **Authenticator**: Properly handling expired sessions when loading the component (#87)
+
 ## 1.1.5 (2024-07-02)
 
 ### Bug Fixes
-- **Authenticator**: Settting corner radius according to the theme (#84)
+- **Authenticator**: Setting corner radius according to the theme (#84)
 
 ## 1.1.4 (2024-06-07)
 
