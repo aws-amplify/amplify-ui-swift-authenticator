@@ -88,15 +88,11 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             let authSession = try await authenticationService.fetchAuthSession(options: nil)
 
             if authSession.isSignedIn {
-                // The user has previously signed in, but validate if they still have valid credentials
-                guard let cognitoSession = authSession as? AWSAuthCognitoSession else {
-                    // In the unlikely case of this happening, honour the `isSignedIn` flag
-                    try await setSignedInStep()
-                    return
-                }
-
-                if hasValidCredentials(session: cognitoSession) {
-                    try await setSignedInStep()
+                // The user has previously signed in, but validate if the session is still valid
+                if isSessionValid(authSession) {
+                    log.info("The user is signed in, going to signedIn step")
+                    let user = try await authenticationService.getCurrentUser()
+                    setCurrentStep(.signedIn(user: user))
                 } else {
                     log.info("The user's credentials have expired. Signing out and going to signedOut step")
                     _ = await Amplify.Auth.signOut()
@@ -114,24 +110,23 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
         }
     }
 
-    private func hasValidCredentials(session: AWSAuthCognitoSession) -> Bool {
-        if configuration.hasIdentityPool, case .failure(_) = session.getIdentityId() {
+    private func isSessionValid(_ session: AuthSession) -> Bool {
+        guard let cognitoSession = session as? AWSAuthCognitoSession else {
+            // Consider non-Cognito sessions to be valid if it's signed in
+            return session.isSignedIn
+        }
+
+        if configuration.hasIdentityPool, case .failure(_) = cognitoSession.getIdentityId() {
             log.verbose("Could not fetch Identity ID")
             return false
         }
 
-        if configuration.hasUserPool, case .failure(_) = session.getCognitoTokens(){
+        if configuration.hasUserPool, case .failure(_) = cognitoSession.getCognitoTokens(){
             log.verbose("Could not fetch Cognito Tokens")
             return false
         }
 
         return true
-    }
-
-    private func setSignedInStep() async throws {
-        log.info("The user is signed in, going to signedIn step")
-        let user = try await authenticationService.getCurrentUser()
-        setCurrentStep(.signedIn(user: user))
     }
 
     private func setUserAgentSuffix() {
