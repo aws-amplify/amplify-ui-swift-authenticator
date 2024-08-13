@@ -15,7 +15,9 @@ class MockAuthenticatorState: AuthenticatorStateProtocol {
         usernameAttributes: [],
         signupAttributes: [],
         passwordProtectionSettings: .init(minLength: 0, characterPolicy: []),
-        verificationMechanisms: []
+        verificationMechanisms: [],
+        hasUserPool: true,
+        hasIdentityPool: true
     )
 
     var setCurrentStepCount = 0

@@ -88,9 +88,16 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             let authSession = try await authenticationService.fetchAuthSession(options: nil)
 
             if authSession.isSignedIn {
-                let user = try await authenticationService.getCurrentUser()
-                log.info("The user is signed in, going to signedIn step")
-                setCurrentStep(.signedIn(user: user))
+                // The user has previously signed in, but validate if the session is still valid
+                if isSessionValid(authSession) {
+                    log.info("The user is signed in, going to signedIn step")
+                    let user = try await authenticationService.getCurrentUser()
+                    setCurrentStep(.signedIn(user: user))
+                } else {
+                    log.info("The user's credentials have expired. Signing out and going to signedOut step")
+                    _ = await Amplify.Auth.signOut()
+                    setCurrentStep(signedOutStep)
+                }
             } else {
                 log.info("The user is not signed in, going to signedOut step")
                 setCurrentStep(signedOutStep)
@@ -101,6 +108,25 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             log.error("Error while attempting to determine signed in user, going signedOut step")
             setCurrentStep(signedOutStep)
         }
+    }
+
+    private func isSessionValid(_ session: AuthSession) -> Bool {
+        guard let cognitoSession = session as? AWSAuthCognitoSession else {
+            // Consider non-Cognito sessions to be valid if it's signed in
+            return session.isSignedIn
+        }
+
+        if configuration.hasIdentityPool, case .failure(_) = cognitoSession.getIdentityId() {
+            log.verbose("Could not fetch Identity ID")
+            return false
+        }
+
+        if configuration.hasUserPool, case .failure(_) = cognitoSession.getCognitoTokens(){
+            log.verbose("Could not fetch Cognito Tokens")
+            return false
+        }
+
+        return true
     }
 
     private func setUserAgentSuffix() {

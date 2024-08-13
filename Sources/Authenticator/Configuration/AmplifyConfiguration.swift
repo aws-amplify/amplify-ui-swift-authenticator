@@ -106,11 +106,25 @@ struct AmplifyConfiguration {
             }
         }
 
+        var hasIdentityPool = false
+        if let cognitoConfiguration = configuration.value(at: "CredentialsProvider.CognitoIdentity.Default"),
+           case .string(let poolId) = cognitoConfiguration["PoolId"], !poolId.isEmpty {
+            hasIdentityPool = true
+        }
+
+        var hasUserPool = false
+        if let cognitoConfiguration = configuration.value(at: "CognitoUserPool.Default"),
+           case .string(let poolId) = cognitoConfiguration["PoolId"], !poolId.isEmpty {
+            hasUserPool = true
+        }
+
         self.cognito = CognitoConfiguration(
             usernameAttributes: usernameAttributes,
             signupAttributes: signUpAttributes,
             passwordProtectionSettings: passwordProtectionSettings,
-            verificationMechanisms: verificationMechanisms
+            verificationMechanisms: verificationMechanisms,
+            hasUserPool: hasUserPool,
+            hasIdentityPool: hasIdentityPool
         )
     }
 }
@@ -179,12 +193,18 @@ struct CognitoConfiguration {
         return .username
     }
 
+    var hasUserPool: Bool
+    var hasIdentityPool: Bool
+
     static var empty: CognitoConfiguration {
         .init(
             usernameAttributes: [],
             signupAttributes: [],
             passwordProtectionSettings: .init(minLength: 0, characterPolicy: []),
-            verificationMechanisms: [])
+            verificationMechanisms: [],
+            hasUserPool: false,
+            hasIdentityPool: false
+        )
     }
 }
 
