@@ -63,6 +63,18 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
                 .animation(.none, value: state.selectedMFAType)
             }
 
+            /// Only add Email option if it is allowed selection by the service
+            if(state.allowedMFATypes.contains(.email)) {
+                RadioButton(
+                    label: "authenticator.continueSignInWithMFASelection.email.radioButton.title".localized(),
+                    isSelected: .constant(state.selectedMFAType == .email)
+                ) {
+                    state.selectedMFAType = .email
+                }
+                .accessibilityAddTraits(state.selectedMFAType == .email ? .isSelected : .isButton)
+                .animation(.none, value: state.selectedMFAType)
+            }
+
             Button("authenticator.continueSignInWithMFASelection.button.submit".localized()) {
                 Task { await continueSignIn() }
             }

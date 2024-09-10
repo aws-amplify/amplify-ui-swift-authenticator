@@ -76,4 +76,3 @@ public struct ConfirmSignInWithMFACodeFooter: View {
         .buttonStyle(.link)
     }
 }
-

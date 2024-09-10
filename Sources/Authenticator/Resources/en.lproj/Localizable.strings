@@ -85,10 +85,23 @@
 "authenticator.confirmSignInWithCode.totp.button.submit" = "Confirm";
 "authenticator.confirmSignInWithCode.totp.button.backToSignIn" = "Back to Sign In";
 
+/* Continue Sign In with MFA Setup Selection */
+"authenticator.continueSignInWithMFASetupSelection.email.radioButton.title" = "Email";
+"authenticator.continueSignInWithMFASetupSelection.totp.radioButton.title" = "Authenticator App (TOTP)";
+"authenticator.continueSignInWithMFASetupSelection.button.continue" = "Continue";
+"authenticator.continueSignInWithMFASetupSelection.title" = "Select your preferred Two-Factor Auth method to set up";
+"authenticator.continueSignInWithMFASetupSelection.button.backToSignIn" = "Back to Sign In";
+
+/* Continue Sign In with Email MFA Setup */
+"authenticator.continueSignInWithEmailMFASetup.title" = "Enter your email for setting up Two-Factor Auth method";
+"authenticator.continueSignInWithEmailMFASetup.button.continue" = "Continue";
+"authenticator.continueSignInWithEmailMFASetup.button.backToSignIn" = "Back to Sign In";
+
 /* Continue Sign In with MFA Selection */
 "authenticator.continueSignInWithMFASelection.title" = "Select your preferred Two-Factor Auth method";
 "authenticator.continueSignInWithMFASelection.sms.radioButton.title" = "Text Message (SMS)";
 "authenticator.continueSignInWithMFASelection.totp.radioButton.title" = "Authenticator App (TOTP)";
+"authenticator.continueSignInWithMFASelection.email.radioButton.title" = "Email";
 "authenticator.continueSignInWithMFASelection.button.submit" = "Continue";
 "authenticator.continueSignInWithMFASelection.button.backToSignIn" = "Back to Sign In";
 

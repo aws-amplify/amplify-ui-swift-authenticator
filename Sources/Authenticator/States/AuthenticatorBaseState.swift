@@ -117,6 +117,10 @@ public class AuthenticatorBaseState: ObservableObject {
             return .continueSignInWithMFASelection(allowedMFATypes: allowedMFATypes)
         case .continueSignInWithTOTPSetup(let totpSetupDetails):
             return .continueSignInWithTOTPSetup(totpSetupDetails: totpSetupDetails)
+        case .continueSignInWithMFASetupSelection(let allowedMFATypes):
+            return .continueSignInWithMFASetupSelection(allowedMFATypes: allowedMFATypes)
+        case .continueSignInWithEmailMFASetup:
+            return .continueSignInWithEmailMFASetup
         default:
             throw AuthError.unknown("Unsupported next step: \(result.nextStep)", nil)
         }

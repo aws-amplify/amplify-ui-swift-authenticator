@@ -58,6 +58,14 @@ public struct AuthenticatorStep: Equatable {
     /// so they are presented with the Confirm Sign In with MFA Selection View
     public static let continueSignInWithMFASelection = AuthenticatorStep("continueSignInWithMFASelection")
 
+    /// A user has successfully provided valid Sign In credentials but is required to select  a MFA type to continue
+    /// so they are presented with the Confirm Sign In with MFA Selection View
+    public static let continueSignInWithMFASetupSelection = AuthenticatorStep("continueSignInWithMFASetupSelection")
+
+    /// A user has successfully provided valid Sign In credentials but is required to setup TOTP before continuing sign in
+    /// so they are presented with the  TOTP Setup View
+    public static let continueSignInWithEmailMFASetup = AuthenticatorStep("continueSignInWithEmailMFASetup")
+
     /// A user has successfully provided valid Sign In credentials but is required to provide a MFA code,
     /// so they are presented with the Confirm Sign In with MFA Code view
     public static let confirmSignInWithMFACode = AuthenticatorStep("confirmSignInWithMFACode")
