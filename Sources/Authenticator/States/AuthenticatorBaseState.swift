@@ -68,7 +68,7 @@ public class AuthenticatorBaseState: ObservableObject {
         log.verbose("Sign In next step is \(result.nextStep)")
         switch result.nextStep {
         case .confirmSignInWithSMSMFACode(let details, _),
-                .confirmSignInWithEmailMFACode(let details):
+             .confirmSignInWithEmailMFACode(let details):
             return .confirmSignInWithMFACode(deliveryDetails: details)
         case .confirmSignInWithCustomChallenge(_):
             return .confirmSignInWithCustomChallenge

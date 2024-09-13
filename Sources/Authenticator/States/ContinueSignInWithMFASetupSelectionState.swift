@@ -9,7 +9,7 @@ import Amplify
 import AWSCognitoAuthPlugin
 import SwiftUI
 
-/// The state observed by the Continue Sign In With MFA Setup Selection content views, representing the ``Authenticator`` is in  ``AuthenticatorStep/continueSignInWithMFASetupSelection``  step.
+/// The state observed by the Continue Sign In With MFA Setup Selection content views, representing the ``Authenticator`` is in the ``AuthenticatorStep/continueSignInWithMFASetupSelection`` step.
 public class ContinueSignInWithMFASetupSelectionState: AuthenticatorBaseState {
 
     /// The MFA type selected by the user

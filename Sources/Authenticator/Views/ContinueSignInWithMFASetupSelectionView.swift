@@ -40,7 +40,7 @@ public struct ContinueSignInWithMFASetupSelectionView<Header: View,
             headerContent
 
             /// Only add TOTP option if it is allowed for setup selection by the service
-            if(state.allowedMFATypes.contains(.totp)) {
+            if state.allowedMFATypes.contains(.totp) {
                 RadioButton(
                     label: "authenticator.continueSignInWithMFASelection.totp.radioButton.title".localized(),
                     isSelected: .constant(state.selectedMFATypeToSetup == .totp)
@@ -52,7 +52,7 @@ public struct ContinueSignInWithMFASetupSelectionView<Header: View,
             }
 
             /// Only add Email option if it is allowed for setup selection by the service
-            if(state.allowedMFATypes.contains(.email)) {
+            if state.allowedMFATypes.contains(.email) {
                 RadioButton(
                     label: "authenticator.continueSignInWithMFASetupSelection.email.radioButton.title".localized(),
                     isSelected: .constant(state.selectedMFATypeToSetup == .email)
@@ -78,7 +78,7 @@ public struct ContinueSignInWithMFASetupSelectionView<Header: View,
                 await continueSignIn()
             }
         }
-        .onDisappear{
+        .onDisappear {
             state.selectedMFATypeToSetup = nil
         }
     }

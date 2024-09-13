@@ -64,7 +64,7 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
             }
 
             /// Only add Email option if it is allowed selection by the service
-            if(state.allowedMFATypes.contains(.email)) {
+            if state.allowedMFATypes.contains(.email) {
                 RadioButton(
                     label: "authenticator.continueSignInWithMFASelection.email.radioButton.title".localized(),
                     isSelected: .constant(state.selectedMFAType == .email)

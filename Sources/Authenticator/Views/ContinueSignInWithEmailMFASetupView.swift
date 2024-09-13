@@ -17,7 +17,7 @@ public struct ContinueSignInWithEmailMFASetupView<Header: View,
     private let headerContent: Header
     private let footerContent: Footer
 
-    /// Creates a `ConfirmSignInWithMFACodeView`
+    /// Creates a `ContinueSignInWithEmailMFASetupView`
     /// - Parameter state: The ``ContinueSignInWithEmailMFASetupState`` that is observed by this view
     /// - Parameter headerContent: The content displayed above the fields. Defaults to  ``ContinueSignInWithEmailMFASetupHeader``
     /// - Parameter footerContent: The content displayed bellow the fields. Defaults to  ``ContinueSignInWithEmailMFASetupFooter``
