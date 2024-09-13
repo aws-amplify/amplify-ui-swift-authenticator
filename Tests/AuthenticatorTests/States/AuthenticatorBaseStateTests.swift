@@ -239,6 +239,22 @@ class AuthenticatorBaseStateTests: XCTestCase {
         XCTAssertEqual(authenticatorError.content, "A custom error")
     }
 
+    func testError_withCustomErrorTransformThatReturnsNil_shouldReturnDefaultError() {
+        var closureCount = 0
+        state.errorTransform = { error in
+            closureCount = 1
+            if case .service = error {
+                return .error(message: "A service error")
+            }
+            return nil
+        }
+        let authenticatorError = state.error(for: AuthError.notAuthorized("description", "recovery", nil))
+        XCTAssertEqual(closureCount, 1)
+        XCTAssertEqual(authenticatorError.style, .error)
+        let expectedMessage = "authenticator.authError.incorrectCredentials".localized()
+        XCTAssertEqual(authenticatorError.content, expectedMessage)
+    }
+
     func testError_withLocalizedCognitoError_shouldReturnLocalizedError() {
         let cognitoError = AWSCognitoAuthError.userNotFound
         let authenticatorError = state.error(for: AuthError.service("description", "recovery", cognitoError))

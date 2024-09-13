@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.7 (2024-09-13)
+
+### Bug Fixes
+- **Authenticator**: Allowing to only override the desired errors when invoking the errorMap functions (#93)
+
 ## 1.1.6 (2024-08-13)
 
 ### Bug Fixes
