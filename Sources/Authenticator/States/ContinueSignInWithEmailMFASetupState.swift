@@ -11,7 +11,7 @@ import SwiftUI
 
 /// The state observed by the Continue Sign In with Email MFA Setup Challenge, representing the ``Authenticator`` is in the ``AuthenticatorStep/continueSignInWithEmailMFASetup`` step.
 public class ContinueSignInWithEmailMFASetupState: AuthenticatorBaseState {
-    /// The confirmation code provided by the user
+    /// The email provided by the user
     @Published public var email: String = ""
 
     override init(credentials: Credentials) {

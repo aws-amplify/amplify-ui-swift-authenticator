@@ -109,6 +109,23 @@ public enum PreviewFactory {
                 credentials: .init()
             )
         }
+
+        /// Returns an empty and no-op ``ContinueSignInWithEmailMFASetupState``.
+        public static func continueSignInWithEmailMFASetup() -> ContinueSignInWithEmailMFASetupState {
+            return .init(credentials: .init())
+        }
+
+        /// Returns an empty and no-op ``ContinueSignInWithMFASetupSelectionState``.
+        /// - Parameter allowedMFATypes: The ``AllowedMFATypes`` associated with this state
+        public static func continueSignInWithMFASetupSelection(
+            allowedMFATypes: AllowedMFATypes
+        ) -> ContinueSignInWithMFASetupSelectionState {
+            return .init(
+                authenticatorState: .empty,
+                allowedMFATypes: allowedMFATypes
+            )
+        }
+
     }
 }
 
