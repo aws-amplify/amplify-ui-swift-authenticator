@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.8 (2024-09-20)
+
+### Bug Fixes
+- **Authenticator**: Adding new error localizations for limits exceeded (#96)
+
 ## 1.1.7 (2024-09-13)
 
 ### Bug Fixes

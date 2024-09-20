@@ -197,8 +197,13 @@ public class AuthenticatorBaseState: ObservableObject {
     }
 
     private func localizedMessage(for error: AuthError) -> String? {
-        if case .notAuthorized(_, _, _) = error {
-            return "authenticator.authError.incorrectCredentials".localized()
+        if case .notAuthorized(let description, _, _) = error {
+            switch description {
+            case "Password attempts exceeded":
+                return "authenticator.authError.passwordAttemptsExceeded".localized()
+            default:
+                return "authenticator.authError.incorrectCredentials".localized()
+            }
         }
 
         if case .validation(let field, _, _, _) = error {
