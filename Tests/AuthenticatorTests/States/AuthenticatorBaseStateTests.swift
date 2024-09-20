@@ -221,8 +221,14 @@ class AuthenticatorBaseStateTests: XCTestCase {
         XCTAssertEqual(authenticatorError.content, "authenticator.unknownError".localized())
     }
 
-    func testError_withNotAuthorizedError_shouldReturnLocalizedError() {
-        let authenticatorError = state.error(for: AuthError.notAuthorized("description", "recovery", nil))
+    func testError_withNotAuthorizedError_withPasswordAttemptsExceededDescription_shouldReturnLocalizedError() {
+        let authenticatorError = state.error(for: AuthError.notAuthorized("Password attempts exceeded", "recovery", nil))
+        XCTAssertEqual(authenticatorError.style, .error)
+        XCTAssertEqual(authenticatorError.content, "authenticator.authError.passwordAttemptsExceeded".localized())
+    }
+
+    func testError_withNotAuthorizedError_withAnotherDescription_shouldReturnLocalizedError() {
+        let authenticatorError = state.error(for: AuthError.notAuthorized("Unable to sign in", "recovery", nil))
         XCTAssertEqual(authenticatorError.style, .error)
         XCTAssertEqual(authenticatorError.content, "authenticator.authError.incorrectCredentials".localized())
     }
