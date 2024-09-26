@@ -24,7 +24,7 @@ struct ConfirmSignInWithCodeView<Header: View,
         @ViewBuilder footerContent: () -> Footer = {
             EmptyView()
         },
-        errorTransform: ((AuthError) -> AuthenticatorError)? = nil
+        errorTransform: ((AuthError) -> AuthenticatorError?)? = nil,
     ) {
         self.state = state
         self.headerContent = headerContent()

@@ -110,7 +110,7 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
     
     /// Sets a custom error mapping function for the `AuthError`s that are displayed
     /// - Parameter errorTransform: A closure that takes an `AuthError` and returns a ``AuthenticatorError`` that will be displayed.
-    public func errorMap(_ errorTransform: @escaping (AuthError) -> AuthenticatorError) -> Self {
+    public func errorMap(_ errorTransform: @escaping (AuthError) -> AuthenticatorError?) -> Self {
         state.errorTransform = errorTransform
         return self
     }

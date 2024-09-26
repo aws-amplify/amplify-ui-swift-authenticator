@@ -23,7 +23,7 @@ public class AuthenticatorBaseState: ObservableObject {
 
     @ObservedObject var credentials: Credentials
 
-    var errorTransform: ((AuthError) -> AuthenticatorError)? = nil
+    var errorTransform: ((AuthError) -> AuthenticatorError?)? = nil
     private(set) var authenticatorState: AuthenticatorStateProtocol = .empty
 
     init(credentials: Credentials) {
@@ -188,8 +188,8 @@ public class AuthenticatorBaseState: ObservableObject {
             return .unknown(from: error)
         }
 
-        if let errorTransform = errorTransform {
-            return errorTransform(authError)
+        if let customError = errorTransform?(authError) {
+            return customError
         }
 
         if let localizedMessage = localizedMessage(for: authError) {
@@ -202,8 +202,13 @@ public class AuthenticatorBaseState: ObservableObject {
     }
 
     private func localizedMessage(for error: AuthError) -> String? {
-        if case .notAuthorized(_, _, _) = error {
-            return "authenticator.authError.incorrectCredentials".localized()
+        if case .notAuthorized(let description, _, _) = error {
+            switch description {
+            case "Password attempts exceeded":
+                return "authenticator.authError.passwordAttemptsExceeded".localized()
+            default:
+                return "authenticator.authError.incorrectCredentials".localized()
+            }
         }
 
         if case .validation(let field, _, _, _) = error {

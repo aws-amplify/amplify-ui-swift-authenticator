@@ -221,8 +221,14 @@ class AuthenticatorBaseStateTests: XCTestCase {
         XCTAssertEqual(authenticatorError.content, "authenticator.unknownError".localized())
     }
 
-    func testError_withNotAuthorizedError_shouldReturnLocalizedError() {
-        let authenticatorError = state.error(for: AuthError.notAuthorized("description", "recovery", nil))
+    func testError_withNotAuthorizedError_withPasswordAttemptsExceededDescription_shouldReturnLocalizedError() {
+        let authenticatorError = state.error(for: AuthError.notAuthorized("Password attempts exceeded", "recovery", nil))
+        XCTAssertEqual(authenticatorError.style, .error)
+        XCTAssertEqual(authenticatorError.content, "authenticator.authError.passwordAttemptsExceeded".localized())
+    }
+
+    func testError_withNotAuthorizedError_withAnotherDescription_shouldReturnLocalizedError() {
+        let authenticatorError = state.error(for: AuthError.notAuthorized("Unable to sign in", "recovery", nil))
         XCTAssertEqual(authenticatorError.style, .error)
         XCTAssertEqual(authenticatorError.content, "authenticator.authError.incorrectCredentials".localized())
     }
@@ -237,6 +243,22 @@ class AuthenticatorBaseStateTests: XCTestCase {
         XCTAssertEqual(closureCount, 1)
         XCTAssertEqual(authenticatorError.style, .error)
         XCTAssertEqual(authenticatorError.content, "A custom error")
+    }
+
+    func testError_withCustomErrorTransformThatReturnsNil_shouldReturnDefaultError() {
+        var closureCount = 0
+        state.errorTransform = { error in
+            closureCount = 1
+            if case .service = error {
+                return .error(message: "A service error")
+            }
+            return nil
+        }
+        let authenticatorError = state.error(for: AuthError.notAuthorized("description", "recovery", nil))
+        XCTAssertEqual(closureCount, 1)
+        XCTAssertEqual(authenticatorError.style, .error)
+        let expectedMessage = "authenticator.authError.incorrectCredentials".localized()
+        XCTAssertEqual(authenticatorError.content, expectedMessage)
     }
 
     func testError_withLocalizedCognitoError_shouldReturnLocalizedError() {

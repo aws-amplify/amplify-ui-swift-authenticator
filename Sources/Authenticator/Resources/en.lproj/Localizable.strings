@@ -182,6 +182,7 @@
 
 /* Authenticator Errors */
 "authenticator.authError.incorrectCredentials" = "Incorrect username or password";
+"authenticator.authError.passwordAttemptsExceeded" = "You've reached the password attempts limit. Please try again later";
 "authenticator.authError.continueSignInWithMFASelection.noSelectionError" = "Please select an MFA method to continue";
 "authenticator.unknownError" = "Sorry, something went wrong";
 
@@ -192,6 +193,7 @@
 "authenticator.cognitoError.network" = "Please check your connectivity";
 "authenticator.cognitoError.usernameExists" = "Username already exists";
 "authenticator.cognitoError.userNotFound" = "User not found";
+"authenticator.cognitoError.limitExceeded" = "You've reached the request limit. Please try again later";
 
 /* Toolbar displayed on top of the keyboard */
 "authenticator.keyboardToolbar.Done" = "Done";
