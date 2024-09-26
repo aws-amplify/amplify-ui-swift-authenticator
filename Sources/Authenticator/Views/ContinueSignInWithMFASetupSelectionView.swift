@@ -14,6 +14,7 @@ public struct ContinueSignInWithMFASetupSelectionView<Header: View,
     @Environment(\.authenticatorState) private var authenticatorState
     @ObservedObject private var state: ContinueSignInWithMFASetupSelectionState
 
+    @Environment(\.authenticatorTheme) private var theme
     private let headerContent: Header
     private let footerContent: Footer
 
@@ -38,6 +39,13 @@ public struct ContinueSignInWithMFASetupSelectionView<Header: View,
     public var body: some View {
         AuthenticatorView(isBusy: state.isBusy) {
             headerContent
+
+            SwiftUI.Text("authenticator.continueSignInWithMFASetupSelection.body".localized())
+                .font(theme.fonts.body)
+                .foregroundColor(theme.colors.foreground.primary)
+                .accessibilityAddTraits(.isStaticText)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             /// Only add TOTP option if it is allowed for setup selection by the service
             if state.allowedMFATypes.contains(.totp) {

@@ -39,7 +39,7 @@ public struct ContinueSignInWithEmailMFASetupView<Header: View,
     }
 
     private var textFieldLabel: String {
-        return "authenticator.field.email.label".localized()
+        return "authenticator.continueSignInWithEmailMFASetup.field.email.label".localized()
     }
 
     private var textFieldPlaceholder: String {
@@ -60,8 +60,8 @@ public struct ContinueSignInWithEmailMFASetupView<Header: View,
                 placeholder: textFieldPlaceholder,
                 validator: emailValidator
             )
-            .textContentType(.emailAddress)
 #if os(iOS)
+            .textContentType(.emailAddress)
             .keyboardType(.emailAddress)
 #endif
 

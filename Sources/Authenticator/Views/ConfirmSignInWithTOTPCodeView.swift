@@ -32,8 +32,7 @@ public struct ConfirmSignInWithTOTPView<Header: View,
         self.content = ConfirmSignInWithCodeView(
             state: state,
             headerContent: headerContent,
-            footerContent: footerContent,
-            mfaType: .totp
+            footerContent: footerContent
         )
     }
 

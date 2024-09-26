@@ -7,6 +7,7 @@
 
 enum AuthenticatorMFAType {
     case sms
+    case email
     case totp
     case none
 }
