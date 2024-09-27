@@ -67,7 +67,8 @@ public class AuthenticatorBaseState: ObservableObject {
     func nextStep(for result: AuthSignInResult) async throws -> Step {
         log.verbose("Sign In next step is \(result.nextStep)")
         switch result.nextStep {
-        case .confirmSignInWithSMSMFACode(let details, _):
+        case .confirmSignInWithSMSMFACode(let details, _),
+             .confirmSignInWithEmailMFACode(let details):
             return .confirmSignInWithMFACode(deliveryDetails: details)
         case .confirmSignInWithCustomChallenge(_):
             return .confirmSignInWithCustomChallenge
@@ -116,6 +117,10 @@ public class AuthenticatorBaseState: ObservableObject {
             return .continueSignInWithMFASelection(allowedMFATypes: allowedMFATypes)
         case .continueSignInWithTOTPSetup(let totpSetupDetails):
             return .continueSignInWithTOTPSetup(totpSetupDetails: totpSetupDetails)
+        case .continueSignInWithMFASetupSelection(let allowedMFATypes):
+            return .continueSignInWithMFASetupSelection(allowedMFATypes: allowedMFATypes)
+        case .continueSignInWithEmailMFASetup:
+            return .continueSignInWithEmailMFASetup
         default:
             throw AuthError.unknown("Unsupported next step: \(result.nextStep)", nil)
         }

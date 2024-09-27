@@ -15,6 +15,8 @@ public struct Authenticator<LoadingContent: View,
                             ConfirmSignInWithMFACodeContent: View,
                             ConfirmSignInWithTOTPCodeContent: View,
                             ContinueSignInWithMFASelectionContent: View,
+                            ContinueSignInWithMFASetupSelectionContent: View,
+                            ContinueSignInWithEmailMFASetupContent: View,
                             ContinueSignInWithTOTPSetupContent: View,
                             ConfirmSignInWithCustomChallengeContent: View,
                             SignUpContent: View,
@@ -40,7 +42,9 @@ public struct Authenticator<LoadingContent: View,
     private let confirmSignInContentWithMFACodeContent: ConfirmSignInWithMFACodeContent
     private let confirmSignInWithTOTPCodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPCodeContent
     private let continueSignInWithMFASelectionContent: (ContinueSignInWithMFASelectionState) -> ContinueSignInWithMFASelectionContent
+    private let continueSignInWithMFASetupSelectionContent: (ContinueSignInWithMFASetupSelectionState) -> ContinueSignInWithMFASetupSelectionContent
     private let continueSignInWithTOTPSetupContent: (ContinueSignInWithTOTPSetupState) -> ContinueSignInWithTOTPSetupContent
+    private let continueSignInWithEmailMFASetupContent: (ContinueSignInWithEmailMFASetupState) -> ContinueSignInWithEmailMFASetupContent
     private let confirmSignInContentWithCustomChallengeContent: ConfirmSignInWithCustomChallengeContent
     private let confirmSignInContentWithNewPasswordContent: ConfirmSignInWithNewPasswordContent
     private let signUpContent: SignUpContent
@@ -69,8 +73,12 @@ public struct Authenticator<LoadingContent: View,
     /// Defaults to a ``ConfirmSignInWithMFACodeView``.
     ///- Parameter continueSignInWithMFASelectionContent: The content associated with the ``AuthenticatorStep/continueSignInWithMFASelection`` step.
     /// Defaults to a ``ContinueSignInWithMFASelectionView``.
+    ///- Parameter continueSignInWithMFASetupSelectionContent: The content associated with the ``AuthenticatorStep/continueSignInWithMFASetupSelection`` step.
+    /// Defaults to a ``ContinueSignInWithMFASetupSelectionView``.
     ///- Parameter continueSignInWithTOTPSetupContent: The content associated with the ``AuthenticatorStep/continueSignInWithTOTPSetup`` step.
     /// Defaults to a ``ContinueSignInWithTOTPSetupView``.
+    ///- Parameter continueSignInWithEmailMFASetupContent: The content associated with the ``AuthenticatorStep/continueSignInWithEmailMFASetup`` step.
+    /// Defaults to a ``ContinueSignInWithEmailMFASetupView``.
     /// - Parameter confirmSignInWithCustomChallengeContent: The content associated with the ``AuthenticatorStep/confirmSignInWithCustomChallenge`` step.
     /// Defaults to a ``ConfirmSignInWithCustomChallengeView``.
     /// - Parameter confirmSignInWithNewPasswordContent: The content associated with the ``AuthenticatorStep/confirmSignInWithNewPassword`` step.
@@ -112,8 +120,14 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder continueSignInWithMFASelectionContent: @escaping (ContinueSignInWithMFASelectionState) -> ContinueSignInWithMFASelectionContent = { state in
             ContinueSignInWithMFASelectionView(state: state)
         },
+        @ViewBuilder continueSignInWithMFASetupSelectionContent: @escaping (ContinueSignInWithMFASetupSelectionState) -> ContinueSignInWithMFASetupSelectionContent = { state in
+            ContinueSignInWithMFASetupSelectionView(state: state)
+        },
         @ViewBuilder continueSignInWithTOTPSetupContent: @escaping (ContinueSignInWithTOTPSetupState) -> ContinueSignInWithTOTPSetupContent = { state in
             ContinueSignInWithTOTPSetupView(state: state)
+        },
+        @ViewBuilder continueSignInWithEmailMFASetupContent: @escaping (ContinueSignInWithEmailMFASetupState) -> ContinueSignInWithEmailMFASetupContent = { state in
+            ContinueSignInWithEmailMFASetupView(state: state)
         },
         @ViewBuilder confirmSignInWithCustomChallengeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithCustomChallengeContent = { state in
             ConfirmSignInWithCustomChallengeView(state: state)
@@ -163,7 +177,9 @@ public struct Authenticator<LoadingContent: View,
 
         self.confirmSignInWithTOTPCodeContent = confirmSignInWithTOTPCodeContent
         self.continueSignInWithMFASelectionContent = continueSignInWithMFASelectionContent
+        self.continueSignInWithMFASetupSelectionContent = continueSignInWithMFASetupSelectionContent
         self.continueSignInWithTOTPSetupContent = continueSignInWithTOTPSetupContent
+        self.continueSignInWithEmailMFASetupContent = continueSignInWithEmailMFASetupContent
 
         let confirmSignInWithCustomChallengeState = ConfirmSignInWithCodeState(credentials: credentials)
         contentStates.add(confirmSignInWithMFACodeState)
@@ -344,18 +360,29 @@ public struct Authenticator<LoadingContent: View,
                 allowedMFATypes: allowedMFATypes
             )
             continueSignInWithMFASelectionContent(continueSignInWithMFASelection)
+        case .continueSignInWithMFASetupSelection(let allowedMFATypes):
+            let continueSignInWithMFASetupSelection = ContinueSignInWithMFASetupSelectionState(
+                authenticatorState: state,
+                allowedMFATypes: allowedMFATypes
+            )
+            continueSignInWithMFASetupSelectionContent(continueSignInWithMFASetupSelection)
         case .confirmSignInWithTOTPCode:
             let confirmSignInWithCodeState = ConfirmSignInWithCodeState(
                 authenticatorState: state
             )
             confirmSignInWithTOTPCodeContent(confirmSignInWithCodeState)
         case .continueSignInWithTOTPSetup(let totpSetupDetails):
-            let totpStupState = ContinueSignInWithTOTPSetupState(
+            let totpSetupState = ContinueSignInWithTOTPSetupState(
                 authenticatorState: state,
                 issuer: totpOptions.issuer,
                 totpSetupDetails: totpSetupDetails
             )
-            continueSignInWithTOTPSetupContent(totpStupState)
+            continueSignInWithTOTPSetupContent(totpSetupState)
+        case .continueSignInWithEmailMFASetup:
+            let emailMFASetupState = ContinueSignInWithEmailMFASetupState(
+                authenticatorState: state
+            )
+            continueSignInWithEmailMFASetupContent(emailMFASetupState)
         case .confirmSignInWithCustomChallenge:
             confirmSignInContentWithCustomChallengeContent
         case .resetPassword:

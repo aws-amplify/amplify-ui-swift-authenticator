@@ -32,8 +32,7 @@ public struct ConfirmSignInWithMFACodeView<Header: View,
         self.content = ConfirmSignInWithCodeView(
             state: state,
             headerContent: headerContent,
-            footerContent: footerContent,
-            mfaType: .sms
+            footerContent: footerContent
         )
     }
 
@@ -76,4 +75,3 @@ public struct ConfirmSignInWithMFACodeFooter: View {
         .buttonStyle(.link)
     }
 }
-

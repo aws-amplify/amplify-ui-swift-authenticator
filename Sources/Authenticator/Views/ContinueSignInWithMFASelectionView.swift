@@ -13,6 +13,7 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
                                                  Footer: View>: View {
     @Environment(\.authenticatorState) private var authenticatorState
     @ObservedObject private var state: ContinueSignInWithMFASelectionState
+    @Environment(\.authenticatorTheme) private var theme
 
     private let headerContent: Header
     private let footerContent: Footer
@@ -39,6 +40,14 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
         AuthenticatorView(isBusy: state.isBusy) {
             headerContent
 
+            SwiftUI.Text("authenticator.continueSignInWithMFASelection.subtitle".localized())
+                .font(theme.fonts.body)
+                .foregroundColor(theme.colors.foreground.primary)
+                .accessibilityAddTraits(.isStaticText)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+
             /// Only add TOTP option if it is allowed for selection by the service
             if(state.allowedMFATypes.contains(.totp)) {
                 RadioButton(
@@ -60,6 +69,18 @@ public struct ContinueSignInWithMFASelectionView<Header: View,
                     state.selectedMFAType = .sms
                 }
                 .accessibilityAddTraits(state.selectedMFAType == .sms ? .isSelected : .isButton)
+                .animation(.none, value: state.selectedMFAType)
+            }
+
+            /// Only add Email option if it is allowed selection by the service
+            if state.allowedMFATypes.contains(.email) {
+                RadioButton(
+                    label: "authenticator.continueSignInWithMFASelection.email.radioButton.title".localized(),
+                    isSelected: .constant(state.selectedMFAType == .email)
+                ) {
+                    state.selectedMFAType = .email
+                }
+                .accessibilityAddTraits(state.selectedMFAType == .email ? .isSelected : .isButton)
                 .animation(.none, value: state.selectedMFAType)
             }
 

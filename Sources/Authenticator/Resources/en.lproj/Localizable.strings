@@ -69,7 +69,9 @@
 "authenticator.confirmSignInWithNewPassword.button.submit" = "Submit";
 
 /* Confirm Sign In with MFA view */
-"authenticator.confirmSignInWithMFACode.title" = "Enter your Sign In code";
+"authenticator.confirmSignInWithMFACode.title" = "Verify your sign-in";
+"authenticator.confirmSignInWithMFACode.field.email.code.label" = "Enter the verification code sent to your email to complete this sign-in.";
+"authenticator.confirmSignInWithMFACode.field.phone.code.label" = "Enter the verification code sent to your phone to complete this sign-in.";
 
 /* Confirm Sign In with Custom Challenge view */
 "authenticator.confirmSignInWithCustomChallenge.title" = "Enter your Sign In code";
@@ -85,10 +87,26 @@
 "authenticator.confirmSignInWithCode.totp.button.submit" = "Confirm";
 "authenticator.confirmSignInWithCode.totp.button.backToSignIn" = "Back to Sign In";
 
+/* Continue Sign In with MFA Setup Selection */
+"authenticator.continueSignInWithMFASetupSelection.email.radioButton.title" = "Email";
+"authenticator.continueSignInWithMFASetupSelection.totp.radioButton.title" = "Authenticator App (TOTP)";
+"authenticator.continueSignInWithMFASetupSelection.button.continue" = "Continue";
+"authenticator.continueSignInWithMFASetupSelection.title" = "Choose your preferred two-factor authentication method to set up";
+"authenticator.continueSignInWithMFASetupSelection.body" = "Select your preferred way to verify your identity when using two-factor authentication (2FA). This will be your default method for added account security.";
+"authenticator.continueSignInWithMFASetupSelection.button.backToSignIn" = "Back to Sign In";
+
+/* Continue Sign In with Email MFA Setup */
+"authenticator.continueSignInWithEmailMFASetup.title" = "Add Email for Two-Factor Authentication";
+"authenticator.continueSignInWithEmailMFASetup.button.continue" = "Continue";
+"authenticator.continueSignInWithEmailMFASetup.field.email.label" = "Enter the email address you want to use for two-factor authentication (2FA). This email will receive verification codes when you sign in";
+"authenticator.continueSignInWithEmailMFASetup.button.backToSignIn" = "Back to Sign In";
+
 /* Continue Sign In with MFA Selection */
-"authenticator.continueSignInWithMFASelection.title" = "Select your preferred Two-Factor Auth method";
+"authenticator.continueSignInWithMFASelection.title" = "Choose your two-factor authentication method";
+"authenticator.continueSignInWithMFASelection.subtitle" = "For added security, choose how you want to verify your identity for this sign-in.";
 "authenticator.continueSignInWithMFASelection.sms.radioButton.title" = "Text Message (SMS)";
 "authenticator.continueSignInWithMFASelection.totp.radioButton.title" = "Authenticator App (TOTP)";
+"authenticator.continueSignInWithMFASelection.email.radioButton.title" = "Email";
 "authenticator.continueSignInWithMFASelection.button.submit" = "Continue";
 "authenticator.continueSignInWithMFASelection.button.backToSignIn" = "Back to Sign In";
 

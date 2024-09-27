@@ -17,13 +17,15 @@ struct AuthenticatorHostApp: App {
     private var hidesSignUpButton = false
     private var initialStep = AuthenticatorInitialStep.signIn
     private var authSignInNextStep = AuthSignInStep.done
+    private var shouldUsePickerForTestingSteps = true
 
     var body: some Scene {
         WindowGroup {
             ContentView(
                 hidesSignUpButton: hidesSignUpButton,
                 initialStep: initialStep,
-                authSignInStep: authSignInNextStep)
+                authSignInStep: authSignInNextStep,
+                shouldUsePickerForTestingSteps: shouldUsePickerForTestingSteps)
         }
     }
 
@@ -55,6 +57,9 @@ struct AuthenticatorHostApp: App {
         var arguments: [ProcessArgument] = []
         for (index, argument) in uiTestArguments.enumerated() {
             if argument.isEqual(UITestKeyKey) {
+                // If no UI tests arguments is present,
+                // that means we can show the picker for testing.
+                shouldUsePickerForTestingSteps = false
                 arguments = try! JSONDecoder().decode([ProcessArgument].self, from: uiTestArguments[index + 1].data(using: .utf8)!)
                 break
             }
