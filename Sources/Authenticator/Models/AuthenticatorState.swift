@@ -116,12 +116,17 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             return session.isSignedIn
         }
 
-        if configuration.hasIdentityPool, case .failure(_) = cognitoSession.getIdentityId() {
+        // If the failures are caused due to connectivity errors, consider the session still valid
+        if configuration.hasIdentityPool,
+           case .failure(let authError) = cognitoSession.getIdentityId(),
+           !authError.isConnectivityError {
             log.verbose("Could not fetch Identity ID")
             return false
         }
 
-        if configuration.hasUserPool, case .failure(_) = cognitoSession.getCognitoTokens(){
+        if configuration.hasUserPool,
+           case .failure(let authError) = cognitoSession.getCognitoTokens(),
+           !authError.isConnectivityError {
             log.verbose("Could not fetch Cognito Tokens")
             return false
         }

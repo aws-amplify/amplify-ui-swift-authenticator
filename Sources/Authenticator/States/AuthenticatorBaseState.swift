@@ -227,7 +227,7 @@ public class AuthenticatorBaseState: ObservableObject {
         }
 
         // First check if the underlying error is a connectivity one
-        if isConnectivityError(error.underlyingError) {
+        if error.isConnectivityError {
             log.verbose("The error is identified as a connectivity issue, displaying the corresponding localized string.")
             return "authenticator.cognitoError.network".localized()
         }
@@ -247,20 +247,6 @@ public class AuthenticatorBaseState: ObservableObject {
         
         log.verbose("No localizable string was found for error of type '\(cognitoError)'")
         return nil
-    }
-
-    private func isConnectivityError(_ error: Error?) -> Bool {
-        guard let error = error as? NSError else {
-            return false
-        }
-        let networkErrorCodes = [
-            NSURLErrorCannotFindHost,
-            NSURLErrorCannotConnectToHost,
-            NSURLErrorNetworkConnectionLost,
-            NSURLErrorDNSLookupFailed,
-            NSURLErrorNotConnectedToInternet
-        ]
-        return networkErrorCodes.contains(where: { $0 == error.code })
     }
 }
 
