@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.3 (2024-12-16)
+
+### Bug Fixes
+- **Theming**: Adding support for customizing the TextFields' input and placeholder foreground colours (#100)
+- **Authenticator**: Avoiding signing out users when the token refresh fails due to no connectivity (#104)
+
 ## 1.2.2 (2024-11-26)
 
 ### Misc. Updates
