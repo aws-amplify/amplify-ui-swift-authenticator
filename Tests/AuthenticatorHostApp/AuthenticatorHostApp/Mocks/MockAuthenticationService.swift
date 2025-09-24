@@ -10,6 +10,18 @@ import Amplify
 import Foundation
 
 class MockAuthenticationService: AuthenticationService {
+    func signInWithWebUI(presentationAnchor: AuthUIPresentationAnchor?, options: AuthWebUISignInRequest.Options?) async throws -> AuthSignInResult {
+        fatalError()
+    }
+
+    func signInWithWebUI(for authProvider: AuthProvider, presentationAnchor: AuthUIPresentationAnchor?, options: AuthWebUISignInRequest.Options?) async throws -> AuthSignInResult {
+        fatalError()
+    }
+
+    func associateWebAuthnCredential(presentationAnchor: AuthUIPresentationAnchor, options: AuthAssociateWebAuthnCredentialRequest.Options?) async throws {
+        fatalError()
+    }
+
 
     static var shared = MockAuthenticationService()
 

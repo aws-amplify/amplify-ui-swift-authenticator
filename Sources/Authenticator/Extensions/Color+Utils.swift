@@ -26,7 +26,7 @@ extension Color {
 
     /// Creates a color that suports Light and Dark mode
     init(light: Color, dark: Color) {
-    #if os(iOS)
+    #if os(iOS) || os(visionOS)
         self.init(
             uiColor: .init {
                 if $0.userInterfaceStyle == .dark {

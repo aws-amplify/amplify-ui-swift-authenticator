@@ -17,7 +17,7 @@ struct AuthenticatorHostApp: App {
     private var hidesSignUpButton = false
     private var initialStep = AuthenticatorInitialStep.signIn
     private var authSignInNextStep = AuthSignInStep.done
-    private var shouldUsePickerForTestingSteps = true
+    private var shouldUsePickerForTestingSteps = false
 
     var body: some Scene {
         WindowGroup {

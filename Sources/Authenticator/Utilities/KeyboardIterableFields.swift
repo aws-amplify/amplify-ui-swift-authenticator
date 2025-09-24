@@ -57,6 +57,7 @@ private struct KeyboardIterableToolbar<V>: ViewModifier where V: KeyboardIterabl
 
     func body(content: Content) -> some View {
         content
+#if os(iOS) || os(macOS)
             .toolbar {
                 SwiftUI.ToolbarItemGroup(placement: .keyboard) {
                     SwiftUI.Button(action: fields.focusPreviousField) {
@@ -76,5 +77,6 @@ private struct KeyboardIterableToolbar<V>: ViewModifier where V: KeyboardIterabl
                     }
                 }
             }
+#endif
     }
 }

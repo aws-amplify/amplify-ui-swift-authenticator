@@ -205,7 +205,7 @@ struct CallingCodeField: View {
     }
 
     private var allRegionsContent: some View {
-    #if os(iOS)
+    #if os(iOS) || os(visionOS)
         NavigationView {
             regionList
         }

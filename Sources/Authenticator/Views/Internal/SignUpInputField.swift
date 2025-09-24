@@ -64,7 +64,9 @@ struct SignUpInputField: View {
                 )
             }
         }
+    #if os(iOS) || os(macOS)
         .textContentType(field.attributeType.textContentType)
+    #endif
     #if os(iOS)
         .keyboardType(field.attributeType.keyboardType)
     #endif

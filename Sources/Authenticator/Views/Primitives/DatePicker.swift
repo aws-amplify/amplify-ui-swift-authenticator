@@ -45,7 +45,7 @@ struct DatePicker: View {
         }
     }
 
-#if os(iOS)
+#if os(iOS) || os(visionOS)
     var body: some View {
         VStack(alignment: .trailing, spacing: theme.components.field.spacing.vertical) {
             AuthenticatorField(

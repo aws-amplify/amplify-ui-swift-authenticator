@@ -33,7 +33,7 @@ public enum SignUpAttribute: Equatable, Hashable {
     case preferredUsername
     case profile
     case website
-#if os(iOS)
+#if os(iOS) || os(visionOS)
     case custom(attributeKey: AuthUserAttributeKey, textContentType: UITextContentType? = nil)
 #elseif os(macOS)
     case custom(attributeKey: AuthUserAttributeKey, textContentType: NSTextContentType? = nil)
