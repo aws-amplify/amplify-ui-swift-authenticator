@@ -12,9 +12,7 @@ enum Step {
     case loading
     case error(_ error: Error)
     case signIn
-    // TODO: Implement signInSelectAuthFactor state handling
-    case signInSelectAuthFactor
-    // TODO: Implement signInConfirmPassword state handling
+    case signInSelectAuthFactor(availableAuthFactors: [AuthFactor])
     case signInConfirmPassword
     case confirmSignInWithCustomChallenge
     case confirmSignInWithTOTPCode
@@ -108,7 +106,6 @@ extension Step: Equatable {
         case (.loading, .loading),
              (.error, .error),
              (.signIn, .signIn),
-             (.signInSelectAuthFactor, .signInSelectAuthFactor),
              (.signInConfirmPassword, .signInConfirmPassword),
              (.continueSignInWithMFASelection, .continueSignInWithMFASelection),
              (.confirmSignInWithTOTPCode, .confirmSignInWithTOTPCode),
@@ -120,6 +117,8 @@ extension Step: Equatable {
              (.promptToCreatePasskey, .promptToCreatePasskey),
              (.passkeyCreated, .passkeyCreated):
             return true
+        case (.signInSelectAuthFactor(let lFactors), .signInSelectAuthFactor(let rFactors)):
+            return lFactors == rFactors
         case (.confirmSignInWithMFACode(let lDetails), .confirmSignInWithMFACode(let hDetails)),
              (.confirmSignUp(let lDetails), .confirmSignUp(let hDetails)),
              (.confirmResetPassword(let lDetails), .confirmResetPassword(let hDetails)):

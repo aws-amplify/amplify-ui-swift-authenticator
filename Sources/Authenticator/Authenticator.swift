@@ -11,6 +11,8 @@ import SwiftUI
 /// The Authenticator component
 public struct Authenticator<LoadingContent: View,
                             SignInContent: View,
+                            SignInSelectAuthFactorContent: View,
+                            SignInConfirmPasswordContent: View,
                             ConfirmSignInWithNewPasswordContent: View,
                             ConfirmSignInWithMFACodeContent: View,
                             ConfirmSignInWithOTPContent: View,
@@ -26,6 +28,8 @@ public struct Authenticator<LoadingContent: View,
                             ConfirmResetPasswordContent: View,
                             VerifyUserContent: View,
                             ConfirmVerifyUserContent: View,
+                            PromptToCreatePasskeyContent: View,
+                            PasskeyCreatedContent: View,
                             SignedInContent: View,
                             ErrorContent: View,
                             Header: View,
@@ -41,6 +45,8 @@ public struct Authenticator<LoadingContent: View,
     private var contentStates: NSHashTable<AuthenticatorBaseState> = .weakObjects()
     private let loadingContent: LoadingContent
     private let signInContent: SignInContent
+    private let signInSelectAuthFactorContent: (SignInSelectAuthFactorState) -> SignInSelectAuthFactorContent
+    private let signInConfirmPasswordContent: (SignInConfirmPasswordState) -> SignInConfirmPasswordContent
     private let confirmSignInWithMFACodeContent: ConfirmSignInWithMFACodeContent
     private let confirmSignInWithOTPContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithOTPContent
     private let confirmSignInWithTOTPCodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPCodeContent
@@ -56,6 +62,8 @@ public struct Authenticator<LoadingContent: View,
     private let confirmResetPasswordContent: ConfirmResetPasswordContent
     private let verifyUserContent: VerifyUserContent
     private let confirmVerifyUserContent: ConfirmVerifyUserContent
+    private let promptToCreatePasskeyContent: (PromptToCreatePasskeyState) -> PromptToCreatePasskeyContent
+    private let passkeyCreatedContent: (PasskeyCreatedState) -> PasskeyCreatedContent
     private let headerContent: Header
     private let footerContent: Footer
     private let errorContentBuilder: (Error) -> ErrorContent
@@ -119,6 +127,12 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder signInContent: (SignInState) -> SignInContent = { state in
             SignInView(state: state)
         },
+        @ViewBuilder signInSelectAuthFactorContent: @escaping (SignInSelectAuthFactorState) -> SignInSelectAuthFactorContent = { state in
+            SignInSelectAuthFactorView(state: state)
+        },
+        @ViewBuilder signInConfirmPasswordContent: @escaping (SignInConfirmPasswordState) -> SignInConfirmPasswordContent = { state in
+            SignInConfirmPasswordView(state: state)
+        },
         @ViewBuilder confirmSignInWithMFACodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithMFACodeContent = { state in
             ConfirmSignInWithMFACodeView(state: state)
         },
@@ -164,6 +178,12 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder confirmVerifyUserContent: (ConfirmVerifyUserState) -> ConfirmVerifyUserContent = { state in
             ConfirmVerifyUserView(state: state)
         },
+        @ViewBuilder promptToCreatePasskeyContent: @escaping (PromptToCreatePasskeyState) -> PromptToCreatePasskeyContent = { state in
+            PromptToCreatePasskeyView(state: state)
+        },
+        @ViewBuilder passkeyCreatedContent: @escaping (PasskeyCreatedState) -> PasskeyCreatedContent = { state in
+            PasskeyCreatedView(state: state)
+        },
         @ViewBuilder errorContent: @escaping (Error) -> ErrorContent = { _ in
             ErrorView()
         },
@@ -180,6 +200,9 @@ public struct Authenticator<LoadingContent: View,
         let signInState = SignInState(credentials: credentials)
         contentStates.add(signInState)
         self.signInContent = signInContent(signInState)
+        
+        self.signInSelectAuthFactorContent = signInSelectAuthFactorContent
+        self.signInConfirmPasswordContent = signInConfirmPasswordContent
 
         let confirmSignInWithMFACodeState = ConfirmSignInWithCodeState(credentials: credentials)
         contentStates.add(confirmSignInWithMFACodeState)
@@ -228,6 +251,9 @@ public struct Authenticator<LoadingContent: View,
         let confirmVerifyUserState = ConfirmVerifyUserState(credentials: credentials)
         contentStates.add(confirmVerifyUserState)
         self.confirmVerifyUserContent = confirmVerifyUserContent(confirmVerifyUserState)
+        
+        self.promptToCreatePasskeyContent = promptToCreatePasskeyContent
+        self.passkeyCreatedContent = passkeyCreatedContent
 
         self.headerContent = headerContent()
         self.footerContent = footerContent()
@@ -363,20 +389,17 @@ public struct Authenticator<LoadingContent: View,
             loadingContent
         case .signIn:
             signInContent
-        case .signInSelectAuthFactor:
-            // TODO: Implement signInSelectAuthFactor view
-            // let signInSelectAuthFactorState = SignInSelectAuthFactorState(
-            //     authenticatorState: state
-            // )
-            // signInSelectAuthFactorContent(signInSelectAuthFactorState)
-            fatalError("signInSelectAuthFactor step not yet implemented")
+        case .signInSelectAuthFactor(let availableAuthFactors):
+            let signInSelectAuthFactorState = SignInSelectAuthFactorState(
+                authenticatorState: state,
+                availableAuthFactors: availableAuthFactors
+            )
+            signInSelectAuthFactorContent(signInSelectAuthFactorState)
         case .signInConfirmPassword:
-            // TODO: Implement signInConfirmPassword view
-            // let signInConfirmPasswordState = SignInConfirmPasswordState(
-            //     authenticatorState: state
-            // )
-            // signInConfirmPasswordContent(signInConfirmPasswordState)
-            fatalError("signInConfirmPassword step not yet implemented")
+            let signInConfirmPasswordState = SignInConfirmPasswordState(
+                authenticatorState: state
+            )
+            signInConfirmPasswordContent(signInConfirmPasswordState)
         case .confirmSignInWithNewPassword:
             confirmSignInContentWithNewPasswordContent
         case .confirmSignInWithMFACode:
@@ -434,19 +457,15 @@ public struct Authenticator<LoadingContent: View,
         case .confirmVerifyUser:
             confirmVerifyUserContent
         case .promptToCreatePasskey:
-            // TODO: Implement promptToCreatePasskey view
-            // let promptToCreatePasskeyState = PromptToCreatePasskeyState(
-            //     authenticatorState: state
-            // )
-            // promptToCreatePasskeyContent(promptToCreatePasskeyState)
-            fatalError("promptToCreatePasskey step not yet implemented")
+            let promptToCreatePasskeyState = PromptToCreatePasskeyState(
+                authenticatorState: state
+            )
+            promptToCreatePasskeyContent(promptToCreatePasskeyState)
         case .passkeyCreated:
-            // TODO: Implement passkeyCreated view
-            // let passkeyCreatedState = PasskeyCreatedState(
-            //     authenticatorState: state
-            // )
-            // passkeyCreatedContent(passkeyCreatedState)
-            fatalError("passkeyCreated step not yet implemented")
+            let passkeyCreatedState = PasskeyCreatedState(
+                authenticatorState: state
+            )
+            passkeyCreatedContent(passkeyCreatedState)
         case .error(let error):
             errorContentBuilder(error)
         case .signedIn(_):
