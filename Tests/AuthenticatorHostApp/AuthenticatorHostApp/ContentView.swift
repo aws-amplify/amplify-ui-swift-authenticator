@@ -95,11 +95,14 @@ struct ContentView: View {
             userID: "user-123"
         )
         
-//        // Mock current user for signed-in state
-//        mockService.mockedCurrentUser = MockAuthenticationService.User(
-//            username: "test@example.com",
-//            userId: "user-123"
-//        )
+        // Mock successful auto sign-in
+        mockService.mockedAutoSignInResult = AuthSignInResult(nextStep: .done)
+        
+        // Configure user to be set when autoSignIn is called
+        mockService.autoSignInUserToSet = MockAuthenticationService.User(
+            username: "test@example.com",
+            userId: "user-123"
+        )
     }
 
     var body: some View {

@@ -132,6 +132,18 @@ public class AuthenticatorBaseState: ObservableObject {
         switch result.nextStep {
         case .confirmUser(let details, _, _):
             return .confirmSignUp(deliveryDetails: details)
+        case .completeAutoSignIn:
+            do {
+                log.verbose("Attempting auto sign-in after sign up")
+                let signInResult = try await authenticationService.autoSignIn()
+                return try await nextStep(for: signInResult)
+            } catch {
+                // Unable to auto sign in
+                log.verbose("Unable to auto sign-in after successful sign up")
+                log.error(error)
+                credentials.message = self.error(for: error)
+                return .signIn
+            }
         case .done:
             do {
                 let signInResult = try await authenticationService.signIn(

@@ -213,6 +213,37 @@ class AuthenticatorBaseStateTests: XCTestCase {
             return
         }
     }
+    
+    func testNextStep_forSignUp_withCompleteAutoSignIn_shouldCallAutoSignIn_andReturnNextStep() async throws {
+        authenticationService.mockedAutoSignInResult = AuthSignInResult(nextStep: .done)
+        authenticationService.mockedCurrentUser = MockAuthenticationService.User(
+            username: "username",
+            userId: "userId"
+        )
+        
+        let signUpResult = AuthSignUpResult(.completeAutoSignIn("session-token"))
+        let nextStep = try await state.nextStep(for: signUpResult)
+        
+        XCTAssertEqual(authenticationService.autoSignInCount, 1)
+        guard case .signedIn(let user) = nextStep else {
+            XCTFail("Expected next step to be signedIn, was \(nextStep)")
+            return
+        }
+        XCTAssertEqual(user.username, "username")
+        XCTAssertEqual(user.userId, "userId")
+    }
+    
+    func testNextStep_forSignUp_withCompleteAutoSignIn_andUnableToAutoSignIn_shouldReturnSignIn() async throws {
+        // Don't set mockedAutoSignInResult, so autoSignIn will fail
+        let signUpResult = AuthSignUpResult(.completeAutoSignIn("session-token"))
+        let nextStep = try await state.nextStep(for: signUpResult)
+        
+        XCTAssertEqual(authenticationService.autoSignInCount, 1)
+        guard case .signIn = nextStep else {
+            XCTFail("Expected next step to be signIn, was \(nextStep)")
+            return
+        }
+    }
 
     func testError_forNotAuthError_shouldReturnUnknownError() {
         let error: Error = NSError(domain: "Authenticator", code: 100)

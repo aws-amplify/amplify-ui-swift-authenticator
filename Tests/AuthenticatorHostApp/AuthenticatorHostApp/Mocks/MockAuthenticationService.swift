@@ -39,8 +39,23 @@ class MockAuthenticationService: AuthenticationService {
         throw AuthenticatorError.error(message: "Unable to confirm sign in")
     }
 
+    var autoSignInCount = 0
+    var mockedAutoSignInResult: AuthSignInResult?
+    var autoSignInUserToSet: User?
     func autoSignIn() async throws -> AuthSignInResult {
-        fatalError("Unsupported operation in Authenticator")
+        autoSignInCount += 1
+        
+        // Set the current user when auto sign-in is called
+        if let userToSet = autoSignInUserToSet {
+            mockedCurrentUser = userToSet
+        }
+        
+        if let mockedAutoSignInResult = mockedAutoSignInResult {
+            return mockedAutoSignInResult
+        }
+        
+        // Default: return successful sign-in
+        return AuthSignInResult(nextStep: .done)
     }
 
     var mockedCurrentUser: AuthUser?
@@ -151,6 +166,16 @@ class MockAuthenticationService: AuthenticationService {
     var mockedSignOutResult: AuthSignOutResult?
     func signOut(options: AuthSignOutRequest.Options?) async -> AuthSignOutResult {
         signOutCount += 1
+        
+        // Clear the current user when signing out
+        mockedCurrentUser = nil
+        
+        // Dispatch Hub event to notify Authenticator of sign-out
+        Amplify.Hub.dispatch(
+            to: .auth,
+            payload: HubPayload(eventName: HubPayload.EventName.Auth.signedOut)
+        )
+        
         return SignOutResult()
     }
 #if os(iOS) || os(macOS)
@@ -167,7 +192,8 @@ class MockAuthenticationService: AuthenticationService {
     // MARK: - User management
 
     func fetchAuthSession(options: AuthFetchSessionRequest.Options?) async throws -> AuthSession {
-        return Session(isSignedIn: true)
+        // Return signed-in status based on whether we have a current user
+        return Session(isSignedIn: mockedCurrentUser != nil)
     }
 
     func update(userAttribute: AuthUserAttribute, options: AuthUpdateUserAttributeRequest.Options?) async throws -> AuthUpdateAttributeResult {

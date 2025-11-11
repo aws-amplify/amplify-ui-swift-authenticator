@@ -35,8 +35,15 @@ class MockAuthenticationService: AuthenticationService {
         throw AuthenticatorError.error(message: "Unable to confirm sign in")
     }
 
+    var autoSignInCount = 0
+    var mockedAutoSignInResult: AuthSignInResult?
     func autoSignIn() async throws -> AuthSignInResult {
-        fatalError("Unsupported operation in Authenticator")
+        autoSignInCount += 1
+        if let mockedAutoSignInResult = mockedAutoSignInResult {
+            return mockedAutoSignInResult
+        }
+        
+        throw AuthenticatorError.error(message: "Unable to auto sign in")
     }
 
     var mockedCurrentUser: AuthUser?
