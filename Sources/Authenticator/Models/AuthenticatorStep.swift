@@ -66,6 +66,14 @@ public struct AuthenticatorStep: Equatable {
     /// so they are presented with the  Email Setup View
     public static let continueSignInWithEmailMFASetup = AuthenticatorStep("continueSignInWithEmailMFASetup")
 
+    /// A user has successfully provided valid Sign In credentials but is required to select an authentication factor,
+    /// so they are presented with the Sign In Select Auth Factor view
+    public static let signInSelectAuthFactor = AuthenticatorStep("signInSelectAuthFactor")
+
+    /// A user has successfully provided valid Sign In credentials but is required to confirm their password,
+    /// so they are presented with the Confirm Password view
+    public static let signInConfirmPassword = AuthenticatorStep("signInConfirmPassword")
+
     /// A user has successfully provided valid Sign In credentials but is required to provide a MFA code,
     /// so they are presented with the Confirm Sign In with MFA Code view
     public static let confirmSignInWithMFACode = AuthenticatorStep("confirmSignInWithMFACode")
@@ -99,6 +107,12 @@ public struct AuthenticatorStep: Equatable {
     /// A user has successfully requested to verify an attribute and they need to provide a verification code,
     /// so they are presented with the Confirm Verify User view
     public static let confirmVerifyUser = AuthenticatorStep("confirmVerifyUser")
+
+    /// A user is prompted to create a passkey for passwordless authentication
+    public static let promptToCreatePasskey = AuthenticatorStep("promptToCreatePasskey")
+
+    /// A user has successfully created a passkey
+    public static let passkeyCreated = AuthenticatorStep("passkeyCreated")
 
     /// An authenticated user has successfully signed in.
     public static let signedIn = AuthenticatorStep("signedIn")

@@ -357,6 +357,20 @@ public struct Authenticator<LoadingContent: View,
             loadingContent
         case .signIn:
             signInContent
+        case .signInSelectAuthFactor:
+            // TODO: Implement signInSelectAuthFactor view
+            // let signInSelectAuthFactorState = SignInSelectAuthFactorState(
+            //     authenticatorState: state
+            // )
+            // signInSelectAuthFactorContent(signInSelectAuthFactorState)
+            fatalError("signInSelectAuthFactor step not yet implemented")
+        case .signInConfirmPassword:
+            // TODO: Implement signInConfirmPassword view
+            // let signInConfirmPasswordState = SignInConfirmPasswordState(
+            //     authenticatorState: state
+            // )
+            // signInConfirmPasswordContent(signInConfirmPasswordState)
+            fatalError("signInConfirmPassword step not yet implemented")
         case .confirmSignInWithNewPassword:
             confirmSignInContentWithNewPasswordContent
         case .confirmSignInWithMFACode:
@@ -413,6 +427,20 @@ public struct Authenticator<LoadingContent: View,
             verifyUserContent
         case .confirmVerifyUser:
             confirmVerifyUserContent
+        case .promptToCreatePasskey:
+            // TODO: Implement promptToCreatePasskey view
+            // let promptToCreatePasskeyState = PromptToCreatePasskeyState(
+            //     authenticatorState: state
+            // )
+            // promptToCreatePasskeyContent(promptToCreatePasskeyState)
+            fatalError("promptToCreatePasskey step not yet implemented")
+        case .passkeyCreated:
+            // TODO: Implement passkeyCreated view
+            // let passkeyCreatedState = PasskeyCreatedState(
+            //     authenticatorState: state
+            // )
+            // passkeyCreatedContent(passkeyCreatedState)
+            fatalError("passkeyCreated step not yet implemented")
         case .error(let error):
             errorContentBuilder(error)
         case .signedIn(_):
