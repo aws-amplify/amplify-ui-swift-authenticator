@@ -11,6 +11,7 @@ import Foundation
 protocol AuthenticatorStateProtocol {
     var authenticationService: AuthenticationService { get }
     var configuration: CognitoConfiguration { get }
+    var authenticationFlow: AuthenticationFlow { get }
     var step: Step { get }
     func setCurrentStep(_ step: Step)
     func move(to initialStep: AuthenticatorInitialStep)
@@ -25,6 +26,7 @@ extension AuthenticatorStateProtocol where Self == EmptyAuthenticatorState {
 struct EmptyAuthenticatorState: AuthenticatorStateProtocol {
     var authenticationService: AuthenticationService = .default
     var configuration: CognitoConfiguration = .empty
+    var authenticationFlow: AuthenticationFlow = .password
     var step: Step = .loading
     func setCurrentStep(_ step: Step) {}
     func move(to initialStep: AuthenticatorInitialStep) {}

@@ -261,6 +261,7 @@ public struct Authenticator<LoadingContent: View,
         .environment(\.authenticatorOptions.busyStyle, viewModifiers.busyStyle)
         .task {
             state.authenticationService = authenticationService
+            state.authenticationFlow = authenticationFlow
             setUpContentStates(contentStates)
             await state.reloadState(initialStep: initialStep)
         }

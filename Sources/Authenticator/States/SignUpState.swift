@@ -145,6 +145,23 @@ public class SignUpState: AuthenticatorBaseState {
                 existingFields.insert(attribute.asSignUpAttribute)
             }
         }
+        
+        // Enforce password requirement when using AuthenticationFlow.password
+        if case .password = authenticatorState.authenticationFlow {
+            if let passwordField = inputs.first(where: { $0.field.attributeType == .password }) {
+                if !passwordField.isRequired {
+                    log.verbose("Marking password field as required due to AuthenticationFlow.password")
+                    passwordField.isRequired = true
+                }
+            }
+            if let confirmPasswordField = inputs.first(where: { $0.field.attributeType == .passwordConfirmation }) {
+                if !confirmPasswordField.isRequired {
+                    log.verbose("Marking password confirmation field as required due to AuthenticationFlow.password")
+                    confirmPasswordField.isRequired = true
+                }
+            }
+        }
+        
         self.fields = inputs
         setBusy(false)
     }
@@ -153,11 +170,33 @@ public class SignUpState: AuthenticatorBaseState {
         log.verbose("Reading Sign Up attributes from the Cognito configuration")
         setBusy(true)
         let cognitoConfiguration = authenticatorState.configuration
-        let initialSignUpFields: [SignUpField] = [
-            .signUpField(from: cognitoConfiguration.usernameAttribute),
-            .password(),
-            .confirmPassword()
+        
+        // Build initial sign up fields based on authentication flow
+        var initialSignUpFields: [SignUpField] = [
+            .signUpField(from: cognitoConfiguration.usernameAttribute)
         ]
+        
+        // Add password fields based on authentication flow
+        switch authenticatorState.authenticationFlow {
+        case .password:
+            // Password flow: password is required
+            initialSignUpFields.append(.password(isRequired: true))
+            initialSignUpFields.append(.confirmPassword(isRequired: true))
+        case .userChoice(let preferredAuthFactor, _):
+            // UserChoice flow: check if password is the preferred factor
+            if let preferredAuthFactor = preferredAuthFactor {
+                switch preferredAuthFactor {
+                case .password:
+                    // If password is preferred, show it as optional (user can still use other factors)
+                    initialSignUpFields.append(.password(isRequired: false))
+                    initialSignUpFields.append(.confirmPassword(isRequired: false))
+                default:
+                    // For other preferred factors, don't show password by default
+                    break
+                }
+            }
+            // If no preferred factor is specified, don't show password by default
+        }
 
         var existingFields: Set<SignUpAttribute> = []
         for field in initialSignUpFields {

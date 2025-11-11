@@ -91,6 +91,8 @@ public extension SignUpField where Self == BaseSignUpField {
 
     /// The user's password field
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to true.
+    /// - Note: When using ``AuthenticationFlow/userChoice(preferredAuthFactor:passkeyPrompts:)``, the password field can be made optional by setting `isRequired: false`.
+    ///         However, when using ``AuthenticationFlow/password``, the password field will always be required regardless of this parameter.
     static func password(isRequired: Bool = true) -> SignUpField {
         return signUpField(
             label: "authenticator.field.password.label".localized(),
@@ -103,6 +105,8 @@ public extension SignUpField where Self == BaseSignUpField {
 
     /// The user's password confirmation field
     /// - Parameter isRequired: Whether the view will require a value to be entered before proceeding. Defaults to true.
+    /// - Note: When using ``AuthenticationFlow/userChoice(preferredAuthFactor:passkeyPrompts:)``, the password confirmation field can be made optional by setting `isRequired: false`.
+    ///         However, when using ``AuthenticationFlow/password``, the password confirmation field will always be required regardless of this parameter.
     static func confirmPassword(isRequired: Bool = true) -> SignUpField {
         return signUpField(
             label: "authenticator.field.confirmPassword.label".localized(),

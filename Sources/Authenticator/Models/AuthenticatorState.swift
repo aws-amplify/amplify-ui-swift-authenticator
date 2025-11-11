@@ -25,6 +25,7 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
     let configuration: CognitoConfiguration
     private(set) var signedOutStep: Step = .signIn
     var authenticationService: AuthenticationService = .default
+    var authenticationFlow: AuthenticationFlow = .password
     private var signOutToken: UnsubscribeToken?
 
     init() {
