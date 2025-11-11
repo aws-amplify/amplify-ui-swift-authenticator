@@ -305,5 +305,149 @@ class AuthenticatorBaseStateTests: XCTestCase {
         XCTAssertEqual(authenticatorError.style, .error)
         XCTAssertEqual(authenticatorError.content, "authenticator.unknownError".localized())
     }
+    
+    // MARK: - Auth Factor Selection Tests
+    
+    func testNextStep_forSignIn_withContinueSignInWithFirstFactorSelection_shouldReturnSignInSelectAuthFactor() async throws {
+        let availableFactors: Set<AuthFactorType> = [.passwordSRP, .emailOTP, .smsOTP]
+        let result = AuthSignInResult(nextStep: .continueSignInWithFirstFactorSelection(availableFactors))
+        
+        let nextStep = try await state.nextStep(for: result)
+        
+        guard case .signInSelectAuthFactor(let authFactors) = nextStep else {
+            XCTFail("Expected next step to be signInSelectAuthFactor, was \(nextStep)")
+            return
+        }
+        
+        XCTAssertEqual(authFactors.count, 3)
+        
+        // Verify passwordSRP was translated to password(srp: true)
+        XCTAssertTrue(authFactors.contains(where: {
+            if case .password(let srp) = $0 {
+                return srp == true
+            }
+            return false
+        }))
+        
+        // Verify emailOTP was translated
+        XCTAssertTrue(authFactors.contains(where: {
+            if case .emailOtp = $0 { return true }
+            return false
+        }))
+        
+        // Verify smsOTP was translated
+        XCTAssertTrue(authFactors.contains(where: {
+            if case .smsOtp = $0 { return true }
+            return false
+        }))
+    }
+    
+    func testNextStep_forSignIn_withContinueSignInWithFirstFactorSelection_withPassword_shouldTranslateToPasswordWithoutSRP() async throws {
+        let availableFactors: Set<AuthFactorType> = [.password]
+        let result = AuthSignInResult(nextStep: .continueSignInWithFirstFactorSelection(availableFactors))
+        
+        let nextStep = try await state.nextStep(for: result)
+        
+        guard case .signInSelectAuthFactor(let authFactors) = nextStep else {
+            XCTFail("Expected next step to be signInSelectAuthFactor, was \(nextStep)")
+            return
+        }
+        
+        XCTAssertEqual(authFactors.count, 1)
+        
+        // Verify password was translated to password(srp: false)
+        if case .password(let srp) = authFactors[0] {
+            XCTAssertFalse(srp, "Expected SRP to be false for .password")
+        } else {
+            XCTFail("Expected password auth factor")
+        }
+    }
+    
+    func testNextStep_forSignIn_withContinueSignInWithFirstFactorSelection_withWebAuthn_shouldTranslateToWebAuthn() async throws {
+        #if os(iOS) || os(macOS) || os(visionOS)
+        if #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) {
+            let availableFactors: Set<AuthFactorType> = [.webAuthn]
+            let result = AuthSignInResult(nextStep: .continueSignInWithFirstFactorSelection(availableFactors))
+            
+            let nextStep = try await state.nextStep(for: result)
+            
+            guard case .signInSelectAuthFactor(let authFactors) = nextStep else {
+                XCTFail("Expected next step to be signInSelectAuthFactor, was \(nextStep)")
+                return
+            }
+            
+            XCTAssertEqual(authFactors.count, 1)
+            XCTAssertTrue(authFactors.contains(where: {
+                if case .webAuthn = $0 { return true }
+                return false
+            }))
+        }
+        #endif
+    }
+    
+    func testNextStep_forSignIn_withContinueSignInWithFirstFactorSelection_withAllFactors_shouldTranslateAll() async throws {
+        var availableFactors: Set<AuthFactorType> = [.password, .passwordSRP, .emailOTP, .smsOTP]
+        
+        #if os(iOS) || os(macOS) || os(visionOS)
+        if #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) {
+            availableFactors.insert(.webAuthn)
+        }
+        #endif
+        
+        let result = AuthSignInResult(nextStep: .continueSignInWithFirstFactorSelection(availableFactors))
+        
+        let nextStep = try await state.nextStep(for: result)
+        
+        guard case .signInSelectAuthFactor(let authFactors) = nextStep else {
+            XCTFail("Expected next step to be signInSelectAuthFactor, was \(nextStep)")
+            return
+        }
+        
+        #if os(iOS) || os(macOS) || os(visionOS)
+        if #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) {
+            XCTAssertEqual(authFactors.count, 5)
+            XCTAssertTrue(authFactors.contains(where: {
+                if case .webAuthn = $0 { return true }
+                return false
+            }))
+        } else {
+            XCTAssertEqual(authFactors.count, 4)
+        }
+        #else
+        XCTAssertEqual(authFactors.count, 4)
+        #endif
+        
+        // Verify all factors were translated
+        XCTAssertTrue(authFactors.contains(where: {
+            if case .password(let srp) = $0 { return !srp }
+            return false
+        }))
+        XCTAssertTrue(authFactors.contains(where: {
+            if case .password(let srp) = $0 { return srp }
+            return false
+        }))
+        XCTAssertTrue(authFactors.contains(where: {
+            if case .emailOtp = $0 { return true }
+            return false
+        }))
+        XCTAssertTrue(authFactors.contains(where: {
+            if case .smsOtp = $0 { return true }
+            return false
+        }))
+    }
+    
+    func testNextStep_forSignIn_withContinueSignInWithFirstFactorSelection_withEmptyFactors_shouldReturnEmptyArray() async throws {
+        let availableFactors: Set<AuthFactorType> = []
+        let result = AuthSignInResult(nextStep: .continueSignInWithFirstFactorSelection(availableFactors))
+        
+        let nextStep = try await state.nextStep(for: result)
+        
+        guard case .signInSelectAuthFactor(let authFactors) = nextStep else {
+            XCTFail("Expected next step to be signInSelectAuthFactor, was \(nextStep)")
+            return
+        }
+        
+        XCTAssertEqual(authFactors.count, 0)
+    }
 }
 

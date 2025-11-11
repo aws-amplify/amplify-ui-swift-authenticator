@@ -22,6 +22,13 @@ class MockAuthenticationService: AuthenticationService {
     func signIn(username: String?, password: String?, options: AuthSignInRequest.Options?) async throws -> AuthSignInResult {
         signInCount += 1
         if let mockedSignInResult = mockedSignInResult {
+            // If sign-in is successful (.done), set the current user
+            if case .done = mockedSignInResult.nextStep {
+                mockedCurrentUser = User(
+                    username: username ?? "test@example.com",
+                    userId: "user-123"
+                )
+            }
             return mockedSignInResult
         }
 

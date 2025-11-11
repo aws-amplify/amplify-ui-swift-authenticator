@@ -122,7 +122,7 @@ struct ContentView: View {
 
         Authenticator(
             initialStep: initialStep,
-            authenticationFlow: .userChoice() // Testing UserChoice with no preferred auth factor
+            authenticationFlow: .userChoice(preferredAuthFactor: .password(), passkeyPrompts: .init(afterSignUp: .always, afterSignIn: .always)) // Testing UserChoice with no preferred auth factor
         ) { state in
             VStack {
                 Text("Hello, \(state.user.username)")

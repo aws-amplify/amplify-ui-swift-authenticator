@@ -47,6 +47,10 @@ public class AuthenticatorBaseState: ObservableObject {
     var configuration: CognitoConfiguration {
         return authenticatorState.configuration
     }
+    
+    var authenticationFlow: AuthenticationFlow {
+        return authenticatorState.authenticationFlow
+    }
 
     func setBusy(_ isBusy: Bool) {
         DispatchQueue.main.async {
@@ -122,6 +126,32 @@ public class AuthenticatorBaseState: ObservableObject {
             return .continueSignInWithMFASetupSelection(allowedMFATypes: allowedMFATypes)
         case .continueSignInWithEmailMFASetup:
             return .continueSignInWithEmailMFASetup
+        case .continueSignInWithFirstFactorSelection(let availableFactors):
+            // Translate Amplify AuthFactorType to Authenticator AuthFactor
+            let authFactors = availableFactors.compactMap { factorType -> AuthFactor? in
+                switch factorType {
+                case .password:
+                    return .password(srp: false)
+                case .passwordSRP:
+                    return .password(srp: true)
+                case .smsOTP:
+                    return .smsOtp
+                case .emailOTP:
+                    return .emailOtp
+                #if os(iOS) || os(macOS) || os(visionOS)
+                case .webAuthn:
+                    if #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) {
+                        return .webAuthn
+                    } else {
+                        return nil
+                    }
+                #endif
+                @unknown default:
+                    log.verbose("Unknown auth factor type: \(factorType)")
+                    return nil
+                }
+            }
+            return .signInSelectAuthFactor(availableAuthFactors: authFactors)
         default:
             throw AuthError.unknown("Unsupported next step: \(result.nextStep)", nil)
         }

@@ -34,10 +34,14 @@ public class SignInState: AuthenticatorBaseState {
 
         do {
             log.verbose("Attempting to Sign In")
+            
+            // Translate AuthenticationFlow to Amplify AuthFlowType
+            let signInOptions = createSignInOptions()
+            
             let result = try await authenticationService.signIn(
                 username: username.isEmpty ? nil : username,
                 password: password.isEmpty ? nil : password,
-                options: nil
+                options: signInOptions
             )
             let nextStep = try await nextStep(for: result)
             setBusy(false)
@@ -47,6 +51,53 @@ public class SignInState: AuthenticatorBaseState {
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError
+        }
+    }
+    
+    /// Creates sign-in options based on the authentication flow configuration
+    private func createSignInOptions() -> AuthSignInRequest.Options? {
+        switch authenticationFlow {
+        case .password:
+            // Use standard SRP flow for password-only authentication
+            return .init(pluginOptions: AWSAuthSignInOptions(authFlowType: .userSRP))
+            
+        case .userChoice(let preferredAuthFactor, _):
+            // Translate AuthFactor to AuthFactorType
+            let preferredFirstFactor: AuthFactorType?
+            if let preferredAuthFactor = preferredAuthFactor {
+                preferredFirstFactor = translateAuthFactor(preferredAuthFactor)
+            } else {
+                preferredFirstFactor = nil
+            }
+            
+            // Use userAuth flow for user choice authentication
+            return .init(pluginOptions: AWSAuthSignInOptions(
+                authFlowType: .userAuth(preferredFirstFactor: preferredFirstFactor)
+            ))
+        }
+    }
+    
+    /// Translates AuthFactor to Amplify AuthFactorType
+    private func translateAuthFactor(_ authFactor: AuthFactor) -> AuthFactorType {
+        switch authFactor {
+        case .password(let srp):
+            return srp ? .passwordSRP : .password
+        case .emailOtp:
+            return .emailOTP
+        case .smsOtp:
+            return .smsOTP
+        case .webAuthn:
+            #if os(iOS) || os(macOS) || os(visionOS)
+            if #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) {
+                return .webAuthn
+            } else {
+                // Fallback to password if WebAuthn not available
+                return .passwordSRP
+            }
+            #else
+            // Fallback to password on unsupported platforms
+            return .passwordSRP
+            #endif
         }
     }
 
