@@ -36,6 +36,7 @@ public struct Authenticator<LoadingContent: View,
     @State private var previousStep: Step = .loading
     private var initialStep: AuthenticatorInitialStep
     private var totpOptions: TOTPOptions
+    private var authenticationFlow: AuthenticationFlow
     private var viewModifiers = ViewModifiers()
     private var contentStates: NSHashTable<AuthenticatorBaseState> = .weakObjects()
     private let loadingContent: LoadingContent
@@ -65,6 +66,8 @@ public struct Authenticator<LoadingContent: View,
     /// Defaults to ``AuthenticatorInitialStep/signIn``
     /// - Parameter totpOptions: The TOTP Options that would be used by the Authenticator
     /// Defaults to ``.init()``
+    /// - Parameter authenticationFlow: The authentication flow configuration
+    /// Defaults to ``.password``
     /// - Parameter loadingContent: The content that is associated with the ``AuthenticatorStep/loading`` step.
     /// Defaults to a `SwiftUI.ProgressView`.
     /// - Parameter signInContent: The content associated with the ``AuthenticatorStep/signIn`` step.
@@ -109,6 +112,7 @@ public struct Authenticator<LoadingContent: View,
     public init(
         initialStep: AuthenticatorInitialStep = .signIn,
         totpOptions: TOTPOptions = .init(),
+        authenticationFlow: AuthenticationFlow = .password,
         @ViewBuilder loadingContent: () -> LoadingContent = {
             ProgressView()
         },
@@ -169,6 +173,7 @@ public struct Authenticator<LoadingContent: View,
     ) {
         self.initialStep = initialStep
         self.totpOptions = totpOptions
+        self.authenticationFlow = authenticationFlow
         self.loadingContent = loadingContent()
         let credentials = Credentials()
 
