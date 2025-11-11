@@ -25,9 +25,17 @@ class MockAuthenticationService: AuthenticationService {
     }
 
     var confirmSignInCount = 0
+    var confirmSignInChallengeResponse: String?
     var mockedConfirmSignInResult: AuthSignInResult?
+    var mockedConfirmSignInError: Error?
     func confirmSignIn(challengeResponse: String, options: AuthConfirmSignInRequest.Options?) async throws -> AuthSignInResult {
         confirmSignInCount += 1
+        confirmSignInChallengeResponse = challengeResponse
+        
+        if let mockedConfirmSignInError = mockedConfirmSignInError {
+            throw mockedConfirmSignInError
+        }
+        
         if let mockedConfirmSignInResult = mockedConfirmSignInResult {
             return mockedConfirmSignInResult
         }

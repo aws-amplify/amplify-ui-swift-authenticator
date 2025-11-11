@@ -44,7 +44,14 @@ enum SignInNextStepForTesting: String, CaseIterable, Identifiable {
         case .customAuth:
             return .confirmSignInWithCustomChallenge(nil)
         case .continueSignInWithFirstFactorSelection:
-            return .continueSignInWithFirstFactorSelection([.emailOTP, .smsOTP, .password, .passwordSRP, .webAuthn])
+            // WebAuthn is only available in iOS 17.4+, macOS 13.5+, visionOS 1.0+
+            var availableFactors: Set<AuthFactorType> = [.emailOTP, .smsOTP, .password, .passwordSRP]
+            #if os(iOS) || os(macOS) || os(visionOS)
+            if #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) {
+                availableFactors.insert(.webAuthn)
+            }
+            #endif
+            return .continueSignInWithFirstFactorSelection(availableFactors)
         case .confirmSignInWithOTP:
             return .confirmSignInWithOTP(.init(destination: .email("tst@example.com")))
         case .confirmSignInWithPassword:

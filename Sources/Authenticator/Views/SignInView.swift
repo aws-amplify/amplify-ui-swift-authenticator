@@ -164,10 +164,7 @@ public struct SignInView<Header: View,
             return true
         case .userChoice(let preferredAuthFactor, _):
             // Show password field only if password is the preferred auth factor
-            if case .password = preferredAuthFactor {
-                return true
-            }
-            return false
+            return preferredAuthFactor?.isPassword ?? false
         }
     }
     
@@ -179,7 +176,7 @@ public struct SignInView<Header: View,
             return "authenticator.field.password.label".localized()
         case .userChoice(let preferredAuthFactor, _):
             // Password is optional when it's the preferred factor in userChoice
-            if case .password = preferredAuthFactor {
+            if preferredAuthFactor?.isPassword == true {
                 return "authenticator.field.label.optional".localized(
                     using: "authenticator.field.password.label".localized()
                 )

@@ -50,11 +50,8 @@ public struct SignInSelectAuthFactorView<Header: View,
             )
             .disabled(true)
 
-            // TODO: Implement auth factor selection UI
-            // This should display available auth factors and allow selection
-            
-            // Show password field if password-based auth factor is selected
-            if case .password = state.selectedAuthFactor {
+            // Show password field if password is one of the available factors
+            if state.availableAuthFactors.containsPassword {
                 PasswordField(
                     "authenticator.field.password.label".localized(),
                     text: $state.password,
@@ -65,21 +62,49 @@ public struct SignInSelectAuthFactorView<Header: View,
             #if os(iOS)
                 .textInputAutocapitalization(.never)
             #endif
-            }
-
-            Button("authenticator.signIn.button.signIn".localized()) {
-                Task {
-                    await selectAuthFactor()
+                
+                Button("authenticator.signInSelectAuthFactor.button.signInWithPassword".localized()) {
+                    Task {
+                        await signInWithPassword()
+                    }
                 }
+                .buttonStyle(.primary)
             }
-            .buttonStyle(.primary)
+            
+            // Show separator if password is available and there are other factors
+            if state.availableAuthFactors.containsPassword &&
+               state.availableAuthFactors.count > 1 {
+                HStack {
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(theme.colors.border.primary)
+                    Text("authenticator.signInSelectAuthFactor.separator.or".localized())
+                        .font(theme.fonts.body)
+                        .foregroundColor(theme.colors.border.primary)
+                        .padding(.horizontal, 8)
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(theme.colors.border.primary)
+                }
+                .padding(.vertical, 8)
+            }
+            
+            // Show buttons for other auth factors
+            ForEach(state.availableAuthFactors.nonPasswordFactors, id: \.self) { factor in
+                Button(buttonTitle(for: factor)) {
+                    Task {
+                        await selectAuthFactor(factor)
+                    }
+                }
+                .buttonStyle(.primary)
+            }
 
             footerContent
         }
         .messageBanner($state.message)
         .onSubmit {
             Task {
-                await selectAuthFactor()
+                await signInWithPassword()
             }
         }
     }
@@ -91,20 +116,38 @@ public struct SignInSelectAuthFactorView<Header: View,
         return self
     }
 
-    private func selectAuthFactor() async {
-        guard let selectedFactor = state.selectedAuthFactor else {
-            log.verbose("No auth factor selected")
+    private func signInWithPassword() async {
+        guard passwordValidator.validate() else {
+            log.verbose("Password validation failed")
             return
         }
         
-        if case .password = selectedFactor {
-            guard passwordValidator.validate() else {
-                log.verbose("Password validation failed")
-                return
-            }
+        // Find the preferred password auth factor (prefers SRP over non-SRP)
+        guard let passwordFactor = state.availableAuthFactors.preferredPasswordFactor else {
+            log.verbose("Password auth factor not available")
+            return
         }
 
+        state.selectedAuthFactor = passwordFactor
         try? await state.selectAuthFactor()
+    }
+    
+    private func selectAuthFactor(_ factor: AuthFactor) async {
+        state.selectedAuthFactor = factor
+        try? await state.selectAuthFactor()
+    }
+    
+    private func buttonTitle(for factor: AuthFactor) -> String {
+        switch factor {
+        case .password:
+            return "authenticator.signInSelectAuthFactor.button.signInWithPassword".localized()
+        case .emailOtp:
+            return "authenticator.signInSelectAuthFactor.button.signInWithEmail".localized()
+        case .smsOtp:
+            return "authenticator.signInSelectAuthFactor.button.signInWithSMS".localized()
+        case .webAuthn:
+            return "authenticator.signInSelectAuthFactor.button.signInWithPasskey".localized()
+        }
     }
 }
 

@@ -62,42 +62,13 @@ public class SignInState: AuthenticatorBaseState {
             return .init(pluginOptions: AWSAuthSignInOptions(authFlowType: .userSRP))
             
         case .userChoice(let preferredAuthFactor, _):
-            // Translate AuthFactor to AuthFactorType
-            let preferredFirstFactor: AuthFactorType?
-            if let preferredAuthFactor = preferredAuthFactor {
-                preferredFirstFactor = translateAuthFactor(preferredAuthFactor)
-            } else {
-                preferredFirstFactor = nil
-            }
+            // Use the AuthFactor extension to translate to AuthFactorType
+            let preferredFirstFactor = preferredAuthFactor?.toAuthFactorType()
             
             // Use userAuth flow for user choice authentication
             return .init(pluginOptions: AWSAuthSignInOptions(
                 authFlowType: .userAuth(preferredFirstFactor: preferredFirstFactor)
             ))
-        }
-    }
-    
-    /// Translates AuthFactor to Amplify AuthFactorType
-    private func translateAuthFactor(_ authFactor: AuthFactor) -> AuthFactorType {
-        switch authFactor {
-        case .password(let srp):
-            return srp ? .passwordSRP : .password
-        case .emailOtp:
-            return .emailOTP
-        case .smsOtp:
-            return .smsOTP
-        case .webAuthn:
-            #if os(iOS) || os(macOS) || os(visionOS)
-            if #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) {
-                return .webAuthn
-            } else {
-                // Fallback to password if WebAuthn not available
-                return .passwordSRP
-            }
-            #else
-            // Fallback to password on unsupported platforms
-            return .passwordSRP
-            #endif
         }
     }
 

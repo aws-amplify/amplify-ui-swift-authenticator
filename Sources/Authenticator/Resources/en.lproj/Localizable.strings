@@ -64,6 +64,15 @@
 "authenticator.signIn.button.signIn" = "Sign In";
 "authenticator.signIn.button.createAccount" = "Create account";
 
+/* Sign In Select Auth Factor view */
+"authenticator.signInSelectAuthFactor.title" = "Choose how to sign in";
+"authenticator.signInSelectAuthFactor.separator.or" = "or";
+"authenticator.signInSelectAuthFactor.button.signInWithPassword" = "Sign In with Password";
+"authenticator.signInSelectAuthFactor.button.signInWithEmail" = "Sign In with Email";
+"authenticator.signInSelectAuthFactor.button.signInWithSMS" = "Sign In with SMS";
+"authenticator.signInSelectAuthFactor.button.signInWithPasskey" = "Sign In with Passkey";
+"authenticator.signInSelectAuthFactor.button.backToSignIn" = "Back to Sign In";
+
 /* Confirm Sign In with Password view */
 "authenticator.confirmSignInWithNewPassword.title" = "Set a new password";
 "authenticator.confirmSignInWithNewPassword.button.submit" = "Submit";

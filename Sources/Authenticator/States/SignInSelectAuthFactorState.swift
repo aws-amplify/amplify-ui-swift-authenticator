@@ -6,6 +6,7 @@
 //
 
 import Amplify
+import AWSCognitoAuthPlugin
 import SwiftUI
 
 /// The state observed by the Sign In Select Auth Factor content view, representing the ``Authenticator`` is in the ``AuthenticatorStep/signInSelectAuthFactor`` step.
@@ -26,7 +27,7 @@ public class SignInSelectAuthFactorState: AuthenticatorBaseState {
     }
     
     /// The available authentication factors for this user
-    public let availableAuthFactors: [AuthFactor]
+    public var availableAuthFactors: [AuthFactor]
     
     init(credentials: Credentials, availableAuthFactors: [AuthFactor]) {
         self.availableAuthFactors = availableAuthFactors
@@ -45,13 +46,55 @@ public class SignInSelectAuthFactorState: AuthenticatorBaseState {
     /// ``AuthenticatorBaseState/isBusy`` and ``AuthenticatorBaseState/message`` properties.
     /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func selectAuthFactor() async throws {
+        guard let factor = selectedAuthFactor else {
+            log.verbose("No auth factor selected")
+            setBusy(false)
+            return
+        }
+        
         setBusy(true)
         
-        // TODO: Implement selectAuthFactor logic
-        // This should call the appropriate sign-in method based on selectedAuthFactor
-        // For now, throw an error
-        setBusy(false)
-        fatalError("selectAuthFactor not yet implemented")
+        do {
+            log.verbose("Selecting auth factor: \(factor)")
+            
+            let result: AuthSignInResult
+            
+            switch factor {
+            case .password:
+                // Sign in with password using confirmSignIn API
+                result = try await authenticationService.confirmSignIn(
+                    challengeResponse: password,
+                    options: nil
+                )
+                
+            case .emailOtp, .smsOtp:
+                // Select the auth factor and move to appropriate next step
+                // Use the AuthFactor extension to get the challenge response
+                let challengeResponse = factor.toAuthFactorType().challengeResponse
+                
+                result = try await authenticationService.confirmSignIn(
+                    challengeResponse: challengeResponse,
+                    options: nil
+                )
+                
+            case .webAuthn:
+                // TODO: Implement WebAuthn sign-in
+                // This will show the native WebAuthn UI
+                setBusy(false)
+                log.verbose("WebAuthn sign-in not yet implemented")
+                setMessage(.error(message: "WebAuthn sign-in is not yet implemented"))
+                return
+            }
+            
+            let nextStep = try await nextStep(for: result)
+            setBusy(false)
+            authenticatorState.setCurrentStep(nextStep)
+        } catch {
+            log.error("Unable to select auth factor")
+            let authenticationError = self.error(for: error)
+            setMessage(authenticationError)
+            throw authenticationError
+        }
     }
     
     /// Manually moves the Authenticator to a different initial step
