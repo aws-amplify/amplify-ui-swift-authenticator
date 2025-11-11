@@ -33,6 +33,9 @@ public enum AuthUITestSignInStep: Codable {
     case continueSignInWithMFASetupSelection
     case continueSignInWithEmailMFASetup
     case confirmSignInWithEmailMFACode
+    case continueSignInWithFirstFactorSelection
+    case confirmSignInWithOTP
+    case confirmSignInWithPassword
     case resetPassword
     case confirmSignUp
     case done

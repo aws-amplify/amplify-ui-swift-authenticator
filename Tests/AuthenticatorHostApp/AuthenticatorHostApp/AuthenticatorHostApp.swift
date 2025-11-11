@@ -89,6 +89,12 @@ struct AuthenticatorHostApp: App {
             return .continueSignInWithEmailMFASetup
         case .confirmSignInWithEmailMFACode:
             return .confirmSignInWithOTP(.init(destination: .email("test@amazon.com")))
+        case .continueSignInWithFirstFactorSelection:
+            return .continueSignInWithFirstFactorSelection([.emailOTP, .smsOTP, .password, .passwordSRP, .webAuthn])
+        case .confirmSignInWithOTP:
+            return .confirmSignInWithOTP(.init(destination: .email("test@amazon.com")))
+        case .confirmSignInWithPassword:
+            return .confirmSignInWithPassword
         case .resetPassword:
             return .resetPassword(nil)
         case .confirmSignUp:

@@ -19,6 +19,9 @@ enum SignInNextStepForTesting: String, CaseIterable, Identifiable {
     case confirmSignInWithPhoneMFACode = "Confirm with Phone MFA Code"
     case confirmSignInWithTOTP = "Confirm with TOTP"
     case customAuth = "Confirm sign in with Custom Auth"
+    case continueSignInWithFirstFactorSelection = "Sign In Select Auth Factor"
+    case confirmSignInWithOTP = "Confirm Sign In with OTP"
+    case confirmSignInWithPassword = "Confirm Sign In with Password"
 
     var id: String { self.rawValue }
 
@@ -40,6 +43,12 @@ enum SignInNextStepForTesting: String, CaseIterable, Identifiable {
             return .confirmSignInWithTOTPCode
         case .customAuth:
             return .confirmSignInWithCustomChallenge(nil)
+        case .continueSignInWithFirstFactorSelection:
+            return .continueSignInWithFirstFactorSelection([.emailOTP, .smsOTP, .password, .passwordSRP, .webAuthn])
+        case .confirmSignInWithOTP:
+            return .confirmSignInWithOTP(.init(destination: .email("tst@example.com")))
+        case .confirmSignInWithPassword:
+            return .confirmSignInWithPassword
         }
     }
 }
@@ -95,8 +104,6 @@ struct ContentView: View {
 #endif
 
     }
-
-
 
     private var signUpFields: [SignUpField] {
         return []
