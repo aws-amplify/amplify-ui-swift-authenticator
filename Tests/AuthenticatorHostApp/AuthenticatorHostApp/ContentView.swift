@@ -84,7 +84,10 @@ struct ContentView: View {
             }
         }
 
-        Authenticator(initialStep: initialStep) { state in
+        Authenticator(
+            initialStep: initialStep,
+            authenticationFlow: .userChoice(preferredAuthFactor: .password()) // Testing UserChoice with no preferred auth factor
+        ) { state in
             VStack {
                 Text("Hello, \(state.user.username)")
                 Button("Sign out") {
@@ -106,6 +109,8 @@ struct ContentView: View {
     }
 
     private var signUpFields: [SignUpField] {
-        return []
+        return [
+            .email(isRequired: true),
+        ]
     }
 }
