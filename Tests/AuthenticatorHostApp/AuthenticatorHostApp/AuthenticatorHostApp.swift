@@ -30,6 +30,9 @@ struct AuthenticatorHostApp: App {
     }
 
     init() {
+        // Configure email as the username attribute
+        factory.setUserAtributes([.email])
+        
         processUITestLaunchArguments()
         do {
             try Amplify.add(plugin: AWSCognitoAuthPlugin())

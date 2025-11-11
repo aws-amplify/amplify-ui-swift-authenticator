@@ -66,7 +66,40 @@ struct ContentView: View {
         self.hidesSignUpButton = hidesSignUpButton
         self.initialStep = initialStep
         self.shouldUsePickerForTestingSteps = shouldUsePickerForTestingSteps
+        
+        // Configure mocks for testing
+        configureMocksForPasswordlessTesting()
+        
         MockAuthenticationService.shared.mockedSignInResult = .init(nextStep: authSignInStep)
+    }
+    
+    // MARK: - Mock Configuration Methods
+    
+    /// Configure mocks for passwordless authentication testing
+    private func configureMocksForPasswordlessTesting() {
+        let mockService = MockAuthenticationService.shared
+        
+        // Mock successful sign up with confirmation required
+        mockService.mockedSignUpResult = AuthSignUpResult(
+            .confirmUser(
+                AuthCodeDeliveryDetails(destination: .email("test@example.com")),
+                nil,
+                "user-123"
+            ),
+            userID: "user-123"
+        )
+        
+        // Mock successful confirm sign up with auto sign-in
+        mockService.mockedConfirmSignUpResult = AuthSignUpResult(
+            .completeAutoSignIn("mock-session-token"),
+            userID: "user-123"
+        )
+        
+//        // Mock current user for signed-in state
+//        mockService.mockedCurrentUser = MockAuthenticationService.User(
+//            username: "test@example.com",
+//            userId: "user-123"
+//        )
     }
 
     var body: some View {
@@ -86,7 +119,7 @@ struct ContentView: View {
 
         Authenticator(
             initialStep: initialStep,
-            authenticationFlow: .userChoice(preferredAuthFactor: .password()) // Testing UserChoice with no preferred auth factor
+            authenticationFlow: .userChoice() // Testing UserChoice with no preferred auth factor
         ) { state in
             VStack {
                 Text("Hello, \(state.user.username)")
