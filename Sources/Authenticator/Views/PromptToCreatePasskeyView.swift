@@ -45,13 +45,11 @@ public struct PromptToCreatePasskeyView<Header: View,
                 .multilineTextAlignment(.leading)
                 .padding(.bottom, 16)
 
-            // Passkey illustration/icon placeholder
-            // TODO: Add actual passkey illustration
-            Image(systemName: "person.badge.key.fill")
+            // Passkey illustration
+            Image("passkey", bundle: .module)
                 .resizable()
                 .scaledToFit()
                 .frame(height: 120)
-                .foregroundColor(theme.colors.border.primary)
                 .padding(.vertical, 24)
 
             Button("authenticator.promptToCreatePasskey.button.createPasskey".localized()) {
