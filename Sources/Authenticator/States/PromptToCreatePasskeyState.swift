@@ -28,10 +28,33 @@ public class PromptToCreatePasskeyState: AuthenticatorBaseState {
     public func createPasskey() async throws {
         setBusy(true)
         
-        // TODO: Implement createPasskey logic
-        // This should call the passkey creation API
-        setBusy(false)
-        fatalError("createPasskey not yet implemented")
+        do {
+            log.verbose("Attempting to create passkey")
+            
+            // Call Amplify WebAuthn API to associate a passkey credential
+            if #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) {
+                try await authenticationService.associateWebAuthnCredential(
+                    presentationAnchor: nil,
+                    options: nil
+                )
+            } else {
+                throw AuthError.configuration(
+                    "WebAuthn is not supported on this platform",
+                    "WebAuthn requires iOS 17.4+, macOS 13.5+, or visionOS 1.0+",
+                    nil
+                )
+            }
+            
+            log.verbose("Passkey created successfully")
+            setBusy(false)
+            authenticatorState.setCurrentStep(.passkeyCreated)
+        } catch {
+            log.error("Passkey creation failed: \(error)")
+            setBusy(false)
+            let authenticationError = self.error(for: error)
+            setMessage(authenticationError)
+            throw authenticationError
+        }
     }
     
     /// Skips passkey creation and continues with the authentication flow
@@ -42,9 +65,19 @@ public class PromptToCreatePasskeyState: AuthenticatorBaseState {
     public func skip() async throws {
         setBusy(true)
         
-        // TODO: Implement skip logic
-        // This should move to the next appropriate step without creating a passkey
-        setBusy(false)
-        fatalError("skip not yet implemented")
+        do {
+            log.verbose("Skipping passkey creation")
+            // Use post-passkey logic (attribute verification and sign-in)
+            let nextStep = try await nextStepAfterPasskeyFlow()
+            
+            setBusy(false)
+            authenticatorState.setCurrentStep(nextStep)
+        } catch {
+            log.error("Skip passkey creation failed")
+            setBusy(false)
+            let authenticationError = self.error(for: error)
+            setMessage(authenticationError)
+            throw authenticationError
+        }
     }
 }

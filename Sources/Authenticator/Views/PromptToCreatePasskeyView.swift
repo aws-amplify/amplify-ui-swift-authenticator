@@ -39,10 +39,20 @@ public struct PromptToCreatePasskeyView<Header: View,
         AuthenticatorView(isBusy: state.isBusy) {
             headerContent
             
-            // TODO: Add passkey creation explanation/instructions
             Text("authenticator.promptToCreatePasskey.description".localized())
                 .font(theme.fonts.body)
-                .padding(.vertical)
+                .foregroundColor(theme.colors.foreground.primary)
+                .multilineTextAlignment(.leading)
+                .padding(.bottom, 16)
+
+            // Passkey illustration/icon placeholder
+            // TODO: Add actual passkey illustration
+            Image(systemName: "person.badge.key.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 120)
+                .foregroundColor(theme.colors.border.primary)
+                .padding(.vertical, 24)
 
             Button("authenticator.promptToCreatePasskey.button.createPasskey".localized()) {
                 Task {

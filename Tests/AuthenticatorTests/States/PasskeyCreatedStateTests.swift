@@ -9,6 +9,7 @@ import Amplify
 @testable import Authenticator
 import XCTest
 
+@available(iOS 17.4, macOS 13.5, visionOS 1.0, *)
 class PasskeyCreatedStateTests: XCTestCase {
     private var state: PasskeyCreatedState!
     private var authenticatorState: MockAuthenticatorState!
@@ -28,59 +29,62 @@ class PasskeyCreatedStateTests: XCTestCase {
         authenticationService = nil
     }
 
-    // TODO: Implement test for continue with success
-    func testContinue_withSuccess_shouldTransitionToSignedIn() async throws {
-        // TODO: Mock successful continuation
-        // authenticationService.mockedCurrentUser = MockAuthenticationService.User(
-        //     username: "username",
-        //     userId: "userId"
-        // )
-        // try await state.continue()
-        // XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
-        // let currentStep = try XCTUnwrap(authenticatorState.setCurrentStepValue)
-        // guard case .signedIn(_) = currentStep else {
-        //     XCTFail("Expected signedIn, was \(currentStep)")
-        //     return
-        // }
-        XCTExpectFailure("Test not yet implemented")
-        XCTFail("Test not yet implemented")
+    /// Given: A PasskeyCreatedState
+    /// When: continue is called with no unverified attributes
+    /// Then: Should transition to signedIn step
+    func testContinue_withNoUnverifiedAttributes_shouldTransitionToSignedIn() async throws {
+        authenticationService.mockedCurrentUser = MockAuthenticationService.User(
+            username: "username",
+            userId: "userId"
+        )
+        authenticationService.mockedUnverifiedAttributes = []
+        
+        try await state.continue()
+        
+        XCTAssertEqual(authenticationService.fetchUserAttributesCount, 1)
+        XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
+        
+        let currentStep = try XCTUnwrap(authenticatorState.setCurrentStepValue)
+        guard case .signedIn(_) = currentStep else {
+            XCTFail("Expected signedIn, was \(currentStep)")
+            return
+        }
     }
 
-    // TODO: Implement test for continue with error
-    func testContinue_withError_shouldSetErrorMessage() async throws {
-        // TODO: Mock error response
-        // do {
-        //     try await state.continue()
-        //     XCTFail("Should not succeed")
-        // } catch {
-        //     guard let authenticatorError = error as? AuthenticatorError else {
-        //         XCTFail("Expected AuthenticatorError")
-        //         return
-        //     }
-        //     let task = Task { @MainActor in
-        //         XCTAssertNotNil(state.message)
-        //         XCTAssertEqual(state.message?.content, authenticatorError.content)
-        //     }
-        //     await task.value
-        // }
-        XCTExpectFailure("Test not yet implemented")
-        XCTFail("Test not yet implemented")
+    /// Given: A PasskeyCreatedState
+    /// When: continue is called with unverified attributes
+    /// Then: Should transition to verifyUser step
+    func testContinue_withUnverifiedAttributes_shouldTransitionToVerifyUser() async throws {
+        authenticationService.mockedUnverifiedAttributes = [
+            AuthUserAttribute(.phoneNumberVerified, value: "false")
+        ]
+        
+        try await state.continue()
+        
+        XCTAssertEqual(authenticationService.fetchUserAttributesCount, 1)
+        XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
+        
+        let currentStep = try XCTUnwrap(authenticatorState.setCurrentStepValue)
+        guard case .verifyUser(let attributes) = currentStep else {
+            XCTFail("Expected verifyUser, was \(currentStep)")
+            return
+        }
+        XCTAssertEqual(attributes, [.phoneNumber])
     }
 
-    // TODO: Implement test for passkey metadata
-    func testPasskeyMetadata_shouldBeAvailable() {
-        // TODO: Verify passkey creation metadata is accessible
-        // - Creation timestamp
-        // - Passkey ID
-        // - Device information
-        XCTExpectFailure("Test not yet implemented")
-        XCTFail("Test not yet implemented")
-    }
-
-    // TODO: Implement test for multiple passkeys
-    func testMultiplePasskeys_shouldBeSupported() {
-        // TODO: Verify user can have multiple passkeys
-        XCTExpectFailure("Test not yet implemented")
-        XCTFail("Test not yet implemented")
+    /// Given: A PasskeyCreatedState
+    /// When: continue is called and the service returns an error
+    /// Then: An error message should be set
+    func testContinue_withError_shouldSetErrorMessage() async {
+        authenticationService.mockedUnverifiedAttributes = []
+        // Make getCurrentUser throw an error
+        authenticationService.mockedCurrentUser = nil
+        
+        do {
+            try await state.continue()
+            XCTFail("Expected error to be thrown")
+        } catch {
+            XCTAssertNotNil(state.message)
+        }
     }
 }

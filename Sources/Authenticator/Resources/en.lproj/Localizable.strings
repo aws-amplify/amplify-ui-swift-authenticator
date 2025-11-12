@@ -191,6 +191,19 @@
 "authenticator.banner.sendCode" = "A verification code has been sent to %@"; // Argument is the destination where a code was sent. E.g. "axxx@axxx.com"
 "authenticator.banner.sendCodeGeneric" = "A verification code has been sent";
 
+/* Prompt To Create Passkey view */
+"authenticator.promptToCreatePasskey.title" = "Sign in faster with Passkey";
+"authenticator.promptToCreatePasskey.description" = "Passkeys are WebAuthn credentials that validate your identity using biometric data like touch or facial recognition or device authentication like passwords or PINs, serving as a secure password replacement.";
+"authenticator.promptToCreatePasskey.button.createPasskey" = "Create a Passkey";
+"authenticator.promptToCreatePasskey.button.skip" = "Continue without a Passkey";
+
+/* Passkey Created view */
+"authenticator.passkeyCreated.title" = "Passkey created successfully!";
+"authenticator.passkeyCreated.message" = "Passkey created successfully!";
+"authenticator.passkeyCreated.existingPasskeys" = "Existing Passkeys";
+"authenticator.passkeyCreated.unknowName" = "Unknown Provider";
+"authenticator.passkeyCreated.button.continue" = "Continue";
+
 /* Authenticator Error View */
 "authenticator.authenticatorError.title" = "Something went wrong";
 "authenticator.authenticatorError.message" = "There is a configuration problem that is preventing the Authenticator from being displayed.";

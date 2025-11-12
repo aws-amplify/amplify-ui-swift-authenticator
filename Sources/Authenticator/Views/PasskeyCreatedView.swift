@@ -37,12 +37,41 @@ public struct PasskeyCreatedView<Header: View,
 
     public var body: some View {
         AuthenticatorView(isBusy: state.isBusy) {
-            headerContent
+            // Success icon
+            Image(systemName: "checkmark.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 48, height: 48)
+                .foregroundColor(.green)
+                .padding(.top, 24)
+                .padding(.bottom, 8)
             
-            // TODO: Add success message/icon for passkey creation
-            Text("authenticator.passkeyCreated.description".localized())
-                .font(theme.fonts.body)
-                .padding(.vertical)
+            Text("authenticator.passkeyCreated.message".localized())
+                .font(theme.fonts.title)
+                .foregroundColor(theme.colors.foreground.primary)
+                .padding(.bottom, 16)
+            
+            // Existing passkeys section
+            if !state.passkeyCredentials.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("authenticator.passkeyCreated.existingPasskeys".localized())
+                        .font(theme.fonts.subheadline)
+                        .foregroundColor(theme.colors.foreground.secondary)
+                    
+                    ForEach(state.passkeyCredentials, id: \.credentialId) { credential in
+                        HStack {
+                            Text(credential.friendlyName ?? "authenticator.passkeyCreated.unknowName".localized())
+                                .font(theme.fonts.body)
+                                .foregroundColor(theme.colors.foreground.primary)
+                            Spacer()
+                        }
+                        .padding()
+                        .background(theme.colors.background.secondary)
+                        .cornerRadius(8)
+                    }
+                }
+                .padding(.bottom, 24)
+            }
 
             Button("authenticator.passkeyCreated.button.continue".localized()) {
                 Task {
@@ -54,6 +83,11 @@ public struct PasskeyCreatedView<Header: View,
             footerContent
         }
         .messageBanner($state.message)
+        .onAppear {
+            Task {
+                await state.fetchPasskeyCredentials()
+            }
+        }
     }
 
     /// Sets a custom error mapping function for the `AuthError`s that are displayed
@@ -70,13 +104,11 @@ public struct PasskeyCreatedView<Header: View,
 
 extension PasskeyCreatedView: AuthenticatorLogging {}
 
-/// Default header for the ``PasskeyCreatedView``. It displays the view's title
+/// Default header for the ``PasskeyCreatedView``.
 public struct PasskeyCreatedHeader: View {
     public init() {}
     public var body: some View {
-        DefaultHeader(
-            title: "authenticator.passkeyCreated.title".localized()
-        )
+        EmptyView()
     }
 }
 

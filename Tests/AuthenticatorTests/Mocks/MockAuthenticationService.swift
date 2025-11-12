@@ -28,7 +28,7 @@ class MockAuthenticationService: AuthenticationService {
     var confirmSignInChallengeResponse: String?
     var mockedConfirmSignInResult: AuthSignInResult?
     var mockedConfirmSignInError: Error?
-    var confirmSignInHandler: ((String) -> AuthSignInResult)?
+    var confirmSignInHandler: ((String, AuthConfirmSignInRequest.Options?) throws -> AuthSignInResult)?
     func confirmSignIn(challengeResponse: String, options: AuthConfirmSignInRequest.Options?) async throws -> AuthSignInResult {
         confirmSignInCount += 1
         confirmSignInChallengeResponse = challengeResponse
@@ -38,7 +38,7 @@ class MockAuthenticationService: AuthenticationService {
         }
         
         if let confirmSignInHandler = confirmSignInHandler {
-            return confirmSignInHandler(challengeResponse)
+            return try confirmSignInHandler(challengeResponse, options)
         }
         
         if let mockedConfirmSignInResult = mockedConfirmSignInResult {
@@ -185,6 +185,38 @@ class MockAuthenticationService: AuthenticationService {
         return .init(nextStep: .done)
     }
 
+    // MARK: - WebAuthn
+
+    var associateWebAuthnCredentialCount = 0
+    var mockedAssociateWebAuthnCredentialError: Error?
+    @available(iOS 17.4, macOS 13.5, visionOS 1.0, *)
+    func associateWebAuthnCredential(presentationAnchor: AuthUIPresentationAnchor?, options: AuthAssociateWebAuthnCredentialRequest.Options?) async throws {
+        associateWebAuthnCredentialCount += 1
+        if let mockedAssociateWebAuthnCredentialError = mockedAssociateWebAuthnCredentialError {
+            throw mockedAssociateWebAuthnCredentialError
+        }
+        // Success - no return value
+    }
+
+    var listWebAuthnCredentialsCount = 0
+    var mockedWebAuthnCredentials: [AuthWebAuthnCredential] = []
+    @available(iOS 17.4, macOS 13.5, visionOS 1.0, *)
+    func listWebAuthnCredentials(options: AuthListWebAuthnCredentialsRequest.Options?) async throws -> AuthListWebAuthnCredentialsResult {
+        listWebAuthnCredentialsCount += 1
+        return AuthListWebAuthnCredentialsResult(credentials: mockedWebAuthnCredentials, nextToken: nil)
+    }
+
+    var deleteWebAuthnCredentialCount = 0
+    var mockedDeleteWebAuthnCredentialError: Error?
+    @available(iOS 17.4, macOS 13.5, visionOS 1.0, *)
+    func deleteWebAuthnCredential(credentialId: String, options: AuthDeleteWebAuthnCredentialRequest.Options?) async throws {
+        deleteWebAuthnCredentialCount += 1
+        if let mockedDeleteWebAuthnCredentialError = mockedDeleteWebAuthnCredentialError {
+            throw mockedDeleteWebAuthnCredentialError
+        }
+        // Success - no return value
+    }
+
     // MARK: - User management
 
     func fetchAuthSession(options: AuthFetchSessionRequest.Options?) async throws -> AuthSession {
@@ -220,20 +252,6 @@ class MockAuthenticationService: AuthenticationService {
     }
 
     func verifyTOTPSetup(code: String, options: VerifyTOTPSetupRequest.Options?) async throws {}
-
-    // MARK: - WebAuthn
-
-    func associateWebAuthnCredential(presentationAnchor: AuthUIPresentationAnchor?, options: AuthAssociateWebAuthnCredentialRequest.Options?) async throws {
-        fatalError("Unsupported operation in Authenticator")
-    }
-
-    func listWebAuthnCredentials(options: AuthListWebAuthnCredentialsRequest.Options?) async throws -> AuthListWebAuthnCredentialsResult {
-        fatalError("Unsupported operation in Authenticator")
-    }
-
-    func deleteWebAuthnCredential(credentialId: String, options: AuthDeleteWebAuthnCredentialRequest.Options?) async throws {
-        fatalError("Unsupported operation in Authenticator")
-    }
 }
 
 extension MockAuthenticationService {
