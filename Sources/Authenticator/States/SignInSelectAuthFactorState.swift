@@ -71,12 +71,30 @@ public class SignInSelectAuthFactorState: AuthenticatorBaseState {
                 )
                 
             case .webAuthn:
-                // TODO: Implement WebAuthn sign-in
-                // This will show the native WebAuthn UI
+                // WebAuthn sign-in - Amplify handles the native UI
+                #if os(iOS) || os(macOS) || os(visionOS)
+                guard #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) else {
+                    setBusy(false)
+                    log.error("WebAuthn requires iOS 17.4+, macOS 13.5+, or visionOS 1.0+")
+                    setMessage(.error(message: "Passkey is not available"))
+                    return
+                }
+                
+                log.verbose("Initiating WebAuthn sign-in")
+                
+                // Select WebAuthn as the auth factor
+                let challengeResponse = factor.toAuthFactorType().challengeResponse
+                
+                result = try await authenticationService.confirmSignIn(
+                    challengeResponse: challengeResponse,
+                    options: nil
+                )
+                #else
                 setBusy(false)
-                log.verbose("WebAuthn sign-in not yet implemented")
-                setMessage(.error(message: "WebAuthn sign-in is not yet implemented"))
+                log.error("WebAuthn is not available on this platform")
+                setMessage(.error(message: "Passkey is not available"))
                 return
+                #endif
             }
             
             let nextStep = try await nextStep(for: result)

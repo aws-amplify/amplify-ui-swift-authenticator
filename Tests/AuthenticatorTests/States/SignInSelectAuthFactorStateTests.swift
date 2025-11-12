@@ -117,21 +117,27 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
         XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
     }
 
-    // TODO: Re-enable when WebAuthn is fully implemented
-    // func testSelectAuthFactor_withWebAuthn_shouldShowTodoMessage() async throws {
-    //     // Given
-    //     state.selectedAuthFactor = .webAuthn
-    //     
-    //     // When
-    //     try await state.selectAuthFactor()
-    //     
-    //     // Then - WebAuthn is not yet implemented, should show error message
-    //     XCTAssertEqual(authenticationService.confirmSignInCount, 0, "Should not call confirmSignIn for WebAuthn yet")
-    //     // WebAuthn returns early with TODO message
-    //     await MainActor.run {
-    //         XCTAssertNotNil(state.message, "Should show TODO message")
-    //     }
-    // }
+    @available(iOS 17.4, macOS 13.5, visionOS 1.0, *)
+    func testSelectAuthFactor_withWebAuthn_shouldInitiateWebAuthn() async throws {
+        // Given
+        state.selectedAuthFactor = .webAuthn
+        
+        // Mock WebAuthn sign-in flow
+        authenticationService.mockedConfirmSignInResult = AuthSignInResult(nextStep: .done)
+        authenticationService.mockedCurrentUser = MockAuthenticationService.User(
+            username: "testuser",
+            userId: "test-user-id"
+        )
+        authenticationService.mockedUnverifiedAttributes = []
+        
+        // When
+        try await state.selectAuthFactor()
+        
+        // Then - Should call confirmSignIn with WebAuthn challenge response
+        XCTAssertEqual(authenticationService.confirmSignInCount, 1)
+        XCTAssertEqual(authenticationService.confirmSignInChallengeResponse, "WEB_AUTHN")
+        XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
+    }
 
     @MainActor
     func testSelectAuthFactor_withNoSelection_shouldNotCallAPI() async throws {
