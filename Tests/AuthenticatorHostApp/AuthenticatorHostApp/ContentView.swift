@@ -24,7 +24,7 @@ enum SignInNextStepForTesting: String, CaseIterable, Identifiable {
     case confirmSignInWithPassword = "Confirm Sign In with Password"
 
     var id: String { self.rawValue }
-
+    
     func toAuthSignInStep() -> AuthSignInStep {
         switch self {
         case .done:
@@ -60,8 +60,43 @@ enum SignInNextStepForTesting: String, CaseIterable, Identifiable {
     }
 }
 
+enum ConfirmSignInNextStepForTesting: String, CaseIterable, Identifiable {
+    case done = "Done"
+    case continueSignInWithMFASelection = "Continue with MFA Selection"
+    case continueSignInWithEmailMFASetup = "Continue with Email MFA Setup"
+    case continueSignInWithMFASetupSelection = "Continue with MFA Setup Selection"
+    case confirmSignInWithEmailMFACode = "Confirm with Email MFA Code"
+    case confirmSignInWithPhoneMFACode = "Confirm with Phone MFA Code"
+    case confirmSignInWithTOTP = "Confirm with TOTP"
+    case confirmSignInWithOTP = "Confirm Sign In with OTP"
+
+    var id: String { self.rawValue }
+
+    func toAuthSignInStep() -> AuthSignInStep {
+        switch self {
+        case .done:
+            return .done
+        case .continueSignInWithMFASelection:
+            return .continueSignInWithMFASelection(.init([.sms, .email, .totp]))
+        case .continueSignInWithEmailMFASetup:
+            return .continueSignInWithEmailMFASetup
+        case .continueSignInWithMFASetupSelection:
+            return .continueSignInWithMFASetupSelection(.init([.email, .totp]))
+        case .confirmSignInWithEmailMFACode:
+            return .confirmSignInWithOTP(.init(destination: .email("h***@a***.com")))
+        case .confirmSignInWithPhoneMFACode:
+            return .confirmSignInWithOTP(.init(destination: .phone("+11***")))
+        case .confirmSignInWithTOTP:
+            return .confirmSignInWithTOTPCode
+        case .confirmSignInWithOTP:
+            return .confirmSignInWithOTP(.init(destination: .email("tst@example.com")))
+        }
+    }
+}
+
 struct ContentView: View {
-    @State private var selectedStep: SignInNextStepForTesting = .done
+    @State private var selectedSignInStep: SignInNextStepForTesting = .done
+    @State private var selectedConfirmSignInStep: ConfirmSignInNextStepForTesting = .done
     private let hidesSignUpButton: Bool
     private let initialStep: AuthenticatorInitialStep
     private let shouldUsePickerForTestingSteps: Bool
@@ -83,6 +118,24 @@ struct ContentView: View {
     // MARK: - Mock Configuration Methods
     
     /// Configure mocks for passwordless authentication testing
+    ///
+    /// Multi-Step Authentication Flows:
+    ///
+    /// EMAIL/SMS OTP Flow:
+    /// 1. Sign In → returns .continueSignInWithFirstFactorSelection(availableFactors)
+    /// 2. Select Factor (SignInSelectAuthFactorView) → confirmSignIn("EMAIL_OTP") → returns .confirmSignInWithOTP
+    /// 3. Enter OTP Code (ConfirmSignInWithOTPView) → confirmSignIn("123456") → returns .done
+    ///
+    /// Password Flow:
+    /// 1. Sign In → returns .continueSignInWithFirstFactorSelection(availableFactors)
+    /// 2. Select Factor (SignInSelectAuthFactorView) → confirmSignIn("PASSWORD") → returns .confirmSignInWithPassword
+    /// 3. Enter Password (SignInConfirmPasswordView) → confirmSignIn("Pass@123") → returns .done
+    ///
+    /// The MockAuthenticationService.confirmSignIn() automatically handles these multi-step flows:
+    /// - "EMAIL_OTP" or "SMS_OTP" → returns .confirmSignInWithOTP
+    /// - "PASSWORD" or "PASSWORD_SRP" → returns .confirmSignInWithPassword
+    /// - After OTP factor: 6-digit code → returns .done
+    /// - After Password factor: password string → returns .done
     private func configureMocksForPasswordlessTesting() {
         let mockService = MockAuthenticationService.shared
         
@@ -114,17 +167,38 @@ struct ContentView: View {
 
     var body: some View {
         if shouldUsePickerForTestingSteps {
-            Picker("Next Step", selection: $selectedStep) {
-                ForEach(SignInNextStepForTesting.allCases) { step in
-                    Text(step.rawValue).tag(step)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 4) {
+                    Text("Sign In Next Step")
+                        .font(.headline)
+                    Picker("", selection: $selectedSignInStep) {
+                        ForEach(SignInNextStepForTesting.allCases) { step in
+                            Text(step.rawValue).tag(step)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .onChange(of: selectedSignInStep) { newStepForTesting in
+                        // Update MockAuthenticationService when picker selection changes
+                        MockAuthenticationService.shared.mockedSignInResult = .init(nextStep: newStepForTesting.toAuthSignInStep())
+                    }
+                }
+                
+                HStack(spacing: 4) {
+                    Text("Confirm Sign In Next Step")
+                        .font(.headline)
+                    Picker("", selection: $selectedConfirmSignInStep) {
+                        ForEach(ConfirmSignInNextStepForTesting.allCases) { step in
+                            Text(step.rawValue).tag(step)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .onChange(of: selectedConfirmSignInStep) { newStepForTesting in
+                        // Update MockAuthenticationService when picker selection changes
+                        MockAuthenticationService.shared.mockedConfirmSignInResult = .init(nextStep: newStepForTesting.toAuthSignInStep())
+                    }
                 }
             }
-            .pickerStyle(MenuPickerStyle())
             .padding()
-            .onChange(of: selectedStep) { newStepForTesting in
-                // Update MockAuthenticationService when picker selection changes
-                MockAuthenticationService.shared.mockedSignInResult = .init(nextStep: newStepForTesting.toAuthSignInStep())
-            }
         }
 
         Authenticator(

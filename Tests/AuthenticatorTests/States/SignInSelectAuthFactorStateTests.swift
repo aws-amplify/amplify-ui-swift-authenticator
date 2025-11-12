@@ -34,12 +34,27 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
 
     func testSelectAuthFactor_withPassword_shouldSignIn() async throws {
         // Given
-        state.selectedAuthFactor = .password()
+        state.selectedAuthFactor = .password(srp: true)
         state.password = "password123"
         state.credentials.username = "testuser"
         
-        // Mock successful sign-in with .done step
-        authenticationService.mockedConfirmSignInResult = AuthSignInResult(nextStep: .done)
+        // Mock the 2-step password flow:
+        // Step 1: Factor selection returns .confirmSignInWithPassword
+        // Step 2: Password submission returns .done
+        var callCount = 0
+        authenticationService.mockedConfirmSignInResult = nil
+        authenticationService.confirmSignInHandler = { challengeResponse in
+            callCount += 1
+            if callCount == 1 {
+                // First call: factor selection
+                XCTAssertEqual(challengeResponse, "PASSWORD_SRP")
+                return AuthSignInResult(nextStep: .confirmSignInWithPassword)
+            } else {
+                // Second call: password submission
+                XCTAssertEqual(challengeResponse, "password123")
+                return AuthSignInResult(nextStep: .done)
+            }
+        }
         
         // Mock user attributes and current user for .done step processing
         authenticationService.mockedUnverifiedAttributes = []
@@ -51,10 +66,16 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
         // When
         try await state.selectAuthFactor()
         
-        // Then
-        XCTAssertEqual(authenticationService.confirmSignInCount, 1)
-        XCTAssertEqual(authenticationService.confirmSignInChallengeResponse, "password123")
+        // Then - Should make 2 API calls (factor selection + password)
+        XCTAssertEqual(authenticationService.confirmSignInCount, 2)
         XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
+        
+        // Verify it transitions to signedIn step
+        if case .signedIn = authenticatorState.setCurrentStepValue {
+            // Success - correct step
+        } else {
+            XCTFail("Expected to transition to .signedIn step, got \(authenticatorState.setCurrentStepValue)")
+        }
     }
 
     func testSelectAuthFactor_withEmailOtp_shouldSendOtp() async throws {
@@ -182,6 +203,48 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
         
         // Then - Password should be updated in shared credentials
         XCTAssertEqual(sharedCredentials.password, "mypassword123")
+    }
+    
+    func testAuthenticationServiceAccess_afterConfiguration_shouldHaveAccessToService() {
+        // Given - Create state with credentials (simulating dynamic creation in Authenticator)
+        let credentials = Credentials()
+        credentials.username = "testuser"
+        
+        let dynamicState = SignInSelectAuthFactorState(
+            credentials: credentials,
+            availableAuthFactors: [.password(), .emailOtp]
+        )
+        
+        // When - Configure with authenticatorState (this happens in Authenticator.onAppear)
+        let mockAuthenticatorState = MockAuthenticatorState()
+        let mockAuthService = MockAuthenticationService()
+        mockAuthenticatorState.authenticationService = mockAuthService
+        dynamicState.configure(with: mockAuthenticatorState)
+        
+        // Then - State should have access to authentication service
+        XCTAssertTrue(dynamicState.authenticationService === mockAuthService,
+                     "State must be configured with authenticatorState to access authenticationService")
+        
+        // And - State should have access to configuration
+        XCTAssertNotNil(dynamicState.configuration)
+        
+        // And - State should have access to authentication flow
+        XCTAssertEqual(dynamicState.authenticationFlow, .password)
+    }
+    
+    func testAuthenticationServiceAccess_withoutConfiguration_shouldNotHaveAccess() {
+        // Given - Create state without configuration (missing configure call)
+        let credentials = Credentials()
+        let unconfiguredState = SignInSelectAuthFactorState(
+            credentials: credentials,
+            availableAuthFactors: [.password()]
+        )
+        
+        // Then - State should not have access to authentication service
+        // (authenticationService will be .default which is not the mock)
+        // This test documents the requirement that configure() MUST be called
+        XCTAssertTrue(unconfiguredState.authenticatorState is EmptyAuthenticatorState,
+                     "Without configure(), state uses EmptyAuthenticatorState")
     }
 
     func testAvailableAuthFactors_shouldReturnProvidedFactors() {

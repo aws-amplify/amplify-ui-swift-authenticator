@@ -36,14 +36,76 @@ class MockAuthenticationService: AuthenticationService {
     }
 
     var confirmSignInCount = 0
+    var confirmSignInChallengeResponse: String?
     var mockedConfirmSignInResult: AuthSignInResult?
+    
+    /// Tracks the last challenge response to enable multi-step flow testing
+    /// For example: "EMAIL_OTP" -> confirmSignInWithOTP -> "123456" -> done
+    var lastChallengeResponse: String?
+    
     func confirmSignIn(challengeResponse: String, options: AuthConfirmSignInRequest.Options?) async throws -> AuthSignInResult {
         confirmSignInCount += 1
-        if let mockedConfirmSignInResult = mockedConfirmSignInResult {
-            return mockedConfirmSignInResult
+        confirmSignInChallengeResponse = challengeResponse
+        
+        // Otherwise, simulate the multi-step passwordless flow
+        // Step 1: Factor selection (EMAIL_OTP, SMS_OTP, PASSWORD, PASSWORD_SRP, etc.)
+        if challengeResponse == "EMAIL_OTP" {
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(
+                nextStep: .confirmSignInWithOTP(.init(destination: .email("test@example.com")))
+            )
+        } else if challengeResponse == "SMS_OTP" {
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(
+                nextStep: .confirmSignInWithOTP(.init(destination: .phone("+1234567890")))
+            )
+        } else if challengeResponse == "PASSWORD" || challengeResponse == "PASSWORD_SRP" {
+            // Step 1: Password factor selected
+            // Return .confirmSignInWithPassword to prompt for password entry
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .confirmSignInWithPassword)
+        } else if lastChallengeResponse == "PASSWORD" || lastChallengeResponse == "PASSWORD_SRP" {
+            // Step 2: Password entered after selecting password factor
+            // Complete sign-in
+            mockedCurrentUser = User(
+                username: "test@example.com",
+                userId: "user-123"
+            )
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .done)
+        } else if challengeResponse.count == 6 && challengeResponse.allSatisfy({ $0.isNumber }) {
+            // Step 2: OTP code confirmation (6-digit code)
+            // Set the current user when OTP is confirmed
+            mockedCurrentUser = User(
+                username: "test@example.com",
+                userId: "user-123"
+            )
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .done)
+        } else if lastChallengeResponse == "EMAIL_OTP" || lastChallengeResponse == "SMS_OTP" {
+            // Step 2: OTP code entered after selecting OTP factor
+            // Complete sign-in
+            mockedCurrentUser = User(
+                username: "test@example.com",
+                userId: "user-123"
+            )
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .done)
+        } else {
+            // If a specific result is mocked, return it
+            if let mockedConfirmSignInResult = mockedConfirmSignInResult {
+                lastChallengeResponse = challengeResponse
+                return mockedConfirmSignInResult
+            }
+            
+            // Default: complete sign-in
+            mockedCurrentUser = User(
+                username: "test@example.com",
+                userId: "user-123"
+            )
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .done)
         }
-
-        throw AuthenticatorError.error(message: "Unable to confirm sign in")
     }
 
     var autoSignInCount = 0

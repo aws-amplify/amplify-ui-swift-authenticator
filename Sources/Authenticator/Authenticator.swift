@@ -395,6 +395,9 @@ public struct Authenticator<LoadingContent: View,
                 availableAuthFactors: availableAuthFactors
             )
             signInSelectAuthFactorContent(signInSelectAuthFactorState)
+                .onAppear {
+                    signInSelectAuthFactorState.configure(with: state)
+                }
         case .signInConfirmPassword:
             let signInConfirmPasswordState = SignInConfirmPasswordState(
                 authenticatorState: state

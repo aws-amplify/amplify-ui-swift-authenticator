@@ -34,6 +34,8 @@ struct AuthenticatorHostApp: App {
         factory.setUserAtributes([.email])
         
         processUITestLaunchArguments()
+        
+        Amplify.Logging.logLevel = .verbose
         do {
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.configure(AmplifyConfiguration(auth: factory.createConfiguration()))

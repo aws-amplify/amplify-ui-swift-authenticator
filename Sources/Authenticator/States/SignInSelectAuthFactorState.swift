@@ -55,11 +55,10 @@ public class SignInSelectAuthFactorState: AuthenticatorBaseState {
             
             switch factor {
             case .password:
-                // Sign in with password using confirmSignIn API
-                result = try await authenticationService.confirmSignIn(
-                    challengeResponse: password,
-                    options: nil
-                )
+                // Password requires 2-step flow, use dedicated method
+                // Step 1: Select password factor → confirmSignIn("PASSWORD") → .confirmSignInWithPassword
+                // Step 2: Send password → confirmSignIn("Pass@123") → .done
+                result = try await signInWithPassword()
                 
             case .emailOtp, .smsOtp:
                 // Select the auth factor and move to appropriate next step
@@ -89,6 +88,48 @@ public class SignInSelectAuthFactorState: AuthenticatorBaseState {
             setMessage(authenticationError)
             throw authenticationError
         }
+    }
+    
+    /// Signs in with password using the multi-step flow
+    ///
+    /// Password flow:
+    /// 1. Select password factor → confirmSignIn("PASSWORD") → returns .confirmSignInWithPassword
+    /// 2. Send actual password → confirmSignIn("Pass@123") → returns .done
+    ///
+    /// This method handles both steps and returns the final result.
+    /// - Returns: The final `AuthSignInResult` after completing both steps
+    /// - Throws: An `Amplify.AuthenticationError` if the operation fails
+    private func signInWithPassword() async throws -> AuthSignInResult {
+        guard let passwordFactor = availableAuthFactors.preferredPasswordFactor else {
+            log.verbose("Password auth factor not available")
+            throw AuthError.unknown("Password auth factor not available", nil)
+        }
+        
+        log.verbose("Starting password sign-in flow")
+        
+        // Step 1: Select password as the auth factor
+        let factorChallengeResponse = passwordFactor.toAuthFactorType().challengeResponse
+        let factorResult = try await authenticationService.confirmSignIn(
+            challengeResponse: factorChallengeResponse,
+            options: nil
+        )
+        
+        // Check if we got .confirmSignInWithPassword as expected
+        guard case .confirmSignInWithPassword = factorResult.nextStep else {
+            // Unexpected step - password factor selection should return .confirmSignInWithPassword
+            log.error("Unexpected next step after password factor selection: \(factorResult.nextStep)")
+            throw AuthError.unknown("Expected .confirmSignInWithPassword but got \(factorResult.nextStep)", nil)
+        }
+        
+        log.verbose("Password factor selected, now sending password")
+        
+        // Step 2: Send the actual password
+        let passwordResult = try await authenticationService.confirmSignIn(
+            challengeResponse: password,
+            options: nil
+        )
+        
+        return passwordResult
     }
     
     /// Manually moves the Authenticator to a different initial step
