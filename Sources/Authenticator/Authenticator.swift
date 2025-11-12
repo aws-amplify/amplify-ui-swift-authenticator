@@ -391,7 +391,7 @@ public struct Authenticator<LoadingContent: View,
             signInContent
         case .signInSelectAuthFactor(let availableAuthFactors):
             let signInSelectAuthFactorState = SignInSelectAuthFactorState(
-                authenticatorState: state,
+                credentials: signInState?.credentials ?? Credentials(),
                 availableAuthFactors: availableAuthFactors
             )
             signInSelectAuthFactorContent(signInSelectAuthFactorState)
@@ -491,6 +491,11 @@ public struct Authenticator<LoadingContent: View,
     private var signUpState: SignUpState? {
         contentStates.allObjects.compactMap({ $0 as? SignUpState }).first
     }
+    
+    private var signInState: SignInState? {
+        contentStates.allObjects.compactMap({ $0 as? SignInState }).first
+    }
+    
 }
 
 extension Authenticator {

@@ -34,12 +34,6 @@ public class SignInSelectAuthFactorState: AuthenticatorBaseState {
         super.init(credentials: credentials)
     }
     
-    init(authenticatorState: AuthenticatorStateProtocol, availableAuthFactors: [AuthFactor]) {
-        self.availableAuthFactors = availableAuthFactors
-        super.init(authenticatorState: authenticatorState,
-                   credentials: Credentials())
-    }
-    
     /// Attempts to sign in using the selected authentication factor
     ///
     /// Automatically sets the Authenticator's next step accordingly, as well as the
