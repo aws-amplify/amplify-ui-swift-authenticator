@@ -20,6 +20,11 @@ class SignInConfirmPasswordStateTests: XCTestCase {
         authenticationService = MockAuthenticationService()
         authenticatorState.authenticationService = authenticationService
         state.configure(with: authenticatorState)
+        
+        // Set up mock user for post-sign-in flow
+        authenticationService.mockedCurrentUser = MockAuthenticationService.User(username: "testuser", userId: "test-user-id")
+        // Set up empty attributes (user is verified)
+        authenticationService.mockedUnverifiedAttributes = []
     }
 
     override func tearDown() {

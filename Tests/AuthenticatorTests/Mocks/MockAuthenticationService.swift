@@ -189,7 +189,6 @@ class MockAuthenticationService: AuthenticationService {
 
     var associateWebAuthnCredentialCount = 0
     var mockedAssociateWebAuthnCredentialError: Error?
-    @available(iOS 17.4, macOS 13.5, visionOS 1.0, *)
     func associateWebAuthnCredential(presentationAnchor: AuthUIPresentationAnchor?, options: AuthAssociateWebAuthnCredentialRequest.Options?) async throws {
         associateWebAuthnCredentialCount += 1
         if let mockedAssociateWebAuthnCredentialError = mockedAssociateWebAuthnCredentialError {
@@ -200,7 +199,6 @@ class MockAuthenticationService: AuthenticationService {
 
     var listWebAuthnCredentialsCount = 0
     var mockedWebAuthnCredentials: [AuthWebAuthnCredential] = []
-    @available(iOS 17.4, macOS 13.5, visionOS 1.0, *)
     func listWebAuthnCredentials(options: AuthListWebAuthnCredentialsRequest.Options?) async throws -> AuthListWebAuthnCredentialsResult {
         listWebAuthnCredentialsCount += 1
         return AuthListWebAuthnCredentialsResult(credentials: mockedWebAuthnCredentials, nextToken: nil)
@@ -208,7 +206,6 @@ class MockAuthenticationService: AuthenticationService {
 
     var deleteWebAuthnCredentialCount = 0
     var mockedDeleteWebAuthnCredentialError: Error?
-    @available(iOS 17.4, macOS 13.5, visionOS 1.0, *)
     func deleteWebAuthnCredential(credentialId: String, options: AuthDeleteWebAuthnCredentialRequest.Options?) async throws {
         deleteWebAuthnCredentialCount += 1
         if let mockedDeleteWebAuthnCredentialError = mockedDeleteWebAuthnCredentialError {

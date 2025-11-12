@@ -43,7 +43,7 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
         // Step 2: Password submission returns .done
         var callCount = 0
         authenticationService.mockedConfirmSignInResult = nil
-        authenticationService.confirmSignInHandler = { challengeResponse in
+        authenticationService.confirmSignInHandler = { (challengeResponse, _) in
             callCount += 1
             if callCount == 1 {
                 // First call: factor selection

@@ -82,7 +82,10 @@ class PromptToCreatePasskeyStateTests: XCTestCase {
             try await state.createPasskey()
             XCTFail("Expected error to be thrown")
         } catch {
-            XCTAssertNotNil(state.message)
+            // Wait for message to be set on main actor
+            await MainActor.run {
+                XCTAssertNotNil(state.message)
+            }
         }
         
         XCTAssertEqual(authenticationService.associateWebAuthnCredentialCount, 1)

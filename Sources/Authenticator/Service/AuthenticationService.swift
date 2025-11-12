@@ -16,4 +16,4 @@ import SwiftUI
 
 protocol AuthenticationService: AuthCategoryBehavior, AnyObject { }
 
-extension Amplify.AuthCategory: AuthenticationService, ObservableObject {}
+extension Amplify.AuthCategory: AuthenticationService, @retroactive ObservableObject {}
