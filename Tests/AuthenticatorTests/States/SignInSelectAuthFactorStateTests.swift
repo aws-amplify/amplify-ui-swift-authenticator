@@ -147,6 +147,42 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
         state.credentials.username = "testuser"
         XCTAssertEqual(state.username, "testuser")
     }
+    
+    func testCredentialsSharing_usernameSetInCredentials_shouldBeAccessibleViaUsernameProperty() {
+        // Given - Simulate credentials being set from SignInState
+        let sharedCredentials = Credentials()
+        sharedCredentials.username = "john.doe@example.com"
+        
+        // When - Create SignInSelectAuthFactorState with the shared credentials
+        let stateWithSharedCredentials = SignInSelectAuthFactorState(
+            credentials: sharedCredentials,
+            availableAuthFactors: [.password(), .emailOtp]
+        )
+        
+        // Then - Username should be accessible
+        XCTAssertEqual(stateWithSharedCredentials.username, "john.doe@example.com")
+        
+        // And - Modifying credentials should reflect in the state
+        sharedCredentials.username = "jane.smith@example.com"
+        XCTAssertEqual(stateWithSharedCredentials.username, "jane.smith@example.com")
+    }
+    
+    func testCredentialsSharing_passwordSetInState_shouldUpdateSharedCredentials() {
+        // Given - Simulate credentials being shared from SignInState
+        let sharedCredentials = Credentials()
+        sharedCredentials.username = "testuser"
+        
+        let stateWithSharedCredentials = SignInSelectAuthFactorState(
+            credentials: sharedCredentials,
+            availableAuthFactors: [.password()]
+        )
+        
+        // When - Set password in the state
+        stateWithSharedCredentials.password = "mypassword123"
+        
+        // Then - Password should be updated in shared credentials
+        XCTAssertEqual(sharedCredentials.password, "mypassword123")
+    }
 
     func testAvailableAuthFactors_shouldReturnProvidedFactors() {
         XCTAssertEqual(state.availableAuthFactors.count, 2)
