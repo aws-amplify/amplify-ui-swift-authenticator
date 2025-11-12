@@ -36,6 +36,7 @@ class SignInConfirmPasswordStateTests: XCTestCase {
     /// Given: A SignInConfirmPasswordState
     /// When: confirmPassword is called with a valid password
     /// Then: The authentication service should be called and the next step should be set
+    @MainActor
     func testConfirmPassword_withValidPassword_shouldSignIn() async throws {
         state.credentials.username = "testuser"
         state.password = "ValidPassword123!"
@@ -54,6 +55,7 @@ class SignInConfirmPasswordStateTests: XCTestCase {
     /// Given: A SignInConfirmPasswordState
     /// When: confirmPassword is called and the service returns an error
     /// Then: An error message should be set
+    @MainActor
     func testConfirmPassword_withInvalidPassword_shouldSetErrorMessage() async {
         state.password = "WrongPassword"
         
@@ -65,7 +67,9 @@ class SignInConfirmPasswordStateTests: XCTestCase {
             try await state.confirmPassword()
             XCTFail("Expected error to be thrown")
         } catch {
-            XCTAssertNotNil(state.message)
+            await MainActor.run {
+                XCTAssertNotNil(state.message)
+            }
         }
 
         XCTAssertEqual(authenticationService.confirmSignInCount, 1)
@@ -74,6 +78,7 @@ class SignInConfirmPasswordStateTests: XCTestCase {
     /// Given: A SignInConfirmPasswordState
     /// When: confirmPassword is called with an empty password
     /// Then: The authentication service should still be called (validation happens in view)
+    @MainActor
     func testConfirmPassword_withEmptyPassword_shouldCallService() async throws {
         state.password = ""
         
@@ -90,6 +95,7 @@ class SignInConfirmPasswordStateTests: XCTestCase {
     /// Given: A SignInConfirmPasswordState
     /// When: confirmPassword is called and returns a multi-step flow
     /// Then: The next step should be properly handled
+    @MainActor
     func testConfirmPassword_withMultiStepFlow_shouldHandleNextStep() async throws {
         state.password = "ValidPassword123!"
         

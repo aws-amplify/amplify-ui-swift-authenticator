@@ -129,7 +129,7 @@ struct PhoneNumberField: View {
         let textView = SwiftUI.Text(label)
             .foregroundColor(theme.colors.foreground.disabled.opacity(0.6))
             .font(theme.fonts.body)
-        textView.accessibilityHidden(true)
+        _ = textView.accessibilityHidden(true)
         return textView
     }
 

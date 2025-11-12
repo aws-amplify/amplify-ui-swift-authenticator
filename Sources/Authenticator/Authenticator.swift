@@ -410,7 +410,7 @@ public struct Authenticator<LoadingContent: View,
             confirmSignInContentWithNewPasswordContent
         case .confirmSignInWithMFACode:
             confirmSignInWithMFACodeContent
-        case .confirmSignInWithOTP(let deliveryDetails):
+        case .confirmSignInWithOTP:
             let confirmSignInWithCodeState = ConfirmSignInWithCodeState(
                 authenticatorState: state
             )

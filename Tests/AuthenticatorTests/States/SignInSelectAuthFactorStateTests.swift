@@ -32,6 +32,7 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
         authenticationService = nil
     }
 
+    @MainActor
     func testSelectAuthFactor_withPassword_shouldSignIn() async throws {
         // Given
         state.selectedAuthFactor = .password(srp: true)
@@ -74,10 +75,11 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
         if case .signedIn = authenticatorState.setCurrentStepValue {
             // Success - correct step
         } else {
-            XCTFail("Expected to transition to .signedIn step, got \(authenticatorState.setCurrentStepValue)")
+            XCTFail("Expected to transition to .signedIn step, got \(String(describing: authenticatorState.setCurrentStepValue))")
         }
     }
 
+    @MainActor
     func testSelectAuthFactor_withEmailOtp_shouldSendOtp() async throws {
         // Given
         state.selectedAuthFactor = .emailOtp
@@ -96,6 +98,7 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
         XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
     }
 
+    @MainActor
     func testSelectAuthFactor_withSmsOtp_shouldSendOtp() async throws {
         // Given
         state.selectedAuthFactor = .smsOtp
@@ -130,6 +133,7 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
     //     }
     // }
 
+    @MainActor
     func testSelectAuthFactor_withNoSelection_shouldNotCallAPI() async throws {
         // Given
         state.selectedAuthFactor = nil
@@ -141,6 +145,7 @@ class SignInSelectAuthFactorStateTests: XCTestCase {
         XCTAssertEqual(authenticationService.confirmSignInCount, 0)
     }
 
+    @MainActor
     func testSelectAuthFactor_withError_shouldSetErrorMessage() async throws {
         // Given
         state.selectedAuthFactor = .password()

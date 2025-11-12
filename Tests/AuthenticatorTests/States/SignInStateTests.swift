@@ -64,6 +64,7 @@ class SignInStateTests: XCTestCase {
     
     // MARK: - Password Flow Tests
     
+    @MainActor
     func testSignIn_withPasswordFlow_shouldUseUserSRPAuthFlow() async throws {
         // Configure for password-only flow
         authenticatorState.authenticationFlow = .password
@@ -93,6 +94,7 @@ class SignInStateTests: XCTestCase {
     
     // MARK: - UserChoice Flow Tests
     
+    @MainActor
     func testSignIn_withUserChoiceFlowPasswordPreferred_shouldUseUserAuthFlow() async throws {
         // Configure for userChoice flow with password as preferred
         authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .password())
@@ -112,6 +114,7 @@ class SignInStateTests: XCTestCase {
         XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
     }
     
+    @MainActor
     func testSignIn_withUserChoiceFlowEmailOtpPreferred_shouldUseUserAuthFlow() async throws {
         // Configure for userChoice flow with emailOtp as preferred
         authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .emailOtp)
@@ -130,6 +133,7 @@ class SignInStateTests: XCTestCase {
         XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
     }
     
+    @MainActor
     func testSignIn_withUserChoiceFlowNoPreferredFactor_shouldUseUserAuthFlow() async throws {
         // Configure for userChoice flow without preferred factor
         authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: nil)

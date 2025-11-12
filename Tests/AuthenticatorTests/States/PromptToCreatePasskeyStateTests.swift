@@ -51,6 +51,7 @@ class PromptToCreatePasskeyStateTests: XCTestCase {
     /// Given: A PromptToCreatePasskeyState
     /// When: createPasskey is called and the service returns an error
     /// Then: An error message should be set
+    @MainActor
     func testCreatePasskey_withError_shouldSetErrorMessage() async {
         authenticationService.mockedAssociateWebAuthnCredentialError = AuthError.service(
             "Passkey creation failed",
@@ -62,7 +63,9 @@ class PromptToCreatePasskeyStateTests: XCTestCase {
             try await state.createPasskey()
             XCTFail("Expected error to be thrown")
         } catch {
-            XCTAssertNotNil(state.message)
+            await MainActor.run {
+                XCTAssertNotNil(state.message)
+            }
         }
         
         XCTAssertEqual(authenticationService.associateWebAuthnCredentialCount, 1)
@@ -137,6 +140,7 @@ class PromptToCreatePasskeyStateTests: XCTestCase {
     /// Given: A PromptToCreatePasskeyState
     /// When: skip is called and the service returns an error
     /// Then: An error message should be set
+    @MainActor
     func testSkip_withError_shouldSetErrorMessage() async {
         authenticationService.mockedUnverifiedAttributes = []
         // Make getCurrentUser throw an error
@@ -146,7 +150,9 @@ class PromptToCreatePasskeyStateTests: XCTestCase {
             try await state.skip()
             XCTFail("Expected error to be thrown")
         } catch {
-            XCTAssertNotNil(state.message)
+            await MainActor.run {
+                XCTAssertNotNil(state.message)
+            }
         }
     }
 }

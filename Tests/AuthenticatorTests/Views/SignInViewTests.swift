@@ -36,7 +36,7 @@ class SignInViewTests: XCTestCase {
         authenticatorState.authenticationFlow = .password
         
         // Create view to trigger validator initialization
-        let view = SignInView(state: state)
+        _ = SignInView(state: state)
         
         // The validator should require password in password flow
         // This is tested implicitly through the validation logic
@@ -48,7 +48,7 @@ class SignInViewTests: XCTestCase {
         authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .password())
         
         // Create view to trigger validator initialization
-        let view = SignInView(state: state)
+        _ = SignInView(state: state)
         
         // The validator should allow empty password in userChoice with password preferred
         if case .userChoice(let preferredAuthFactor, _) = state.authenticationFlow,
@@ -64,7 +64,7 @@ class SignInViewTests: XCTestCase {
         authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .emailOtp)
         
         // Create view
-        let view = SignInView(state: state)
+        _ = SignInView(state: state)
         
         // Password field should not be shown
         if case .userChoice(let preferredAuthFactor, _) = state.authenticationFlow {
