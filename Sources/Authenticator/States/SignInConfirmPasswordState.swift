@@ -39,10 +39,23 @@ public class SignInConfirmPasswordState: AuthenticatorBaseState {
     public func confirmPassword() async throws {
         setBusy(true)
         
-        // TODO: Implement confirmPassword logic
-        // This should call the appropriate sign-in method with the password
-        setBusy(false)
-        fatalError("confirmPassword not yet implemented")
+        do {
+            log.verbose("Attempting to confirm Sign In with Password")
+            let result = try await authenticationService.confirmSignIn(
+                challengeResponse: password,
+                options: nil
+            )
+            let nextStep = try await nextStep(for: result)
+
+            setBusy(false)
+
+            authenticatorState.setCurrentStep(nextStep)
+        } catch {
+            log.error("Confirm Sign In with Password failed")
+            let authenticationError = self.error(for: error)
+            setMessage(authenticationError)
+            throw authenticationError
+        }
     }
     
     /// Manually moves the Authenticator to a different initial step

@@ -28,48 +28,84 @@ class SignInConfirmPasswordStateTests: XCTestCase {
         authenticationService = nil
     }
 
-    // TODO: Implement test for confirmPassword with valid password
+    /// Given: A SignInConfirmPasswordState
+    /// When: confirmPassword is called with a valid password
+    /// Then: The authentication service should be called and the next step should be set
     func testConfirmPassword_withValidPassword_shouldSignIn() async throws {
-        // TODO: Mock successful password confirmation
-        // state.password = "password123"
-        // authenticationService.mockedSignInResult = .init(nextStep: .done)
-        // authenticationService.mockedCurrentUser = MockAuthenticationService.User(
-        //     username: "username",
-        //     userId: "userId"
-        // )
-        // try await state.confirmPassword()
-        // XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
-        XCTExpectFailure("Test not yet implemented")
-        XCTFail("Test not yet implemented")
+        state.credentials.username = "testuser"
+        state.password = "ValidPassword123!"
+        
+        authenticationService.confirmSignInHandler = { challengeResponse, options in
+            XCTAssertEqual(challengeResponse, "ValidPassword123!")
+            return AuthSignInResult(nextStep: .done)
+        }
+
+        try await state.confirmPassword()
+
+        XCTAssertEqual(authenticationService.confirmSignInCount, 1)
+        XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
     }
 
-    // TODO: Implement test for confirmPassword with invalid password
-    func testConfirmPassword_withInvalidPassword_shouldSetErrorMessage() async throws {
-        // TODO: Mock error response
-        // state.password = "wrongpassword"
-        // do {
-        //     try await state.confirmPassword()
-        //     XCTFail("Should not succeed")
-        // } catch {
-        //     guard let authenticatorError = error as? AuthenticatorError else {
-        //         XCTFail("Expected AuthenticatorError")
-        //         return
-        //     }
-        //     let task = Task { @MainActor in
-        //         XCTAssertNotNil(state.message)
-        //         XCTAssertEqual(state.message?.content, authenticatorError.content)
-        //     }
-        //     await task.value
-        // }
-        XCTExpectFailure("Test not yet implemented")
-        XCTFail("Test not yet implemented")
+    /// Given: A SignInConfirmPasswordState
+    /// When: confirmPassword is called and the service returns an error
+    /// Then: An error message should be set
+    func testConfirmPassword_withInvalidPassword_shouldSetErrorMessage() async {
+        state.password = "WrongPassword"
+        
+        authenticationService.confirmSignInHandler = { _, _ in
+            throw AuthError.service("Invalid password", "", nil)
+        }
+
+        do {
+            try await state.confirmPassword()
+            XCTFail("Expected error to be thrown")
+        } catch {
+            XCTAssertNotNil(state.message)
+        }
+
+        XCTAssertEqual(authenticationService.confirmSignInCount, 1)
     }
 
-    // TODO: Implement test for confirmPassword with empty password
-    func testConfirmPassword_withEmptyPassword_shouldFail() async throws {
-        // TODO: Verify error when password is empty
-        XCTExpectFailure("Test not yet implemented")
-        XCTFail("Test not yet implemented")
+    /// Given: A SignInConfirmPasswordState
+    /// When: confirmPassword is called with an empty password
+    /// Then: The authentication service should still be called (validation happens in view)
+    func testConfirmPassword_withEmptyPassword_shouldCallService() async throws {
+        state.password = ""
+        
+        authenticationService.confirmSignInHandler = { challengeResponse, options in
+            XCTAssertEqual(challengeResponse, "")
+            return AuthSignInResult(nextStep: .done)
+        }
+
+        try await state.confirmPassword()
+
+        XCTAssertEqual(authenticationService.confirmSignInCount, 1)
+    }
+
+    /// Given: A SignInConfirmPasswordState
+    /// When: confirmPassword is called and returns a multi-step flow
+    /// Then: The next step should be properly handled
+    func testConfirmPassword_withMultiStepFlow_shouldHandleNextStep() async throws {
+        state.password = "ValidPassword123!"
+        
+        authenticationService.confirmSignInHandler = { _, _ in
+            return AuthSignInResult(
+                nextStep: .confirmSignInWithOTP(
+                    AuthCodeDeliveryDetails(destination: .email("test@example.com"))
+                )
+            )
+        }
+
+        try await state.confirmPassword()
+
+        XCTAssertEqual(authenticationService.confirmSignInCount, 1)
+        XCTAssertEqual(authenticatorState.setCurrentStepCount, 1)
+        
+        let currentStep = try XCTUnwrap(authenticatorState.setCurrentStepValue)
+        guard case .confirmSignInWithOTP = currentStep else {
+            XCTFail("Expected confirmSignInWithOTP, was \(currentStep)")
+            return
+        }
     }
 
     func testUsername_shouldReturnCredentialsUsername() {

@@ -400,9 +400,12 @@ public struct Authenticator<LoadingContent: View,
                 }
         case .signInConfirmPassword:
             let signInConfirmPasswordState = SignInConfirmPasswordState(
-                authenticatorState: state
+                credentials: signInState?.credentials ?? Credentials()
             )
             signInConfirmPasswordContent(signInConfirmPasswordState)
+                .onAppear {
+                    signInConfirmPasswordState.configure(with: state)
+                }
         case .confirmSignInWithNewPassword:
             confirmSignInContentWithNewPasswordContent
         case .confirmSignInWithMFACode:

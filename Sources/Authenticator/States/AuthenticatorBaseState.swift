@@ -79,6 +79,8 @@ public class AuthenticatorBaseState: ObservableObject {
             return .confirmSignInWithCustomChallenge
         case .confirmSignInWithNewPassword(_):
             return .confirmSignInWithNewPassword
+        case .confirmSignInWithPassword:
+            return .signInConfirmPassword
         case .resetPassword(_):
             return await nextStepForResetPassword()
         case .confirmSignUp(_):

@@ -73,7 +73,12 @@
 "authenticator.signInSelectAuthFactor.button.signInWithPasskey" = "Sign In with Passkey";
 "authenticator.signInSelectAuthFactor.button.backToSignIn" = "Back to Sign In";
 
-/* Confirm Sign In with Password view */
+/* Sign In Confirm Password view */
+"authenticator.signInConfirmPassword.title" = "Enter your password";
+"authenticator.signInConfirmPassword.button.confirm" = "Submit";
+"authenticator.signInConfirmPassword.button.backToSignIn" = "Back to Sign In";
+
+/* Confirm Sign In with New Password view */
 "authenticator.confirmSignInWithNewPassword.title" = "Set a new password";
 "authenticator.confirmSignInWithNewPassword.button.submit" = "Submit";
 
