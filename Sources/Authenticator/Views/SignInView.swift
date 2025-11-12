@@ -66,13 +66,7 @@ public struct SignInView<Header: View,
             using: { [weak state] value in
                 guard let state = state else { return nil }
                 
-                // Password is optional in userChoice with password as preferred factor
-                if case .userChoice(let preferredAuthFactor, _) = state.authenticationFlow,
-                   case .password = preferredAuthFactor {
-                    return nil // Password is optional
-                }
-                
-                // Password is required in password-only flow
+                // Password is always required when shown (both password flow and userChoice with password preferred)
                 return FieldValidators.required(value)
             }
         ))
@@ -170,19 +164,8 @@ public struct SignInView<Header: View,
     
     /// Returns the appropriate label for the password field
     private var passwordFieldLabel: String {
-        switch state.authenticationFlow {
-        case .password:
-            // Password is required in password-only flow
-            return "authenticator.field.password.label".localized()
-        case .userChoice(let preferredAuthFactor, _):
-            // Password is optional when it's the preferred factor in userChoice
-            if preferredAuthFactor?.isPassword == true {
-                return "authenticator.field.label.optional".localized(
-                    using: "authenticator.field.password.label".localized()
-                )
-            }
-            return "authenticator.field.password.label".localized()
-        }
+        // Password is always required when shown (both password flow and userChoice)
+        return "authenticator.field.password.label".localized()
     }
 
     private func signIn() async {

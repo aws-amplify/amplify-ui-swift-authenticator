@@ -43,17 +43,17 @@ class SignInViewTests: XCTestCase {
         XCTAssertEqual(state.authenticationFlow, .password)
     }
     
-    func testPasswordValidation_withUserChoiceFlowPasswordPreferred_shouldBeOptional() {
+    func testPasswordValidation_withUserChoiceFlowPasswordPreferred_shouldBeRequired() {
         // Configure for userChoice flow with password as preferred
         authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .password())
         
         // Create view to trigger validator initialization
         _ = SignInView(state: state)
         
-        // The validator should allow empty password in userChoice with password preferred
+        // The validator should require password in userChoice with password preferred
         if case .userChoice(let preferredAuthFactor, _) = state.authenticationFlow,
            case .password = preferredAuthFactor {
-            XCTAssertTrue(true, "Password is preferred factor in userChoice")
+            XCTAssertTrue(true, "Password is preferred factor in userChoice and should be required")
         } else {
             XCTFail("Expected userChoice with password preferred")
         }
