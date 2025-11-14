@@ -263,3 +263,11 @@ extension MockAuthenticationService {
         var isSignedIn: Bool
     }
 }
+
+@available(iOS 17.4, macOS 13.5, visionOS 1.0, *)
+struct MockWebAuthnCredential: AuthWebAuthnCredential {
+    var credentialId: String
+    var friendlyName: String?
+    var relyingPartyId: String
+    var createdAt: Date
+}

@@ -90,4 +90,65 @@ class PasskeyCreatedStateTests: XCTestCase {
             }
         }
     }
+    
+    /// Given: A PasskeyCreatedState
+    /// When: fetchPasskeyCredentials is called
+    /// Then: Should fetch and populate passkey credentials
+    func testPasskeyMetadata_shouldBeAvailable() async {
+        // Mock passkey credentials
+        let credential1 = MockWebAuthnCredential(
+            credentialId: "cred1",
+            friendlyName: "iPhone 15 Pro",
+            relyingPartyId: "example.com",
+            createdAt: Date()
+        )
+        authenticationService.mockedWebAuthnCredentials = [credential1]
+        
+        await state.fetchPasskeyCredentials()
+        
+        XCTAssertEqual(authenticationService.listWebAuthnCredentialsCount, 1)
+        
+        await MainActor.run {
+            XCTAssertEqual(state.passkeyCredentials.count, 1)
+            XCTAssertEqual(state.passkeyCredentials.first?.credentialId, "cred1")
+            XCTAssertEqual(state.passkeyCredentials.first?.friendlyName, "iPhone 15 Pro")
+        }
+    }
+    
+    /// Given: A PasskeyCreatedState
+    /// When: fetchPasskeyCredentials is called with multiple passkeys
+    /// Then: Should fetch and display all passkeys
+    func testMultiplePasskeys_shouldBeSupported() async {
+        // Mock multiple passkey credentials
+        let credential1 = MockWebAuthnCredential(
+            credentialId: "cred1",
+            friendlyName: "iPhone 15 Pro",
+            relyingPartyId: "example.com",
+            createdAt: Date()
+        )
+        let credential2 = MockWebAuthnCredential(
+            credentialId: "cred2",
+            friendlyName: "MacBook Pro",
+            relyingPartyId: "example.com",
+            createdAt: Date()
+        )
+        let credential3 = MockWebAuthnCredential(
+            credentialId: "cred3",
+            friendlyName: "iPad Air",
+            relyingPartyId: "example.com",
+            createdAt: Date()
+        )
+        authenticationService.mockedWebAuthnCredentials = [credential1, credential2, credential3]
+        
+        await state.fetchPasskeyCredentials()
+        
+        XCTAssertEqual(authenticationService.listWebAuthnCredentialsCount, 1)
+        
+        await MainActor.run {
+            XCTAssertEqual(state.passkeyCredentials.count, 3)
+            XCTAssertEqual(state.passkeyCredentials[0].friendlyName, "iPhone 15 Pro")
+            XCTAssertEqual(state.passkeyCredentials[1].friendlyName, "MacBook Pro")
+            XCTAssertEqual(state.passkeyCredentials[2].friendlyName, "iPad Air")
+        }
+    }
 }
