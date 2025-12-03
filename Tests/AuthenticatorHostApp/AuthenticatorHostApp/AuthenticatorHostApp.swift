@@ -31,7 +31,7 @@ struct AuthenticatorHostApp: App {
 
     init() {
         // Configure email as the username attribute
-        factory.setUserAtributes([.email])
+        //factory.setUserAtributes([.email])
         
         processUITestLaunchArguments()
         

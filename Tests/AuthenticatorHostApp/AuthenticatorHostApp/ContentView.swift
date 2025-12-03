@@ -227,7 +227,8 @@ struct ContentView: View {
 
     private var signUpFields: [SignUpField] {
         return [
-            .email(isRequired: true),
+            .password(isRequired: true),
+            .confirmPassword(isRequired: true)
         ]
     }
 }
