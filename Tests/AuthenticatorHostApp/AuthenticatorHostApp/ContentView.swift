@@ -171,6 +171,10 @@ struct ContentView: View {
             username: "test@example.com",
             userId: "user-123"
         )
+        
+        mockService.mockedSignUpResult = AuthSignUpResult(
+            .done
+        )
     }
 
     var body: some View {

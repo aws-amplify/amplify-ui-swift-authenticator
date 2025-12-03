@@ -298,11 +298,11 @@ class MockAuthenticationService: AuthenticationService {
     // MARK: - WebAuthn
 
     func associateWebAuthnCredential(presentationAnchor: AuthUIPresentationAnchor?, options: AuthAssociateWebAuthnCredentialRequest.Options?) async throws {
-        fatalError("Unsupported operation in Authenticator")
+        
     }
 
     func listWebAuthnCredentials(options: AuthListWebAuthnCredentialsRequest.Options?) async throws -> AuthListWebAuthnCredentialsResult {
-        fatalError("Unsupported operation in Authenticator")
+        return .init(credentials: [], nextToken: nil)
     }
 
     func deleteWebAuthnCredential(credentialId: String, options: AuthDeleteWebAuthnCredentialRequest.Options?) async throws {
