@@ -30,7 +30,7 @@ public class SignUpState: AuthenticatorBaseState {
             case .username:
                 username = field.value
             case .password:
-                password = field.value
+                password = !field.value.isEmpty ? field.value : nil
             default:
                 if let key = field.field.attributeType.attributeKey {
                     attributes.append(
