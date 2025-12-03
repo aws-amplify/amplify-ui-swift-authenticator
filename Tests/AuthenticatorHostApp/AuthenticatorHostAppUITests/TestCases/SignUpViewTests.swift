@@ -15,4 +15,12 @@ final class SignUpViewTests: AuthenticatorBaseTestCase {
         ])
         assertSnapshot()
     }
+    
+    func testPasswordlessSignUpView() throws {
+        launchApp(with: [
+            .initialStep(.signUp),
+            .passwordlessFlow(true)
+        ])
+        assertSnapshot()
+    }
 }

@@ -17,6 +17,7 @@ struct AuthenticatorHostApp: App {
     private var hidesSignUpButton = false
     private var initialStep = AuthenticatorInitialStep.signIn
     private var authSignInNextStep = AuthSignInStep.done
+    private var passwordlessFlow: Bool = false
     private var shouldUsePickerForTestingSteps = true
 
     var body: some Scene {
@@ -25,7 +26,8 @@ struct AuthenticatorHostApp: App {
                 hidesSignUpButton: hidesSignUpButton,
                 initialStep: initialStep,
                 authSignInStep: authSignInNextStep,
-                shouldUsePickerForTestingSteps: shouldUsePickerForTestingSteps)
+                shouldUsePickerForTestingSteps: shouldUsePickerForTestingSteps,
+                passwordlessFlow: passwordlessFlow)
         }
     }
 
@@ -54,6 +56,8 @@ struct AuthenticatorHostApp: App {
             factory.setUserAtributes(userAttributes)
         case .authSignInStep(let authUITestNextStep):
             self.authSignInNextStep = getMockedNextStepResult(from: authUITestNextStep)
+        case .passwordlessFlow(let isPasswordlessFlow):
+            self.passwordlessFlow = isPasswordlessFlow
         }
     }
 

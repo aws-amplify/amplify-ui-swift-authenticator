@@ -100,14 +100,22 @@ struct ContentView: View {
     private let hidesSignUpButton: Bool
     private let initialStep: AuthenticatorInitialStep
     private let shouldUsePickerForTestingSteps: Bool
+    private let signUpFields: [SignUpField]
 
     init(hidesSignUpButton: Bool,
          initialStep: AuthenticatorInitialStep,
          authSignInStep: AuthSignInStep,
-         shouldUsePickerForTestingSteps: Bool = false) {
+         shouldUsePickerForTestingSteps: Bool = false,
+         passwordlessFlow: Bool = false) {
         self.hidesSignUpButton = hidesSignUpButton
         self.initialStep = initialStep
         self.shouldUsePickerForTestingSteps = shouldUsePickerForTestingSteps
+        
+        if passwordlessFlow {
+            self.signUpFields = []
+        } else {
+            self.signUpFields = Self.defaultSignUpFields
+        }
         
         // Configure mocks for testing
         configureMocksForPasswordlessTesting()
@@ -203,7 +211,11 @@ struct ContentView: View {
 
         Authenticator(
             initialStep: initialStep,
-            authenticationFlow: .userChoice(preferredAuthFactor: .password(), passkeyPrompts: .init(afterSignUp: .always, afterSignIn: .always)) // Testing UserChoice with no preferred auth factor
+            authenticationFlow: .userChoice(
+                preferredAuthFactor: .password(),
+                passkeyPrompts: .init(
+                    afterSignUp: .always,
+                    afterSignIn: .always))
         ) { state in
             VStack {
                 Text("Hello, \(state.user.username)")
@@ -225,7 +237,7 @@ struct ContentView: View {
 
     }
 
-    private var signUpFields: [SignUpField] {
+    private static var defaultSignUpFields: [SignUpField] {
         return [
             .password(isRequired: true),
             .confirmPassword(isRequired: true)

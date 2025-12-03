@@ -15,6 +15,7 @@ enum ProcessArgument: Codable {
     case initialStep(AuthenticatorInitialStep)
     case authSignInStep(AuthUITestSignInStep)
     case userAttributes([UserAttribute])
+    case passwordlessFlow(Bool)
 }
 
 enum UserAttribute: String, Codable {
