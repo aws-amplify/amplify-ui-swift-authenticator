@@ -226,4 +226,43 @@ class SignInStateTests: XCTestCase {
         XCTAssertEqual(authenticatorState.moveToCount, 1)
         XCTAssertEqual(authenticatorState.moveToValue, .signUp)
     }
+    
+    // MARK: - Selected Auth Factor Reset Tests
+    
+    @MainActor
+    func testSignIn_shouldResetSelectedAuthFactor() async throws {
+        // Given - credentials has a previously selected auth factor
+        state.credentials.selectedAuthFactor = .emailOtp
+        state.username = "testuser"
+        
+        authenticationService.mockedSignInResult = .init(nextStep: .done)
+        authenticationService.mockedCurrentUser = MockAuthenticationService.User(
+            username: "testuser",
+            userId: "userId"
+        )
+        
+        // When
+        try await state.signIn()
+        
+        // Then - selectedAuthFactor should be reset to nil
+        XCTAssertNil(state.credentials.selectedAuthFactor, "selectedAuthFactor should be reset on new sign-in")
+    }
+    
+    @MainActor
+    func testSignIn_withPreviousWebAuthnSelection_shouldResetForFreshFlow() async throws {
+        // Given - User previously selected webAuthn (simulating cancel scenario)
+        state.credentials.selectedAuthFactor = .webAuthn
+        state.username = "testuser"
+        
+        // Mock factor selection step (user will need to select again)
+        authenticationService.mockedSignInResult = .init(
+            nextStep: .continueSignInWithFirstFactorSelection([.emailOTP, .smsOTP, .passwordSRP])
+        )
+        
+        // When
+        try await state.signIn()
+        
+        // Then - selectedAuthFactor should be reset so first selection uses confirmSignIn
+        XCTAssertNil(state.credentials.selectedAuthFactor, "selectedAuthFactor should be reset for fresh flow")
+    }
 }

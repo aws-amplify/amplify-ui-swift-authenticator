@@ -14,9 +14,26 @@ class MockAuthenticationService: AuthenticationService {
     // MARK: - Sign In
 
     var signInCount = 0
+    var signInUsername: String?
+    var signInPassword: String?
+    var signInOptions: AuthSignInRequest.Options?
     var mockedSignInResult: AuthSignInResult?
+    var mockedSignInError: Error?
+    var signInHandler: ((String?, String?, AuthSignInRequest.Options?) throws -> AuthSignInResult)?
     func signIn(username: String?, password: String?, options: AuthSignInRequest.Options?) async throws -> AuthSignInResult {
         signInCount += 1
+        signInUsername = username
+        signInPassword = password
+        signInOptions = options
+        
+        if let mockedSignInError = mockedSignInError {
+            throw mockedSignInError
+        }
+        
+        if let signInHandler = signInHandler {
+            return try signInHandler(username, password, options)
+        }
+        
         if let mockedSignInResult = mockedSignInResult {
             return mockedSignInResult
         }
