@@ -127,9 +127,8 @@ public struct SignInSelectAuthFactorView<Header: View,
             log.verbose("Password auth factor not available")
             return
         }
-
-        state.selectedAuthFactor = passwordFactor
-        try? await state.selectAuthFactor()
+        
+        await selectAuthFactor(passwordFactor)
     }
     
     private func selectAuthFactor(_ factor: AuthFactor) async {

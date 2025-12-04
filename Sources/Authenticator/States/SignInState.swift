@@ -31,6 +31,9 @@ public class SignInState: AuthenticatorBaseState {
     /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func signIn() async throws {
         setBusy(true)
+        
+        // Reset selected auth factor tracking for new sign-in flow
+        credentials.selectedAuthFactor = nil
 
         do {
             log.verbose("Attempting to Sign In")
