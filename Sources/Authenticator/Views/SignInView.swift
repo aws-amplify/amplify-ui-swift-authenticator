@@ -63,9 +63,7 @@ public struct SignInView<Header: View,
         // Password validation is dynamic based on authentication flow
         // Check at validation time, not init time, since authenticationFlow may not be available yet
         self._passwordValidator = StateObject(wrappedValue: Validator(
-            using: { [weak state] value in
-                guard let state = state else { return nil }
-                
+            using: { value in
                 // Password is always required when shown (both password flow and userChoice with password preferred)
                 return FieldValidators.required(value)
             }
