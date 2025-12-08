@@ -32,9 +32,6 @@ struct AuthenticatorHostApp: App {
     }
 
     init() {
-        // Configure email as the username attribute
-        //factory.setUserAtributes([.email])
-        
         processUITestLaunchArguments()
         
         Amplify.Logging.logLevel = .verbose

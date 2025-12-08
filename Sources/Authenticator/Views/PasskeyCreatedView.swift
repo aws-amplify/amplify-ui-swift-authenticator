@@ -60,7 +60,7 @@ public struct PasskeyCreatedView<Header: View,
                     
                     ForEach(state.passkeyCredentials, id: \.credentialId) { credential in
                         HStack {
-                            Text(credential.friendlyName ?? "authenticator.passkeyCreated.unknowName".localized())
+                            Text(credential.friendlyName ?? "authenticator.passkeyCreated.unknownName".localized())
                                 .font(theme.fonts.body)
                                 .foregroundColor(theme.colors.foreground.primary)
                             Spacer()

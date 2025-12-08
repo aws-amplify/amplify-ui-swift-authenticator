@@ -29,9 +29,7 @@ enum Step {
     case confirmResetPassword(deliveryDetails: AuthCodeDeliveryDetails?)
     case verifyUser(attributes: [AuthUserAttributeKey])
     case confirmVerifyUser(attribute: AuthUserAttributeKey, deliveryDetails: AuthCodeDeliveryDetails?)
-    // TODO: Implement promptToCreatePasskey state handling
     case promptToCreatePasskey
-    // TODO: Implement passkeyCreated state handling
     case passkeyCreated
     case signedIn(user: AuthUser)
 

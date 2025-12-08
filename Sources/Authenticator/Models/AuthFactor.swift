@@ -59,6 +59,14 @@ extension AuthFactor {
         return false
     }
     
+    /// Returns true if this auth factor is password with SRP enabled
+    var isPasswordWithSRP: Bool {
+        guard case .password(let srp) = self else {
+            return false
+        }
+        return srp
+    }
+    
     /// Display priority for sorting auth factors
     /// Lower values appear first: WebAuthn (1), SMS (2), Email (3), Password (4)
     var displayPriority: Int {
@@ -85,12 +93,7 @@ extension Array where Element == AuthFactor {
     /// Prefers passwordSRP over password when both are available (more secure)
     var preferredPasswordFactor: AuthFactor? {
         // First, try to find password with SRP (more secure)
-        if let passwordSRP = first(where: { 
-            if case .password(let srp) = $0, srp == true {
-                return true
-            }
-            return false
-        }) {
+        if let passwordSRP = first(where: { $0.isPasswordWithSRP }) {
             return passwordSRP
         }
         

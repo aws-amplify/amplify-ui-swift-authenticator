@@ -201,7 +201,7 @@
 "authenticator.passkeyCreated.title" = "Passkey created successfully!";
 "authenticator.passkeyCreated.message" = "Passkey created successfully!";
 "authenticator.passkeyCreated.existingPasskeys" = "Existing Passkeys";
-"authenticator.passkeyCreated.unknowName" = "Unknown Provider";
+"authenticator.passkeyCreated.unknownName" = "Unknown Provider";
 "authenticator.passkeyCreated.button.continue" = "Continue";
 
 /* Authenticator Error View */
