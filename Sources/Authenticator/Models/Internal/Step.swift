@@ -116,7 +116,7 @@ extension Step: Equatable {
              (.passkeyCreated, .passkeyCreated):
             return true
         case (.signInSelectAuthFactor(let lFactors), .signInSelectAuthFactor(let rFactors)):
-            return lFactors == rFactors
+            return lFactors.sorted(by: { $0.displayPriority < $1.displayPriority }) == rFactors.sorted(by: { $0.displayPriority < $1.displayPriority })
         case (.confirmSignInWithMFACode(let lDetails), .confirmSignInWithMFACode(let hDetails)),
              (.confirmSignUp(let lDetails), .confirmSignUp(let hDetails)),
              (.confirmResetPassword(let lDetails), .confirmResetPassword(let hDetails)):
