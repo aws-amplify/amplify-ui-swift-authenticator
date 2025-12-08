@@ -95,10 +95,11 @@ class SignUpStateTests: XCTestCase {
             .password()
         ])
 
-        XCTAssertEqual(state.fields.count, 4) // 2 verification + 2 provided
+        XCTAssertEqual(state.fields.count, 5) // 2 verification + 2 provided + 1 confirmPassword (auto-added for .password flow)
         XCTAssertTrue(state.fields.allSatisfy({ field in
             field.field.attributeType == .username ||
             field.field.attributeType == .password ||
+            field.field.attributeType == .passwordConfirmation ||
             (field.field.attributeType == .phoneNumber && field.field.isRequired) ||
             (field.field.attributeType == .email && field.field.isRequired)
         }))
@@ -114,7 +115,7 @@ class SignUpStateTests: XCTestCase {
             .email(isRequired: false)
         ])
 
-        XCTAssertEqual(state.fields.count, 3)
+        XCTAssertEqual(state.fields.count, 4) // username, password, confirmPassword (auto-added), email
         XCTAssertTrue(state.fields.contains(where: { field in
             field.field.attributeType == .email && field.field.isRequired
         }))
@@ -155,5 +156,136 @@ class SignUpStateTests: XCTestCase {
             field.field.attributeType == .passwordConfirmation ||
             (field.field.attributeType == .phoneNumber && field.field.isRequired)
         }))
+    }
+    
+    // MARK: - AuthenticationFlow Tests
+    
+    func testConfigure_withPasswordFlow_emptyFields_shouldIncludePasswordFields() {
+        authenticatorState.authenticationFlow = .password
+        state.configure(with: [])
+        
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .password && $0.field.isRequired }))
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation && $0.field.isRequired }))
+    }
+    
+    func testConfigure_withPasswordFlow_customFields_shouldAddPasswordFieldsAsRequired() {
+        authenticatorState.authenticationFlow = .password
+        state.configure(with: [
+            .email(isRequired: true)
+        ])
+        
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .password && $0.field.isRequired }))
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation && $0.field.isRequired }))
+    }
+    
+    func testConfigure_withPasswordFlow_customFields_shouldEnforcePasswordRequired() {
+        authenticatorState.authenticationFlow = .password
+        state.configure(with: [
+            .email(isRequired: true),
+            .password(isRequired: false), // Try to make it optional
+            .confirmPassword(isRequired: false) // Try to make it optional
+        ])
+        
+        // Password fields should be forced to required
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .password && $0.field.isRequired }))
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation && $0.field.isRequired }))
+    }
+    
+    func testConfigure_withUserChoiceNoPreferred_emptyFields_shouldNotIncludePasswordFields() {
+        authenticatorState.authenticationFlow = .userChoice()
+        state.configure(with: [])
+        
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .password }))
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation }))
+    }
+    
+    func testConfigure_withUserChoiceNoPreferred_customFields_shouldNotAddPasswordFields() {
+        authenticatorState.authenticationFlow = .userChoice()
+        state.configure(with: [
+            .email(isRequired: true)
+        ])
+        
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .password }))
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation }))
+    }
+    
+    func testConfigure_withUserChoiceNoPreferred_customFieldsWithPassword_shouldAllowOptionalPassword() {
+        authenticatorState.authenticationFlow = .userChoice()
+        state.configure(with: [
+            .email(isRequired: true),
+            .password(isRequired: false),
+            .confirmPassword(isRequired: false)
+        ])
+        
+        // Password fields should remain optional
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .password && !$0.field.isRequired }))
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation && !$0.field.isRequired }))
+    }
+    
+    func testConfigure_withUserChoicePasswordPreferred_emptyFields_shouldIncludeOptionalPasswordFields() {
+        authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .password())
+        state.configure(with: [])
+        
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .password && !$0.field.isRequired }))
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation && !$0.field.isRequired }))
+    }
+    
+    func testConfigure_withUserChoicePasswordPreferred_customFields_shouldAddOptionalPasswordFields() {
+        authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .password(srp: true))
+        state.configure(with: [
+            .email(isRequired: true)
+        ])
+        
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .password && !$0.field.isRequired }))
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation && !$0.field.isRequired }))
+    }
+    
+    func testConfigure_withUserChoiceWebAuthnPreferred_emptyFields_shouldNotIncludePasswordFields() {
+        authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .webAuthn)
+        state.configure(with: [])
+        
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .password }))
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation }))
+    }
+    
+    func testConfigure_withUserChoiceEmailOtpPreferred_customFields_shouldNotAddPasswordFields() {
+        authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .emailOtp)
+        state.configure(with: [
+            .email(isRequired: true)
+        ])
+        
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .password }))
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation }))
+    }
+    
+    func testConfigure_withUserChoiceSmsOtpPreferred_customFields_shouldNotAddPasswordFields() {
+        authenticatorState.authenticationFlow = .userChoice(preferredAuthFactor: .smsOtp)
+        state.configure(with: [
+            .phoneNumber(isRequired: true)
+        ])
+        
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .password }))
+        XCTAssertFalse(state.fields.contains(where: { $0.field.attributeType == .passwordConfirmation }))
+    }
+    
+    func testConfigure_withUsernameAlwaysAddedAndRequired() {
+        authenticatorState.authenticationFlow = .userChoice()
+        state.configure(with: [
+            .email(isRequired: true)
+        ])
+        
+        // Username should be automatically added and required
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .username && $0.field.isRequired }))
+    }
+    
+    func testConfigure_withUsernameInCustomFields_shouldEnforceRequired() {
+        authenticatorState.authenticationFlow = .userChoice()
+        state.configure(with: [
+            .username(), // Already required by default
+            .email(isRequired: true)
+        ])
+        
+        // Username should remain required
+        XCTAssertTrue(state.fields.contains(where: { $0.field.attributeType == .username && $0.field.isRequired }))
     }
 }

@@ -12,6 +12,8 @@ enum Step {
     case loading
     case error(_ error: Error)
     case signIn
+    case signInSelectAuthFactor(availableAuthFactors: [AuthFactor])
+    case signInConfirmPassword
     case confirmSignInWithCustomChallenge
     case confirmSignInWithTOTPCode
     case continueSignInWithMFASelection(allowedMFATypes: AllowedMFATypes)
@@ -27,6 +29,8 @@ enum Step {
     case confirmResetPassword(deliveryDetails: AuthCodeDeliveryDetails?)
     case verifyUser(attributes: [AuthUserAttributeKey])
     case confirmVerifyUser(attribute: AuthUserAttributeKey, deliveryDetails: AuthCodeDeliveryDetails?)
+    case promptToCreatePasskey
+    case passkeyCreated
     case signedIn(user: AuthUser)
 
     init(from initialStep: AuthenticatorInitialStep) {
@@ -50,6 +54,10 @@ enum Step {
             return .error
         case .signIn:
             return .signIn
+        case .signInSelectAuthFactor:
+            return .signInSelectAuthFactor
+        case .signInConfirmPassword:
+            return .signInConfirmPassword
         case .confirmSignInWithCustomChallenge:
             return .confirmSignInWithCustomChallenge
         case .confirmSignInWithTOTPCode:
@@ -82,6 +90,10 @@ enum Step {
             return .verifyUser
         case .confirmVerifyUser:
             return .confirmVerifyUser
+        case .promptToCreatePasskey:
+            return .promptToCreatePasskey
+        case .passkeyCreated:
+            return .passkeyCreated
         }
     }
 }
@@ -92,14 +104,19 @@ extension Step: Equatable {
         case (.loading, .loading),
              (.error, .error),
              (.signIn, .signIn),
+             (.signInConfirmPassword, .signInConfirmPassword),
              (.continueSignInWithMFASelection, .continueSignInWithMFASelection),
              (.confirmSignInWithTOTPCode, .confirmSignInWithTOTPCode),
              (.continueSignInWithTOTPSetup, .continueSignInWithTOTPSetup),
              (.confirmSignInWithCustomChallenge, .confirmSignInWithCustomChallenge),
              (.confirmSignInWithNewPassword, .confirmSignInWithNewPassword),
              (.signUp, .signUp),
-             (.resetPassword, .resetPassword):
+             (.resetPassword, .resetPassword),
+             (.promptToCreatePasskey, .promptToCreatePasskey),
+             (.passkeyCreated, .passkeyCreated):
             return true
+        case (.signInSelectAuthFactor(let lFactors), .signInSelectAuthFactor(let rFactors)):
+            return lFactors.sorted(by: { $0.displayPriority < $1.displayPriority }) == rFactors.sorted(by: { $0.displayPriority < $1.displayPriority })
         case (.confirmSignInWithMFACode(let lDetails), .confirmSignInWithMFACode(let hDetails)),
              (.confirmSignUp(let lDetails), .confirmSignUp(let hDetails)),
              (.confirmResetPassword(let lDetails), .confirmResetPassword(let hDetails)):

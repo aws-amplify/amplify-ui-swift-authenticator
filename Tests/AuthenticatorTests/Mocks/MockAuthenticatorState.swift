@@ -10,6 +10,8 @@ import Foundation
 
 class MockAuthenticatorState: AuthenticatorStateProtocol {
     var authenticationService: AuthenticationService = MockAuthenticationService()
+    
+    var authenticationFlow: AuthenticationFlow = .password
 
     var configuration = CognitoConfiguration(
         usernameAttributes: [],

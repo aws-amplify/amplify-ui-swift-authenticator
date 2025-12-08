@@ -17,6 +17,7 @@ struct AuthenticatorHostApp: App {
     private var hidesSignUpButton = false
     private var initialStep = AuthenticatorInitialStep.signIn
     private var authSignInNextStep = AuthSignInStep.done
+    private var passwordlessFlow: Bool = false
     private var shouldUsePickerForTestingSteps = true
 
     var body: some Scene {
@@ -25,12 +26,15 @@ struct AuthenticatorHostApp: App {
                 hidesSignUpButton: hidesSignUpButton,
                 initialStep: initialStep,
                 authSignInStep: authSignInNextStep,
-                shouldUsePickerForTestingSteps: shouldUsePickerForTestingSteps)
+                shouldUsePickerForTestingSteps: shouldUsePickerForTestingSteps,
+                passwordlessFlow: passwordlessFlow)
         }
     }
 
     init() {
         processUITestLaunchArguments()
+        
+        Amplify.Logging.logLevel = .verbose
         do {
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.configure(AmplifyConfiguration(auth: factory.createConfiguration()))
@@ -49,6 +53,8 @@ struct AuthenticatorHostApp: App {
             factory.setUserAtributes(userAttributes)
         case .authSignInStep(let authUITestNextStep):
             self.authSignInNextStep = getMockedNextStepResult(from: authUITestNextStep)
+        case .passwordlessFlow(let isPasswordlessFlow):
+            self.passwordlessFlow = isPasswordlessFlow
         }
     }
 
@@ -89,6 +95,19 @@ struct AuthenticatorHostApp: App {
             return .continueSignInWithEmailMFASetup
         case .confirmSignInWithEmailMFACode:
             return .confirmSignInWithOTP(.init(destination: .email("test@amazon.com")))
+        case .continueSignInWithFirstFactorSelection:
+            // WebAuthn is only available in iOS 17.4+, macOS 13.5+, visionOS 1.0+
+            var availableFactors: Set<AuthFactorType> = [.emailOTP, .smsOTP, .password, .passwordSRP]
+            #if os(iOS) || os(macOS) || os(visionOS)
+            if #available(iOS 17.4, macOS 13.5, visionOS 1.0, *) {
+                availableFactors.insert(.webAuthn)
+            }
+            #endif
+            return .continueSignInWithFirstFactorSelection(availableFactors)
+        case .confirmSignInWithOTP:
+            return .confirmSignInWithOTP(.init(destination: .email("test@amazon.com")))
+        case .confirmSignInWithPassword:
+            return .confirmSignInWithPassword
         case .resetPassword:
             return .resetPassword(nil)
         case .confirmSignUp:

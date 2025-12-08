@@ -21,6 +21,9 @@ let package = Package(
             dependencies: [
                 .product(name: "Amplify", package: "amplify-swift"),
                 .product(name: "AWSCognitoAuthPlugin", package: "amplify-swift")
+            ],
+            resources: [
+                .process("Resources")
             ]),
         .testTarget(
             name: "AuthenticatorTests",

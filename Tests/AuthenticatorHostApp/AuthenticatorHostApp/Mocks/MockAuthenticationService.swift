@@ -22,6 +22,13 @@ class MockAuthenticationService: AuthenticationService {
     func signIn(username: String?, password: String?, options: AuthSignInRequest.Options?) async throws -> AuthSignInResult {
         signInCount += 1
         if let mockedSignInResult = mockedSignInResult {
+            // If sign-in is successful (.done), set the current user
+            if case .done = mockedSignInResult.nextStep {
+                mockedCurrentUser = User(
+                    username: username ?? "test@example.com",
+                    userId: "user-123"
+                )
+            }
             return mockedSignInResult
         }
 
@@ -29,18 +36,95 @@ class MockAuthenticationService: AuthenticationService {
     }
 
     var confirmSignInCount = 0
+    var confirmSignInChallengeResponse: String?
     var mockedConfirmSignInResult: AuthSignInResult?
+    
+    /// Tracks the last challenge response to enable multi-step flow testing
+    /// For example: "EMAIL_OTP" -> confirmSignInWithOTP -> "123456" -> done
+    var lastChallengeResponse: String?
+    
     func confirmSignIn(challengeResponse: String, options: AuthConfirmSignInRequest.Options?) async throws -> AuthSignInResult {
         confirmSignInCount += 1
-        if let mockedConfirmSignInResult = mockedConfirmSignInResult {
-            return mockedConfirmSignInResult
+        confirmSignInChallengeResponse = challengeResponse
+        
+        // Otherwise, simulate the multi-step passwordless flow
+        // Step 1: Factor selection (EMAIL_OTP, SMS_OTP, PASSWORD, PASSWORD_SRP, etc.)
+        if challengeResponse == "EMAIL_OTP" {
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(
+                nextStep: .confirmSignInWithOTP(.init(destination: .email("test@example.com")))
+            )
+        } else if challengeResponse == "SMS_OTP" {
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(
+                nextStep: .confirmSignInWithOTP(.init(destination: .phone("+1234567890")))
+            )
+        } else if challengeResponse == "PASSWORD" || challengeResponse == "PASSWORD_SRP" {
+            // Step 1: Password factor selected
+            // Return .confirmSignInWithPassword to prompt for password entry
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .confirmSignInWithPassword)
+        } else if lastChallengeResponse == "PASSWORD" || lastChallengeResponse == "PASSWORD_SRP" {
+            // Step 2: Password entered after selecting password factor
+            // Complete sign-in
+            mockedCurrentUser = User(
+                username: "test@example.com",
+                userId: "user-123"
+            )
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .done)
+        } else if challengeResponse.count == 6 && challengeResponse.allSatisfy({ $0.isNumber }) {
+            // Step 2: OTP code confirmation (6-digit code)
+            // Set the current user when OTP is confirmed
+            mockedCurrentUser = User(
+                username: "test@example.com",
+                userId: "user-123"
+            )
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .done)
+        } else if lastChallengeResponse == "EMAIL_OTP" || lastChallengeResponse == "SMS_OTP" {
+            // Step 2: OTP code entered after selecting OTP factor
+            // Complete sign-in
+            mockedCurrentUser = User(
+                username: "test@example.com",
+                userId: "user-123"
+            )
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .done)
+        } else {
+            // If a specific result is mocked, return it
+            if let mockedConfirmSignInResult = mockedConfirmSignInResult {
+                lastChallengeResponse = challengeResponse
+                return mockedConfirmSignInResult
+            }
+            
+            // Default: complete sign-in
+            mockedCurrentUser = User(
+                username: "test@example.com",
+                userId: "user-123"
+            )
+            lastChallengeResponse = challengeResponse
+            return AuthSignInResult(nextStep: .done)
         }
-
-        throw AuthenticatorError.error(message: "Unable to confirm sign in")
     }
 
+    var autoSignInCount = 0
+    var mockedAutoSignInResult: AuthSignInResult?
+    var autoSignInUserToSet: User?
     func autoSignIn() async throws -> AuthSignInResult {
-        fatalError("Unsupported operation in Authenticator")
+        autoSignInCount += 1
+        
+        // Set the current user when auto sign-in is called
+        if let userToSet = autoSignInUserToSet {
+            mockedCurrentUser = userToSet
+        }
+        
+        if let mockedAutoSignInResult = mockedAutoSignInResult {
+            return mockedAutoSignInResult
+        }
+        
+        // Default: return successful sign-in
+        return AuthSignInResult(nextStep: .done)
     }
 
     var mockedCurrentUser: AuthUser?
@@ -151,6 +235,16 @@ class MockAuthenticationService: AuthenticationService {
     var mockedSignOutResult: AuthSignOutResult?
     func signOut(options: AuthSignOutRequest.Options?) async -> AuthSignOutResult {
         signOutCount += 1
+        
+        // Clear the current user when signing out
+        mockedCurrentUser = nil
+        
+        // Dispatch Hub event to notify Authenticator of sign-out
+        Amplify.Hub.dispatch(
+            to: .auth,
+            payload: HubPayload(eventName: HubPayload.EventName.Auth.signedOut)
+        )
+        
         return SignOutResult()
     }
 #if os(iOS) || os(macOS)
@@ -167,7 +261,8 @@ class MockAuthenticationService: AuthenticationService {
     // MARK: - User management
 
     func fetchAuthSession(options: AuthFetchSessionRequest.Options?) async throws -> AuthSession {
-        return Session(isSignedIn: true)
+        // Return signed-in status based on whether we have a current user
+        return Session(isSignedIn: mockedCurrentUser != nil)
     }
 
     func update(userAttribute: AuthUserAttribute, options: AuthUpdateUserAttributeRequest.Options?) async throws -> AuthUpdateAttributeResult {
@@ -203,11 +298,11 @@ class MockAuthenticationService: AuthenticationService {
     // MARK: - WebAuthn
 
     func associateWebAuthnCredential(presentationAnchor: AuthUIPresentationAnchor?, options: AuthAssociateWebAuthnCredentialRequest.Options?) async throws {
-        fatalError("Unsupported operation in Authenticator")
+        
     }
 
     func listWebAuthnCredentials(options: AuthListWebAuthnCredentialsRequest.Options?) async throws -> AuthListWebAuthnCredentialsResult {
-        fatalError("Unsupported operation in Authenticator")
+        return .init(credentials: [], nextToken: nil)
     }
 
     func deleteWebAuthnCredential(credentialId: String, options: AuthDeleteWebAuthnCredentialRequest.Options?) async throws {

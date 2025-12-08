@@ -58,7 +58,7 @@ class AuthenticatorBaseTestCase: XCTestCase {
         app.launch()
     }
 
-    func launchAppAndLogin(with args: [ProcessArgument]) {
+    func launchAppAndLogin(with args: [ProcessArgument], shouldEnterPassword: Bool = true) {
 
         // Launch Application
         launchApp(with: args)
@@ -69,9 +69,11 @@ class AuthenticatorBaseTestCase: XCTestCase {
         app.textFields.firstMatch.tap()
         app.textFields.firstMatch.typeText("username")
 
-        // Enter some password
-        app.secureTextFields.firstMatch.tap()
-        app.secureTextFields.firstMatch.typeText("password")
+        if shouldEnterPassword {
+            // Enter some password
+            app.secureTextFields.firstMatch.tap()
+            app.secureTextFields.firstMatch.typeText("password")
+        }
 
         // Tap Sign in button
         app.buttons["Sign In"].firstMatch.tap()

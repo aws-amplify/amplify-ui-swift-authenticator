@@ -31,22 +31,48 @@ public class SignInState: AuthenticatorBaseState {
     /// - Throws: An `Amplify.AuthenticationError` if the operation fails
     public func signIn() async throws {
         setBusy(true)
+        
+        // Reset selected auth factor tracking for new sign-in flow
+        credentials.selectedAuthFactor = nil
 
         do {
             log.verbose("Attempting to Sign In")
+            
+            // Translate AuthenticationFlow to Amplify AuthFlowType
+            let signInOptions = createSignInOptions()
+            
             let result = try await authenticationService.signIn(
                 username: username.isEmpty ? nil : username,
                 password: password.isEmpty ? nil : password,
-                options: nil
+                options: signInOptions
             )
             let nextStep = try await nextStep(for: result)
             setBusy(false)
             authenticatorState.setCurrentStep(nextStep)
         } catch {
             log.error("Unable to Sign In")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError
+        }
+    }
+    
+    /// Creates sign-in options based on the authentication flow configuration
+    private func createSignInOptions() -> AuthSignInRequest.Options? {
+        switch authenticationFlow {
+        case .password:
+            // Use standard SRP flow for password-only authentication
+            return .init(pluginOptions: AWSAuthSignInOptions(authFlowType: .userSRP))
+            
+        case .userChoice(let preferredAuthFactor, _):
+            // Use the AuthFactor extension to translate to AuthFactorType
+            let preferredFirstFactor = preferredAuthFactor?.toAuthFactorType()
+            
+            // Use userAuth flow for user choice authentication
+            return .init(pluginOptions: AWSAuthSignInOptions(
+                authFlowType: .userAuth(preferredFirstFactor: preferredFirstFactor)
+            ))
         }
     }
 

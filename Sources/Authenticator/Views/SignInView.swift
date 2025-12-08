@@ -60,8 +60,13 @@ public struct SignInView<Header: View,
                 }
             }
         ))
+        // Password validation is dynamic based on authentication flow
+        // Check at validation time, not init time, since authenticationFlow may not be available yet
         self._passwordValidator = StateObject(wrappedValue: Validator(
-            using: FieldValidators.required
+            using: { value in
+                // Password is always required when shown (both password flow and userChoice with password preferred)
+                return FieldValidators.required(value)
+            }
         ))
     }
 
@@ -76,17 +81,20 @@ public struct SignInView<Header: View,
                 .textInputAutocapitalization(.never)
             #endif
 
-            PasswordField(
-                "authenticator.field.password.label".localized(),
-                text: $state.password,
-                placeholder: "authenticator.field.password.placeholder".localized(),
-                validator: passwordValidator
-            )
-            .focused(focusedField.projectedValue, equals: .password)
-            .textContentType(.password)
-        #if os(iOS)
-            .textInputAutocapitalization(.never)
-        #endif
+            // Show password field based on authentication flow
+            if shouldShowPasswordField {
+                PasswordField(
+                    passwordFieldLabel,
+                    text: $state.password,
+                    placeholder: "authenticator.field.password.placeholder".localized(),
+                    validator: passwordValidator
+                )
+                .focused(focusedField.projectedValue, equals: .password)
+                .textContentType(.password)
+            #if os(iOS)
+                .textInputAutocapitalization(.never)
+            #endif
+            }
 
             Button("authenticator.signIn.button.signIn".localized()) {
                 Task {
@@ -139,14 +147,40 @@ public struct SignInView<Header: View,
 
         return options.hidesSignUpButton
     }
+    
+    /// Determines if the password field should be shown based on authentication flow
+    private var shouldShowPasswordField: Bool {
+        switch state.authenticationFlow {
+        case .password:
+            // Always show password field in password-only flow
+            return true
+        case .userChoice(let preferredAuthFactor, _):
+            // Show password field only if password is the preferred auth factor
+            return preferredAuthFactor?.isPassword ?? false
+        }
+    }
+    
+    /// Returns the appropriate label for the password field
+    private var passwordFieldLabel: String {
+        // Password is always required when shown (both password flow and userChoice)
+        return "authenticator.field.password.label".localized()
+    }
 
     private func signIn() async {
         let usernameValidation = usernameValidator.validate()
-        let passwordValidation = passwordValidator.validate()
-
-        guard usernameValidation, passwordValidation else {
-            log.verbose("Some input validations failed")
-            return
+        
+        // Only validate password if the field is shown
+        if shouldShowPasswordField {
+            let passwordValidation = passwordValidator.validate()
+            guard usernameValidation, passwordValidation else {
+                log.verbose("Some input validations failed")
+                return
+            }
+        } else {
+            guard usernameValidation else {
+                log.verbose("Username validation failed")
+                return
+            }
         }
 
         try? await state.signIn()

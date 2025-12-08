@@ -11,6 +11,8 @@ import SwiftUI
 /// The Authenticator component
 public struct Authenticator<LoadingContent: View,
                             SignInContent: View,
+                            SignInSelectAuthFactorContent: View,
+                            SignInConfirmPasswordContent: View,
                             ConfirmSignInWithNewPasswordContent: View,
                             ConfirmSignInWithMFACodeContent: View,
                             ConfirmSignInWithOTPContent: View,
@@ -26,6 +28,8 @@ public struct Authenticator<LoadingContent: View,
                             ConfirmResetPasswordContent: View,
                             VerifyUserContent: View,
                             ConfirmVerifyUserContent: View,
+                            PromptToCreatePasskeyContent: View,
+                            PasskeyCreatedContent: View,
                             SignedInContent: View,
                             ErrorContent: View,
                             Header: View,
@@ -36,10 +40,13 @@ public struct Authenticator<LoadingContent: View,
     @State private var previousStep: Step = .loading
     private var initialStep: AuthenticatorInitialStep
     private var totpOptions: TOTPOptions
+    private var authenticationFlow: AuthenticationFlow
     private var viewModifiers = ViewModifiers()
     private var contentStates: NSHashTable<AuthenticatorBaseState> = .weakObjects()
     private let loadingContent: LoadingContent
     private let signInContent: SignInContent
+    private let signInSelectAuthFactorContent: (SignInSelectAuthFactorState) -> SignInSelectAuthFactorContent
+    private let signInConfirmPasswordContent: (SignInConfirmPasswordState) -> SignInConfirmPasswordContent
     private let confirmSignInWithMFACodeContent: ConfirmSignInWithMFACodeContent
     private let confirmSignInWithOTPContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithOTPContent
     private let confirmSignInWithTOTPCodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithTOTPCodeContent
@@ -55,6 +62,8 @@ public struct Authenticator<LoadingContent: View,
     private let confirmResetPasswordContent: ConfirmResetPasswordContent
     private let verifyUserContent: VerifyUserContent
     private let confirmVerifyUserContent: ConfirmVerifyUserContent
+    private let promptToCreatePasskeyContent: (PromptToCreatePasskeyState) -> PromptToCreatePasskeyContent
+    private let passkeyCreatedContent: (PasskeyCreatedState) -> PasskeyCreatedContent
     private let headerContent: Header
     private let footerContent: Footer
     private let errorContentBuilder: (Error) -> ErrorContent
@@ -65,6 +74,8 @@ public struct Authenticator<LoadingContent: View,
     /// Defaults to ``AuthenticatorInitialStep/signIn``
     /// - Parameter totpOptions: The TOTP Options that would be used by the Authenticator
     /// Defaults to ``.init()``
+    /// - Parameter authenticationFlow: The authentication flow configuration
+    /// Defaults to ``.password``
     /// - Parameter loadingContent: The content that is associated with the ``AuthenticatorStep/loading`` step.
     /// Defaults to a `SwiftUI.ProgressView`.
     /// - Parameter signInContent: The content associated with the ``AuthenticatorStep/signIn`` step.
@@ -109,11 +120,18 @@ public struct Authenticator<LoadingContent: View,
     public init(
         initialStep: AuthenticatorInitialStep = .signIn,
         totpOptions: TOTPOptions = .init(),
+        authenticationFlow: AuthenticationFlow = .password,
         @ViewBuilder loadingContent: () -> LoadingContent = {
             ProgressView()
         },
         @ViewBuilder signInContent: (SignInState) -> SignInContent = { state in
             SignInView(state: state)
+        },
+        @ViewBuilder signInSelectAuthFactorContent: @escaping (SignInSelectAuthFactorState) -> SignInSelectAuthFactorContent = { state in
+            SignInSelectAuthFactorView(state: state)
+        },
+        @ViewBuilder signInConfirmPasswordContent: @escaping (SignInConfirmPasswordState) -> SignInConfirmPasswordContent = { state in
+            SignInConfirmPasswordView(state: state)
         },
         @ViewBuilder confirmSignInWithMFACodeContent: (ConfirmSignInWithCodeState) -> ConfirmSignInWithMFACodeContent = { state in
             ConfirmSignInWithMFACodeView(state: state)
@@ -160,6 +178,12 @@ public struct Authenticator<LoadingContent: View,
         @ViewBuilder confirmVerifyUserContent: (ConfirmVerifyUserState) -> ConfirmVerifyUserContent = { state in
             ConfirmVerifyUserView(state: state)
         },
+        @ViewBuilder promptToCreatePasskeyContent: @escaping (PromptToCreatePasskeyState) -> PromptToCreatePasskeyContent = { state in
+            PromptToCreatePasskeyView(state: state)
+        },
+        @ViewBuilder passkeyCreatedContent: @escaping (PasskeyCreatedState) -> PasskeyCreatedContent = { state in
+            PasskeyCreatedView(state: state)
+        },
         @ViewBuilder errorContent: @escaping (Error) -> ErrorContent = { _ in
             ErrorView()
         },
@@ -169,12 +193,16 @@ public struct Authenticator<LoadingContent: View,
     ) {
         self.initialStep = initialStep
         self.totpOptions = totpOptions
+        self.authenticationFlow = authenticationFlow
         self.loadingContent = loadingContent()
         let credentials = Credentials()
 
         let signInState = SignInState(credentials: credentials)
         contentStates.add(signInState)
         self.signInContent = signInContent(signInState)
+        
+        self.signInSelectAuthFactorContent = signInSelectAuthFactorContent
+        self.signInConfirmPasswordContent = signInConfirmPasswordContent
 
         let confirmSignInWithMFACodeState = ConfirmSignInWithCodeState(credentials: credentials)
         contentStates.add(confirmSignInWithMFACodeState)
@@ -223,6 +251,9 @@ public struct Authenticator<LoadingContent: View,
         let confirmVerifyUserState = ConfirmVerifyUserState(credentials: credentials)
         contentStates.add(confirmVerifyUserState)
         self.confirmVerifyUserContent = confirmVerifyUserContent(confirmVerifyUserState)
+        
+        self.promptToCreatePasskeyContent = promptToCreatePasskeyContent
+        self.passkeyCreatedContent = passkeyCreatedContent
 
         self.headerContent = headerContent()
         self.footerContent = footerContent()
@@ -256,6 +287,7 @@ public struct Authenticator<LoadingContent: View,
         .environment(\.authenticatorOptions.busyStyle, viewModifiers.busyStyle)
         .task {
             state.authenticationService = authenticationService
+            state.authenticationFlow = authenticationFlow
             setUpContentStates(contentStates)
             await state.reloadState(initialStep: initialStep)
         }
@@ -357,11 +389,28 @@ public struct Authenticator<LoadingContent: View,
             loadingContent
         case .signIn:
             signInContent
+        case .signInSelectAuthFactor(let availableAuthFactors):
+            let signInSelectAuthFactorState = SignInSelectAuthFactorState(
+                credentials: signInState?.credentials ?? Credentials(),
+                availableAuthFactors: availableAuthFactors
+            )
+            signInSelectAuthFactorContent(signInSelectAuthFactorState)
+                .onAppear {
+                    signInSelectAuthFactorState.configure(with: state)
+                }
+        case .signInConfirmPassword:
+            let signInConfirmPasswordState = SignInConfirmPasswordState(
+                credentials: signInState?.credentials ?? Credentials()
+            )
+            signInConfirmPasswordContent(signInConfirmPasswordState)
+                .onAppear {
+                    signInConfirmPasswordState.configure(with: state)
+                }
         case .confirmSignInWithNewPassword:
             confirmSignInContentWithNewPasswordContent
         case .confirmSignInWithMFACode:
             confirmSignInWithMFACodeContent
-        case .confirmSignInWithOTP(let deliveryDetails):
+        case .confirmSignInWithOTP:
             let confirmSignInWithCodeState = ConfirmSignInWithCodeState(
                 authenticatorState: state
             )
@@ -413,6 +462,16 @@ public struct Authenticator<LoadingContent: View,
             verifyUserContent
         case .confirmVerifyUser:
             confirmVerifyUserContent
+        case .promptToCreatePasskey:
+            let promptToCreatePasskeyState = PromptToCreatePasskeyState(
+                authenticatorState: state
+            )
+            promptToCreatePasskeyContent(promptToCreatePasskeyState)
+        case .passkeyCreated:
+            let passkeyCreatedState = PasskeyCreatedState(
+                authenticatorState: state
+            )
+            passkeyCreatedContent(passkeyCreatedState)
         case .error(let error):
             errorContentBuilder(error)
         case .signedIn(_):
@@ -438,6 +497,11 @@ public struct Authenticator<LoadingContent: View,
     private var signUpState: SignUpState? {
         contentStates.allObjects.compactMap({ $0 as? SignUpState }).first
     }
+    
+    private var signInState: SignInState? {
+        contentStates.allObjects.compactMap({ $0 as? SignInState }).first
+    }
+    
 }
 
 extension Authenticator {
