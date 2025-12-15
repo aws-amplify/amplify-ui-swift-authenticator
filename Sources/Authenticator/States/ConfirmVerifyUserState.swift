@@ -57,6 +57,7 @@ public class ConfirmVerifyUserState: AuthenticatorBaseState {
             authenticatorState.setCurrentStep(.signedIn(user: user))
         } catch {
             log.error("Unable to confirm user attribute")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError

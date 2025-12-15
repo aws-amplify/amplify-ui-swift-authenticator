@@ -50,6 +50,7 @@ public class ContinueSignInWithMFASelectionState: AuthenticatorBaseState {
             authenticatorState.setCurrentStep(nextStep)
         } catch {
             log.error("Confirm Sign In with Code failed")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError

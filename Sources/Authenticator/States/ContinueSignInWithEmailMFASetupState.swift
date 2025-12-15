@@ -44,6 +44,7 @@ public class ContinueSignInWithEmailMFASetupState: AuthenticatorBaseState {
             authenticatorState.setCurrentStep(nextStep)
         } catch {
             log.error("Continue Sign In with Email MFA Setup failed")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError
