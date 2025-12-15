@@ -50,6 +50,7 @@ public class ContinueSignInWithMFASetupSelectionState: AuthenticatorBaseState {
             authenticatorState.setCurrentStep(nextStep)
         } catch {
             log.error("Continue Sign In with MFA Setup Selection failed")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError

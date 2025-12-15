@@ -51,6 +51,7 @@ public class ConfirmResetPasswordState: AuthenticatorBaseState {
             authenticatorState.setCurrentStep(nextStep)
         } catch {
             log.error("Confirm Reset Password failed")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError

@@ -42,6 +42,7 @@ public class ResetPasswordState: AuthenticatorBaseState {
             }
         } catch {
             log.error("Unable to initialize a password reset")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError

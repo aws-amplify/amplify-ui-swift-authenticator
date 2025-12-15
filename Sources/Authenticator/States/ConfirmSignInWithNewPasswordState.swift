@@ -39,6 +39,7 @@ public class ConfirmSignInWithNewPasswordState: AuthenticatorBaseState {
             authenticatorState.setCurrentStep(nextStep)
         } catch {
             log.error("Confirm Sign In with new password failed")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError

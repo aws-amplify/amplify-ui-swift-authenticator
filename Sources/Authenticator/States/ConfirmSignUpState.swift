@@ -43,6 +43,7 @@ public class ConfirmSignUpState: AuthenticatorBaseState {
             authenticatorState.setCurrentStep(nextStep)
         } catch {
             log.error("Confirm Sign Up failed")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError
@@ -68,6 +69,7 @@ public class ConfirmSignUpState: AuthenticatorBaseState {
             authenticatorState.setCurrentStep(.confirmSignUp(deliveryDetails: details))
         } catch {
             log.error("Unable to resend the Sign Up confirmation code")
+            setBusy(false)
             let authenticationError = self.error(for: error)
             setMessage(authenticationError)
             throw authenticationError
