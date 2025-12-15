@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.0 (2025-12-15)
+- Add support for passwordless auth flows
+
 ## 1.2.3 (2024-12-16)
 
 ### Bug Fixes
