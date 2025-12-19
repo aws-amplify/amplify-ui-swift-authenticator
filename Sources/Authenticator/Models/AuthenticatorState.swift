@@ -105,6 +105,7 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             }
 
         } catch {
+            // Fetch auth session only throws invalid state errors, for which the authenticator should definitely be in signed out state
             log.error(error)
             log.error("Error while attempting to determine signed in user, going signedOut step")
             setCurrentStep(signedOutStep)
@@ -117,19 +118,28 @@ public class AuthenticatorState: ObservableObject, AuthenticatorStateProtocol {
             return session.isSignedIn
         }
 
-        // If the failures are caused due to connectivity errors, consider the session still valid
-        if configuration.hasIdentityPool,
-           case .failure(let authError) = cognitoSession.getIdentityId(),
-           !authError.isConnectivityError {
-            log.verbose("Could not fetch Identity ID")
-            return false
-        }
-
         if configuration.hasUserPool,
-           case .failure(let authError) = cognitoSession.getCognitoTokens(),
-           !authError.isConnectivityError {
-            log.verbose("Could not fetch Cognito Tokens")
-            return false
+           case .failure(let authError) = cognitoSession.getCognitoTokens() {
+            
+            // Only invalidate session for definitive authentication failures.
+            // All other errors (network, service, rate limits, etc.) preserve the session.
+            
+            // Check for specific AuthError cases that indicate authentication failures
+            switch authError {
+            case .notAuthorized:
+                log.verbose("Not authorized - session invalid")
+                return false
+            case .sessionExpired:
+                log.verbose("Session expired")
+                return false
+            case .signedOut:
+                log.verbose("User signed out - session invalid")
+                return false
+            default:
+                // For all other errors (network, service, unknown), preserve session
+                log.verbose("Non-auth error, preserving session: \(authError)")
+                return true
+            }
         }
 
         return true
