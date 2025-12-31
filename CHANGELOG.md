@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1 (2025-12-30)
+
+### Bug Fixes
+- **Authenticator**: Only sign out if we have a definitive authentication failure (#112)
+
 ## 1.3.0 (2025-12-15)
 - Add support for passwordless auth flows
 
