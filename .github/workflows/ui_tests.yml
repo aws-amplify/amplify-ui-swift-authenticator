@@ -23,4 +23,4 @@ jobs:
         working-directory: Tests/AuthenticatorHostApp
         run: |
           xcodebuild -resolvePackageDependencies -scheme Authenticator
-          xcodebuild test -scheme AuthenticatorHostApp -sdk 'iphonesimulator' -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max,OS=latest' -derivedDataPath Build/ -clonedSourcePackagesDirPath ~/Library/Developer/Xcode/DerivedData/Authenticator | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
+          xcodebuild test -scheme AuthenticatorHostApp -sdk 'iphonesimulator' -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.5' -derivedDataPath Build/ -clonedSourcePackagesDirPath ~/Library/Developer/Xcode/DerivedData/Authenticator | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
