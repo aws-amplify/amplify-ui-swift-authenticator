@@ -14,6 +14,8 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - name: Download iOS platform
+        run: xcodebuild -downloadPlatform iOS
       - name: Unit test Authenticator on iOS
         run: xcodebuild test -scheme Authenticator -sdk 'iphonesimulator' -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -derivedDataPath Build/ -enableCodeCoverage YES -clonedSourcePackagesDirPath ~/Library/Developer/Xcode/DerivedData/Authenticator | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
       - name: Generate Coverage Report
