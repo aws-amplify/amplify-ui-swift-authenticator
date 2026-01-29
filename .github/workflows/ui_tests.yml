@@ -11,13 +11,10 @@ permissions:
 
 jobs:
   ui-test-ios:
-    runs-on: macos-15
+    runs-on: macos-14
     steps:
       - name: Checkout
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-
-      - name: Download iOS platform
-        run: xcodebuild -downloadPlatform iOS
 
       - name: Resolve and update Swift packages  
         run: xcodebuild -resolvePackageDependencies -scheme Authenticator
@@ -26,4 +23,4 @@ jobs:
         working-directory: Tests/AuthenticatorHostApp
         run: |
           xcodebuild -resolvePackageDependencies -scheme Authenticator
-          xcodebuild test -scheme AuthenticatorHostApp -sdk 'iphonesimulator' -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max,OS=latest' -derivedDataPath Build/ -clonedSourcePackagesDirPath ~/Library/Developer/Xcode/DerivedData/Authenticator | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
+          xcodebuild test -scheme AuthenticatorHostApp -sdk 'iphonesimulator' -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max,OS=latest' -derivedDataPath Build/ -clonedSourcePackagesDirPath ~/Library/Developer/Xcode/DerivedData/Authenticator | xcpretty --simple --color --report junit && exit ${PIPESTATUS[0]}
