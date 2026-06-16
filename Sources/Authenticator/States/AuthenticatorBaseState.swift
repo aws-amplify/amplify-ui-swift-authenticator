@@ -386,9 +386,13 @@ public class AuthenticatorBaseState: ObservableObject {
     }
 }
 
-extension AuthenticatorBaseState: Equatable {
+extension AuthenticatorBaseState: Equatable, Hashable {
     public static func == (lhs: AuthenticatorBaseState, rhs: AuthenticatorBaseState) -> Bool {
         lhs === rhs
+    }
+    
+    public func hash(into hasher: inout Hasher){
+        hasher.combine(ObjectIdentifier(self))
     }
 }
 
